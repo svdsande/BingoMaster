@@ -3,7 +3,30 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30011.22
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BingoMaster-API", "BingoMaster-API\BingoMaster-API.csproj", "{F45DBED9-D013-41B2-B234-0A5EDDEFE39A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BingoMaster-API", "BingoMaster-API\BingoMaster-API.csproj", "{F45DBED9-D013-41B2-B234-0A5EDDEFE39A}"
+EndProject
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "BingoMaster-Frontend", "BingoMaster-Frontend\", "{5BFAAAA5-3F32-4CC9-A22B-3CC2164FD83B}"
+	ProjectSection(WebsiteProperties) = preProject
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.0"
+		Debug.AspNetCompiler.VirtualPath = "/localhost_62968"
+		Debug.AspNetCompiler.PhysicalPath = "BingoMaster-Frontend\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_62968\"
+		Debug.AspNetCompiler.Updateable = "true"
+		Debug.AspNetCompiler.ForceOverwrite = "true"
+		Debug.AspNetCompiler.FixedNames = "false"
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.VirtualPath = "/localhost_62968"
+		Release.AspNetCompiler.PhysicalPath = "BingoMaster-Frontend\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_62968\"
+		Release.AspNetCompiler.Updateable = "true"
+		Release.AspNetCompiler.ForceOverwrite = "true"
+		Release.AspNetCompiler.FixedNames = "false"
+		Release.AspNetCompiler.Debug = "False"
+		VWDPort = "62968"
+		SlnRelativePath = "BingoMaster-Frontend\"
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BingoMaster-Logic", "BingoMaster-Logic\BingoMaster-Logic.csproj", "{3BC7AD79-25D8-4F3D-9951-2DC70628121E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +38,14 @@ Global
 		{F45DBED9-D013-41B2-B234-0A5EDDEFE39A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F45DBED9-D013-41B2-B234-0A5EDDEFE39A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F45DBED9-D013-41B2-B234-0A5EDDEFE39A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5BFAAAA5-3F32-4CC9-A22B-3CC2164FD83B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5BFAAAA5-3F32-4CC9-A22B-3CC2164FD83B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5BFAAAA5-3F32-4CC9-A22B-3CC2164FD83B}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{5BFAAAA5-3F32-4CC9-A22B-3CC2164FD83B}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{3BC7AD79-25D8-4F3D-9951-2DC70628121E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3BC7AD79-25D8-4F3D-9951-2DC70628121E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3BC7AD79-25D8-4F3D-9951-2DC70628121E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3BC7AD79-25D8-4F3D-9951-2DC70628121E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
