@@ -9,8 +9,9 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 export class BingoCardComponent implements OnInit {
 
   public bingoCardFormGroup: FormGroup = new FormGroup({
-    name: new FormControl('',),
-    size: new FormControl('')
+    name: new FormControl('', Validators.required),
+    size: new FormControl('', Validators.required),
+    centerSquareFree: new FormControl(false)
   });
 
   constructor() { }
@@ -18,4 +19,7 @@ export class BingoCardComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  public generateBingoCards(): void {
+    console.log('form submitted');
+  }
 }

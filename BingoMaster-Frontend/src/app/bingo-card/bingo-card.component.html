@@ -1,17 +1,22 @@
 <div id="container">
-    <form [formGroup]="this.bingoCardFormGroup" id="bingo-card-form">
-        <mat-form-field class="form-field">
-            <mat-label>Name</mat-label>
-            <input matInput type="text" formControlName="name">
-        </mat-form-field>
-        <mat-form-field class="form-field">
-            <mat-label>Size</mat-label>
-            <mat-select name="size" formControlName="size">
-                <mat-option [value]="3">3x3</mat-option>
-                <mat-option [value]="4">4x4</mat-option>
-                <mat-option [value]="5">5x5</mat-option>
-            </mat-select>
-        </mat-form-field>
-        <mat-checkbox color="primary">Center square is a free space</mat-checkbox>
+    <form [formGroup]="this.bingoCardFormGroup" (ngSubmit)="this.generateBingoCards()" id="bingo-card-form">
+        <div class="form-field-row">
+            <mat-form-field class="form-field">
+                <mat-label>Name</mat-label>
+                <input matInput type="text" formControlName="name">
+            </mat-form-field>
+            <mat-form-field class="form-field quarter">
+                <mat-label>Size</mat-label>
+                <mat-select name="size" formControlName="size">
+                    <mat-option [value]="3">3x3</mat-option>
+                    <mat-option [value]="4">4x4</mat-option>
+                    <mat-option [value]="5">5x5</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div class="form-field-row">
+            <mat-checkbox color="primary" formControlName="centerSquareFree">Center square is a free space</mat-checkbox>
+        </div>
+        <button mat-raised-button color="primary" type="submit" [disabled]="!this.bingoCardFormGroup.valid">Generate</button>
     </form>
 </div>

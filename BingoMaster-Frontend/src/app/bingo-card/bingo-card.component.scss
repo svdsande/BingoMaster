@@ -1,0 +1,31 @@
+#container {
+    display: flex;
+    flex: 1;
+    justify-content: center;
+
+    #bingo-card-form {
+        width: 650px;
+
+        .form-field-row {
+            display: flex;
+    
+            .form-field {
+                display: flex;
+                flex: 1 1 auto;
+                margin-right: 30px;
+
+                &:last-child {
+                    margin-right: 0px;
+                }
+
+                &.quarter {
+                    flex: 0 0 25%;
+                }
+
+                ::ng-deep .mat-form-field-wrapper {
+                    width: 100%;
+                }
+            }
+        }
+    }
+}
