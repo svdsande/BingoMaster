@@ -1,5 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { MatSelectChange } from '@angular/material/select';
+
+export interface Tile {
+  cols: number;
+  rows: number;
+  text: string;
+}
 
 @Component({
   selector: 'bingo-card',
@@ -8,18 +15,35 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 })
 export class BingoCardComponent implements OnInit {
 
+  public gridTiles: Tile[];
+  public gridColumns: Number = 3;
   public bingoCardFormGroup: FormGroup = new FormGroup({
     name: new FormControl('', Validators.required),
-    size: new FormControl('', Validators.required),
+    size: new FormControl(3, Validators.required),
     centerSquareFree: new FormControl(false)
   });
 
   constructor() { }
 
   ngOnInit(): void {
+    this.gridTiles = this.generateTiles(3);
+  }
+
+  public selectChange(event: MatSelectChange): void {
+    this.gridTiles = this.generateTiles(event.value);
+  }
+
+  public getNumberOfColumns(): number {
+    return Math.sqrt(this.gridTiles.length);
   }
 
   public generateBingoCards(): void {
     console.log('form submitted');
+  }
+
+  private generateTiles(columns: number): Tile[] {
+    return Array.from(new Array(columns * columns), (_value, _index: number) => {
+      return { cols: 1, rows: 1, text: '' } as Tile
+    });
   }
 }

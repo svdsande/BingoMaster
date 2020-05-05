@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatGridListModule } from '@angular/material/grid-list';
 import { MatIconModule } from "@angular/material/icon";
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
@@ -28,6 +29,7 @@ import { HeaderComponent } from './header/header.component';
     ReactiveFormsModule,
     MatButtonModule,
     MatCheckboxModule,
+    MatGridListModule,
     MatIconModule,
     MatInputModule,
     MatSelectModule,
