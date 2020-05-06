@@ -10,6 +10,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MccColorPickerModule } from 'material-community-components';
 import { AppComponent } from './app.component';
 import { BingoCardComponent } from './bingo-card/bingo-card.component';
 import { FooterComponent } from './footer/footer.component';
@@ -33,7 +34,8 @@ import { HeaderComponent } from './header/header.component';
     MatIconModule,
     MatInputModule,
     MatSelectModule,
-    MatToolbarModule
+    MatToolbarModule,
+    MccColorPickerModule
   ],
   providers: [],
   bootstrap: [AppComponent]

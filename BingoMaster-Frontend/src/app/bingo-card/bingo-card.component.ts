@@ -6,6 +6,7 @@ export interface Tile {
   cols: number;
   rows: number;
   text: string;
+  color: string;
 }
 
 @Component({
@@ -17,6 +18,8 @@ export class BingoCardComponent implements OnInit {
 
   public gridTiles: Tile[];
   public gridColumns: Number = 3;
+  public backgroundColor: string = '#add8e6';
+  public borderColor: string = '#ffffff';
   public bingoCardFormGroup: FormGroup = new FormGroup({
     name: new FormControl('', Validators.required),
     size: new FormControl(3, Validators.required),
@@ -41,9 +44,22 @@ export class BingoCardComponent implements OnInit {
     console.log('form submitted');
   }
 
+  public backgroundColorSelected(color: string): void {
+    this.backgroundColor = color;
+  }
+
+  public borderColorSelected(color: string): void {
+    this.borderColor = color;
+  }
+
+  public resetBingoCardForm(): void {
+    this.bingoCardFormGroup.reset();
+    this.gridTiles = this.generateTiles(3);
+  }
+
   private generateTiles(columns: number): Tile[] {
     return Array.from(new Array(columns * columns), (_value, _index: number) => {
-      return { cols: 1, rows: 1, text: '' } as Tile
+      return { cols: 1, rows: 1, text: ''} as Tile
     });
   }
 }

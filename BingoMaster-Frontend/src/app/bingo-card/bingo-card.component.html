@@ -16,7 +16,7 @@
         </div>
         <div>
             <mat-grid-list [cols]="this.getNumberOfColumns()">
-                <mat-grid-tile
+                <mat-grid-tile [style.background]="this.backgroundColor" [style.border]="'1px solid '+ this.borderColor"
                     *ngFor="let tile of this.gridTiles"
                     [colspan]="tile.cols">
                     {{ tile.text }}
@@ -24,8 +24,23 @@
             </mat-grid-list>
         </div>
         <div class="form-field-row">
-            <mat-checkbox color="primary" formControlName="centerSquareFree">Center square is a free space</mat-checkbox>
+            <div class="form-element">
+                <mat-checkbox color="primary" formControlName="centerSquareFree">
+                    <span class="wrap-mat-radio-label">Center square is a free space</span>
+                </mat-checkbox>
+            </div>
+            <div class="form-element">
+                <span>Background</span>
+                <mcc-color-picker (selected)="this.backgroundColorSelected($event)"></mcc-color-picker>
+            </div>
+            <div class="form-element">
+                <span>Border</span>
+                <mcc-color-picker (selected)="this.borderColorSelected($event)"></mcc-color-picker>
+            </div>
         </div>
-        <button mat-raised-button color="primary" type="submit" [disabled]="!this.bingoCardFormGroup.valid">Generate</button>
+        <div class="form-field-row">
+            <button mat-raised-button color="primary" type="submit" [disabled]="!this.bingoCardFormGroup.valid">Generate Cards</button>
+            <button mat-raised-button color="accent" type="button" (click)="this.resetBingoCardForm()">Reset</button>
+        </div>
     </form>
 </div>

@@ -8,11 +8,19 @@
 
         .form-field-row {
             display: flex;
+            margin: 15px 0px;
     
-            .form-field {
+            .form-field, .form-element {
                 display: flex;
-                flex: 1 1 auto;
-                margin-right: 30px;
+                flex: 1 1 0;
+                width: 0;
+                margin-right: 25px;
+                align-items: center;
+                justify-content: center;
+
+                .wrap-mat-radio-label {
+                    white-space: normal;
+                }
 
                 &:last-child {
                     margin-right: 0px;
@@ -26,10 +34,6 @@
                     width: 100%;
                 }
             }
-        }
-
-        mat-grid-tile {
-            background-color: #add8e6;
         }
     }
 }
