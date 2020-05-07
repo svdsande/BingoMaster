@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatSelectChange } from '@angular/material/select';
+import { MatCheckboxChange } from '@angular/material/checkbox';
 
 export interface Tile {
   cols: number;
@@ -34,6 +35,7 @@ export class BingoCardComponent implements OnInit {
 
   public selectChange(event: MatSelectChange): void {
     this.gridTiles = this.generateTiles(event.value);
+    this.setCenterTileFreeSpace();
   }
 
   public getNumberOfColumns(): number {
@@ -42,6 +44,10 @@ export class BingoCardComponent implements OnInit {
 
   public generateBingoCards(): void {
     console.log('form submitted');
+  }
+
+  public centerSquareChange(changeEvent: MatCheckboxChange): void {
+    this.setCenterTileFreeSpace();
   }
 
   public backgroundColorSelected(color: string): void {
@@ -57,9 +63,24 @@ export class BingoCardComponent implements OnInit {
     this.gridTiles = this.generateTiles(3);
   }
 
+  private setCenterTileFreeSpace() {
+    const index = this.getCenterTileIndex();
+    const freeSpace: boolean = this.bingoCardFormGroup.get('centerSquareFree').value;
+    
+    if (freeSpace) {
+      this.gridTiles[index].text = 'x';
+    } else {
+      this.gridTiles[index].text = '';
+    }
+  }
+
+  private getCenterTileIndex(): number {
+    return Math.floor(this.gridTiles.length / 2);
+  }
+
   private generateTiles(columns: number): Tile[] {
     return Array.from(new Array(columns * columns), (_value, _index: number) => {
-      return { cols: 1, rows: 1, text: ''} as Tile
+      return { cols: 1, rows: 1, text: '' } as Tile
     });
   }
 }

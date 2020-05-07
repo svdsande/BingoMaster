@@ -25,17 +25,17 @@
         </div>
         <div class="form-field-row">
             <div class="form-element">
-                <mat-checkbox color="primary" formControlName="centerSquareFree">
+                <mat-checkbox color="primary" formControlName="centerSquareFree" (change)="this.centerSquareChange($event)">
                     <span class="wrap-mat-radio-label">Center square is a free space</span>
                 </mat-checkbox>
             </div>
             <div class="form-element">
                 <span>Background</span>
-                <mcc-color-picker (selected)="this.backgroundColorSelected($event)"></mcc-color-picker>
+                <mcc-color-picker [selectedColor]="this.backgroundColor" (selected)="this.backgroundColorSelected($event)"></mcc-color-picker>
             </div>
             <div class="form-element">
                 <span>Border</span>
-                <mcc-color-picker (selected)="this.borderColorSelected($event)"></mcc-color-picker>
+                <mcc-color-picker [selectedColor]="this.borderColor" (selected)="this.borderColorSelected($event)"></mcc-color-picker>
             </div>
         </div>
         <div class="form-field-row">
