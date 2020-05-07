@@ -18,13 +18,15 @@ export interface Tile {
 export class BingoCardComponent implements OnInit {
 
   public gridTiles: Tile[];
-  public gridColumns: Number = 3;
+  public gridColumns: number = 3;
   public backgroundColor: string = '#add8e6';
   public borderColor: string = '#ffffff';
   public bingoCardFormGroup: FormGroup = new FormGroup({
     name: new FormControl('', Validators.required),
     size: new FormControl(3, Validators.required),
-    centerSquareFree: new FormControl(false)
+    centerSquareFree: new FormControl(false),
+    amount: new FormControl('', Validators.required),
+    paperSize: new FormControl('')
   });
 
   constructor() { }
@@ -46,7 +48,7 @@ export class BingoCardComponent implements OnInit {
     console.log('form submitted');
   }
 
-  public centerSquareChange(changeEvent: MatCheckboxChange): void {
+  public centerSquareChange(_changeEvent: MatCheckboxChange): void {
     this.setCenterTileFreeSpace();
   }
 
@@ -66,7 +68,7 @@ export class BingoCardComponent implements OnInit {
   private setCenterTileFreeSpace() {
     const index = this.getCenterTileIndex();
     const freeSpace: boolean = this.bingoCardFormGroup.get('centerSquareFree').value;
-    
+
     if (freeSpace) {
       this.gridTiles[index].text = 'x';
     } else {
