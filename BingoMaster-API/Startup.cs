@@ -28,6 +28,20 @@ namespace BingoMaster_API
         {
             services.AddControllers();
             services.AddTransient<IBingoCardLogic, BingoCardLogic>();
+
+            services.AddSwaggerDocument(config =>
+            {
+                config.PostProcess = document =>
+                {
+                    document.Info.Title = "BingoMaster";
+                    document.Info.Description = "Application that helps you organize a bingo game";
+                    document.Info.Version = "v1";
+                    document.Info.Contact = new NSwag.OpenApiContact
+                    {
+                        Name = "Stijn van de Sande"
+                    };
+                };
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -48,6 +62,9 @@ namespace BingoMaster_API
             {
                 endpoints.MapControllers();
             });
+
+            app.UseOpenApi();
+            app.UseSwaggerUi3();
         }
     }
 }

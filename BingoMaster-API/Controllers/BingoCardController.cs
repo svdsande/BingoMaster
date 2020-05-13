@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BingoMaster_Logic;
+using BingoMaster_Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -24,9 +25,16 @@ namespace BingoMaster_API.Controllers
         }
 
         [HttpGet()]
-        public BingoCard GenerateBingoCard(int numberOfCards, int rows, int columns)
+        public ActionResult<BingoCardModel> GenerateBingoCards([FromForm] BingoCardCreationModel bingoCardModel)
         {
-            return new BingoCard { Name = "Foo", Grids = _bingoCardLogic.GenerateCardGrids(numberOfCards, rows, columns) };
+            if (bingoCardModel == null)
+            {
+                return BadRequest("Invalid form data provided");
+            }
+
+            var bingoCards = _bingoCardLogic.GenerateBingoCards(bingoCardModel);
+
+            return Ok(bingoCards);
         }
     }
 }

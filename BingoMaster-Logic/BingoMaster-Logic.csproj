@@ -5,4 +5,8 @@
     <RootNamespace>BingoMaster_Logic</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\BingoMaster-Models\BingoMaster-Models.csproj" />
+  </ItemGroup>
+
 </Project>
