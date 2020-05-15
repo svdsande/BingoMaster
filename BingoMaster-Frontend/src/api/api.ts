@@ -7,79 +7,85 @@
 //----------------------
 // ReSharper disable InconsistentNaming
 
+import { mergeMap as _observableMergeMap, catchError as _observableCatch } from 'rxjs/operators';
+import { Observable, throwError as _observableThrow, of as _observableOf } from 'rxjs';
+import { Injectable, Inject, Optional, InjectionToken } from '@angular/core';
+import { HttpClient, HttpHeaders, HttpResponse, HttpResponseBase } from '@angular/common/http';
+
+export const API_BASE_URL = new InjectionToken<string>('API_BASE_URL');
+
+@Injectable()
 export class BingoCardClient {
-    private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
+    private http: HttpClient;
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
 
-    constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
-        this.http = http ? http : <any>window;
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
         this.baseUrl = baseUrl ? baseUrl : "";
     }
 
-    generateBingoCards(name: string | null | undefined, size: number | undefined, isCenterSquareFree: boolean | undefined, backgroundColor: string | null | undefined, borderColor: string | null | undefined, amount: number | undefined, paperSize: string | null | undefined): Promise<BingoCardModel> {
+    generateBingoCards(bingoCardModel: BingoCardCreationModel): Observable<FileResponse | null> {
         let url_ = this.baseUrl + "/api/BingoCard";
         url_ = url_.replace(/[?&]$/, "");
 
-        const content_ = new FormData();
-        if (name !== null && name !== undefined)
-            content_.append("Name", name.toString());
-        if (size === null || size === undefined)
-            throw new Error("The parameter 'size' cannot be null.");
-        else
-            content_.append("Size", size.toString());
-        if (isCenterSquareFree === null || isCenterSquareFree === undefined)
-            throw new Error("The parameter 'isCenterSquareFree' cannot be null.");
-        else
-            content_.append("IsCenterSquareFree", isCenterSquareFree.toString());
-        if (backgroundColor !== null && backgroundColor !== undefined)
-            content_.append("BackgroundColor", backgroundColor.toString());
-        if (borderColor !== null && borderColor !== undefined)
-            content_.append("BorderColor", borderColor.toString());
-        if (amount === null || amount === undefined)
-            throw new Error("The parameter 'amount' cannot be null.");
-        else
-            content_.append("Amount", amount.toString());
-        if (paperSize !== null && paperSize !== undefined)
-            content_.append("PaperSize", paperSize.toString());
+        const content_ = JSON.stringify(bingoCardModel);
 
-        let options_ = <RequestInit>{
+        let options_ : any = {
             body: content_,
-            method: "GET",
-            headers: {
-                "Accept": "application/json"
-            }
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/octet-stream"
+            })
         };
 
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processGenerateBingoCards(_response);
-        });
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGenerateBingoCards(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGenerateBingoCards(<any>response_);
+                } catch (e) {
+                    return <Observable<FileResponse | null>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<FileResponse | null>><any>_observableThrow(response_);
+        }));
     }
 
-    protected processGenerateBingoCards(response: Response): Promise<BingoCardModel> {
+    protected processGenerateBingoCards(response: HttpResponseBase): Observable<FileResponse | null> {
         const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200) {
-            return response.text().then((_responseText) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = BingoCardModel.fromJS(resultData200);
-            return result200;
-            });
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200 || status === 206) {
+            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
+            const fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
+            const fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
+            return _observableOf({ fileName: fileName, data: <any>responseBlob, status: status, headers: _headers });
         } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
+            }));
         }
-        return Promise.resolve<BingoCardModel>(<any>null);
+        return _observableOf<FileResponse | null>(<any>null);
     }
 }
 
-export class BingoCardModel implements IBingoCardModel {
+export class BingoCardCreationModel implements IBingoCardCreationModel {
     name?: string | undefined;
-    grids?: number[] | undefined;
+    size!: number;
+    isCenterSquareFree!: boolean;
+    backgroundColor?: string | undefined;
+    borderColor?: string | undefined;
+    amount!: number;
+    paperSize?: string | undefined;
 
-    constructor(data?: IBingoCardModel) {
+    constructor(data?: IBingoCardCreationModel) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -91,17 +97,18 @@ export class BingoCardModel implements IBingoCardModel {
     init(_data?: any) {
         if (_data) {
             this.name = _data["name"];
-            if (Array.isArray(_data["grids"])) {
-                this.grids = [] as any;
-                for (let item of _data["grids"])
-                    this.grids!.push(item);
-            }
+            this.size = _data["size"];
+            this.isCenterSquareFree = _data["isCenterSquareFree"];
+            this.backgroundColor = _data["backgroundColor"];
+            this.borderColor = _data["borderColor"];
+            this.amount = _data["amount"];
+            this.paperSize = _data["paperSize"];
         }
     }
 
-    static fromJS(data: any): BingoCardModel {
+    static fromJS(data: any): BingoCardCreationModel {
         data = typeof data === 'object' ? data : {};
-        let result = new BingoCardModel();
+        let result = new BingoCardCreationModel();
         result.init(data);
         return result;
     }
@@ -109,18 +116,31 @@ export class BingoCardModel implements IBingoCardModel {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["name"] = this.name;
-        if (Array.isArray(this.grids)) {
-            data["grids"] = [];
-            for (let item of this.grids)
-                data["grids"].push(item);
-        }
+        data["size"] = this.size;
+        data["isCenterSquareFree"] = this.isCenterSquareFree;
+        data["backgroundColor"] = this.backgroundColor;
+        data["borderColor"] = this.borderColor;
+        data["amount"] = this.amount;
+        data["paperSize"] = this.paperSize;
         return data; 
     }
 }
 
-export interface IBingoCardModel {
+export interface IBingoCardCreationModel {
     name?: string | undefined;
-    grids?: number[] | undefined;
+    size: number;
+    isCenterSquareFree: boolean;
+    backgroundColor?: string | undefined;
+    borderColor?: string | undefined;
+    amount: number;
+    paperSize?: string | undefined;
+}
+
+export interface FileResponse {
+    data: Blob;
+    status: number;
+    fileName?: string;
+    headers?: { [name: string]: any };
 }
 
 export class ApiException extends Error {
@@ -147,9 +167,25 @@ export class ApiException extends Error {
     }
 }
 
-function throwException(message: string, status: number, response: string, headers: { [key: string]: any; }, result?: any): any {
+function throwException(message: string, status: number, response: string, headers: { [key: string]: any; }, result?: any): Observable<any> {
     if (result !== null && result !== undefined)
-        throw result;
+        return _observableThrow(result);
     else
-        throw new ApiException(message, status, response, headers, null);
+        return _observableThrow(new ApiException(message, status, response, headers, null));
+}
+
+function blobToText(blob: any): Observable<string> {
+    return new Observable<string>((observer: any) => {
+        if (!blob) {
+            observer.next("");
+            observer.complete();
+        } else {
+            let reader = new FileReader();
+            reader.onload = event => {
+                observer.next((<any>event.target).result);
+                observer.complete();
+            };
+            reader.readAsText(blob);
+        }
+    });
 }

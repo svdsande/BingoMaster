@@ -4,6 +4,7 @@
             <mat-form-field class="form-field">
                 <mat-label>Name</mat-label>
                 <input matInput type="text" formControlName="name">
+                <mat-error *ngIf="this.bingoCardFormGroup.get('name').invalid">Name is required</mat-error>
             </mat-form-field>
             <mat-form-field class="form-field quarter">
                 <mat-label>Size</mat-label>
@@ -42,6 +43,7 @@
             <mat-form-field class="form-field">
                 <mat-label>Amount:</mat-label>
                 <input matInput type="number" min="1" max="50" formControlName="amount">
+                <mat-error *ngIf="this.bingoCardFormGroup.get('amount').invalid">Amount is required</mat-error>
             </mat-form-field>
             <mat-form-field class="form-field">
                 <mat-label>Paper size</mat-label>

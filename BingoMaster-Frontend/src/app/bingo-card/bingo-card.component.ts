@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatSelectChange } from '@angular/material/select';
 import { MatCheckboxChange } from '@angular/material/checkbox';
+import { BingoCardCreationModel } from 'src/api/api';
+import { BingoCardService } from '../services/bingo-card.service';
 
 export interface Tile {
   cols: number;
@@ -29,7 +31,7 @@ export class BingoCardComponent implements OnInit {
     paperSize: new FormControl('')
   });
 
-  constructor() { }
+  constructor(private bingoCardService: BingoCardService) { }
 
   ngOnInit(): void {
     this.gridTiles = this.generateTiles(3);
@@ -45,7 +47,18 @@ export class BingoCardComponent implements OnInit {
   }
 
   public generateBingoCards(): void {
-    console.log('form submitted');
+    const bingoCardModel: BingoCardCreationModel = new BingoCardCreationModel();
+    bingoCardModel.name = this.bingoCardFormGroup.get('name').value;
+    bingoCardModel.size = this.bingoCardFormGroup.get('size').value;
+    bingoCardModel.isCenterSquareFree = this.bingoCardFormGroup.get('centerSquareFree').value;
+    bingoCardModel.amount = this.bingoCardFormGroup.get('amount').value;
+    bingoCardModel.paperSize = this.bingoCardFormGroup.get('paperSize').value;
+    bingoCardModel.backgroundColor = this.backgroundColor;
+    bingoCardModel.borderColor = this.borderColor;
+
+    this.bingoCardService.generateBingoCards(bingoCardModel).subscribe((value) => {
+      console.log(value);
+    });
   }
 
   public centerSquareChange(_changeEvent: MatCheckboxChange): void {

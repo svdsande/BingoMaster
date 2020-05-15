@@ -67,7 +67,8 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "BingoMaster-Frontend:build"
+            "browserTarget": "BingoMaster-Frontend:build",
+            "proxyConfig": "proxy.config.json"
           },
           "configurations": {
             "production": {

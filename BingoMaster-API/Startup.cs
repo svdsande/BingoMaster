@@ -29,6 +29,8 @@ namespace BingoMaster_API
             services.AddControllers();
             services.AddTransient<IBingoCardLogic, BingoCardLogic>();
 
+            services.AddCors();
+
             services.AddSwaggerDocument(config =>
             {
                 config.PostProcess = document =>
@@ -50,6 +52,13 @@ namespace BingoMaster_API
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+
+                app.UseCors(builder => builder
+                    .WithOrigins("http://localhost:4200")
+                    .AllowCredentials()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                );
             }
 
             app.UseHttpsRedirection();

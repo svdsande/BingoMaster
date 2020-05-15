@@ -11,10 +11,13 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MccColorPickerModule } from 'material-community-components';
+import { API_BASE_URL, BingoCardClient } from 'src/api/api';
+import { environment } from 'src/environments/environment';
 import { AppComponent } from './app.component';
 import { BingoCardComponent } from './bingo-card/bingo-card.component';
 import { FooterComponent } from './footer/footer.component';
 import { HeaderComponent } from './header/header.component';
+import { BingoCardService } from './services/bingo-card.service';
 
 @NgModule({
   declarations: [
@@ -37,7 +40,14 @@ import { HeaderComponent } from './header/header.component';
     MatToolbarModule,
     MccColorPickerModule
   ],
-  providers: [],
+  providers: [
+    BingoCardClient,
+    BingoCardService,
+    {
+      provide: API_BASE_URL,
+      useValue: environment.apiUrl
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

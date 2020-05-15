@@ -24,8 +24,8 @@ namespace BingoMaster_API.Controllers
             _bingoCardLogic = bingoCardLogic;
         }
 
-        [HttpGet()]
-        public ActionResult<BingoCardModel> GenerateBingoCards([FromForm] BingoCardCreationModel bingoCardModel)
+        [HttpPost]
+        public ActionResult GenerateBingoCards([FromBody] BingoCardCreationModel bingoCardModel)
         {
             if (bingoCardModel == null)
             {
