@@ -8,6 +8,6 @@ namespace BingoMaster_API
     public class BingoCardModel
     {
         public string Name { get; set; }
-        public int[,,] Grids { get; set; }
+        public string Grid { get; set; }
     }
 }

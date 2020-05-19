@@ -8,6 +8,6 @@ namespace BingoMaster_Logic
 {
     public interface IBingoCardLogic
     {
-        BingoCardModel GenerateBingoCards(BingoCardCreationModel bingoCard);
+        IEnumerable<BingoCardModel> GenerateBingoCards(BingoCardCreationModel bingoCard);
     }
 }

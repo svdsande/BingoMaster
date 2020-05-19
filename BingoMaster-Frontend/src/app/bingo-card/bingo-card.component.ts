@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatSelectChange } from '@angular/material/select';
 import { MatCheckboxChange } from '@angular/material/checkbox';
-import { BingoCardCreationModel } from 'src/api/api';
+import { BingoCardCreationModel, BingoCardModel } from 'src/api/api';
 import { BingoCardService } from '../services/bingo-card.service';
 
 export interface Tile {
@@ -19,6 +19,7 @@ export interface Tile {
 })
 export class BingoCardComponent implements OnInit {
 
+  public bingoCards: BingoCardModel[];
   public gridTiles: Tile[];
   public gridColumns: number = 3;
   public backgroundColor: string = '#add8e6';
@@ -56,8 +57,9 @@ export class BingoCardComponent implements OnInit {
     bingoCardModel.backgroundColor = this.backgroundColor;
     bingoCardModel.borderColor = this.borderColor;
 
-    this.bingoCardService.generateBingoCards(bingoCardModel).subscribe((value) => {
-      console.log(value);
+    this.bingoCardService.generateBingoCards(bingoCardModel).subscribe((result) => {
+      this.bingoCards = result;
+      console.log(result);
     });
   }
 

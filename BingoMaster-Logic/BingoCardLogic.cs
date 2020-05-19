@@ -1,46 +1,68 @@
 ﻿using BingoMaster_API;
 using BingoMaster_Models;
+using Newtonsoft.Json;
 using System;
-using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace BingoMaster_Logic
 {
     public class BingoCardLogic : IBingoCardLogic
     {
-        public BingoCardModel GenerateBingoCards(BingoCardCreationModel bingoCard)
+        public IEnumerable<BingoCardModel> GenerateBingoCards(BingoCardCreationModel bingoCardModel)
         {
-            if (bingoCard == null || bingoCard.Amount <= 0 || bingoCard.Size<= 0)
+            if (bingoCardModel == null || bingoCardModel.Amount <= 0 || bingoCardModel.Size <= 0)
             {
                 throw new ArgumentException("Invalid number of cards or grid size");
             }
 
-            var bingoCardGrids = GenerateCardGrids(bingoCard.Amount, bingoCard.Size);
-
-            return new BingoCardModel
+            return Enumerable.Range(1, bingoCardModel.Amount).Select(item => new BingoCardModel()
             {
-                Name = bingoCard.Name,
-                Grids = bingoCardGrids
-            };
+                Name = bingoCardModel.Name,
+                Grid = BuildHtmlBingoCardGrid(bingoCardModel)
+            });
         }
 
-        private int[,,] GenerateCardGrids(int amount, int size)
+        private string BuildHtmlBingoCardGrid(BingoCardCreationModel bingoCardModel)
         {
-            var grids = new int[amount, size, size];
+            var grid = GenerateCardGrid(bingoCardModel.Size);
+
+            var stringBuilder = new StringBuilder();
+
+            stringBuilder.Append("<table>");
+
+            for (int i = 0; i < grid.GetLength(0); i++)
+            {
+                stringBuilder.Append("<tr>");
+
+                for (int j = 0; j < grid.GetLength(1); j++)
+                {
+                    stringBuilder.Append($"<td>{grid[i, j]}</td>");
+                }
+
+                stringBuilder.Append("</tr>");
+            }
+
+            stringBuilder.Append("</table>");
+
+            return stringBuilder.ToString();
+        }
+
+        private int[,] GenerateCardGrid(int size)
+        {
+            var grid = new int[size, size];
             var random = new Random();
 
-            for (int i = 0; i < amount; i++)
+            for (int i = 0; i < size; i++)
             {
                 for (int j = 0; j < size; j++)
                 {
-                    for (int z = 0; z < size; z++)
-                    {
-                        grids[i, j, z] = random.Next(1, 91);
-                    }
+                    grid[i, j] = random.Next(1, 91);
                 }
             }
 
-            return grids;
+            return grid;
         }
     }
 }
