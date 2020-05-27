@@ -60,7 +60,12 @@
         </div>
     </form>
 
-    <div id="result-container" *ngFor="let bingoCard of this.bingoCards">
-        <div [innerHTML]="bingoCard.grid"></div>
+    <div>
+        <button mat-raised-button color="primary" type="button" (click)="this.downloadPDF()">Download PDF</button>
+        <div id="bingocard-container" #bingocardsData>
+            <div class="bingocard" *ngFor="let bingoCard of this.bingoCards">
+                <div [ngStyle]="{'background-color': this.backgroundColor}" [innerHTML]="bingoCard.grid"></div>
+            </div>
+        </div>
     </div>
 </div>

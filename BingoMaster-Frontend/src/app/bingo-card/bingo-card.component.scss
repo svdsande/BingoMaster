@@ -1,7 +1,8 @@
 #container {
     display: flex;
     flex: 1;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
 
     #bingo-card-form {
         width: 650px;
@@ -36,6 +37,24 @@
 
                 ::ng-deep .mat-form-field-wrapper {
                     width: 100%;
+                }
+            }
+        }
+    }
+
+    #bingocard-container {
+        display: flex;
+        flex-direction: row;
+        flex: 1;
+        justify-content: space-between;
+        width: 650px;
+
+        .bingocard ::ng-deep {
+            table {
+                text-align: center;
+
+                td {
+                    padding: 5px;
                 }
             }
         }

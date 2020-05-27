@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatSelectChange } from '@angular/material/select';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { BingoCardCreationModel, BingoCardModel } from 'src/api/api';
 import { BingoCardService } from '../services/bingo-card.service';
+import jsPDF from 'jspdf';
 
 export interface Tile {
   cols: number;
@@ -19,6 +20,7 @@ export interface Tile {
 })
 export class BingoCardComponent implements OnInit {
 
+  @ViewChild('bingocardsData') bingocardsData: ElementRef<HTMLElement>;
   public bingoCards: BingoCardModel[];
   public gridTiles: Tile[];
   public gridColumns: number = 3;
@@ -29,7 +31,7 @@ export class BingoCardComponent implements OnInit {
     size: new FormControl(3, Validators.required),
     centerSquareFree: new FormControl(false),
     amount: new FormControl('', Validators.required),
-    paperSize: new FormControl('')
+    paperSize: new FormControl('A4')
   });
 
   constructor(private bingoCardService: BingoCardService) { }
@@ -53,13 +55,9 @@ export class BingoCardComponent implements OnInit {
     bingoCardModel.size = this.bingoCardFormGroup.get('size').value;
     bingoCardModel.isCenterSquareFree = this.bingoCardFormGroup.get('centerSquareFree').value;
     bingoCardModel.amount = this.bingoCardFormGroup.get('amount').value;
-    bingoCardModel.paperSize = this.bingoCardFormGroup.get('paperSize').value;
-    bingoCardModel.backgroundColor = this.backgroundColor;
-    bingoCardModel.borderColor = this.borderColor;
 
     this.bingoCardService.generateBingoCards(bingoCardModel).subscribe((result) => {
       this.bingoCards = result;
-      console.log(result);
     });
   }
 
@@ -78,6 +76,23 @@ export class BingoCardComponent implements OnInit {
   public resetBingoCardForm(): void {
     this.bingoCardFormGroup.reset();
     this.gridTiles = this.generateTiles(3);
+  }
+
+  public downloadPDF(): void {
+    const data = this.bingocardsData.nativeElement;
+    let doc = new jsPDF('p','mm', this.bingoCardFormGroup.get('paperSize').value);
+
+    let handleElement = {
+      '#editor':function(element,renderer){
+        return true;
+      }
+    };
+    doc.fromHTML(data.innerHTML,15,15,{
+      'width': 200,
+      'elementHandlers': handleElement
+    });
+
+    doc.save('bingocards');
   }
 
   private setCenterTileFreeSpace() {
