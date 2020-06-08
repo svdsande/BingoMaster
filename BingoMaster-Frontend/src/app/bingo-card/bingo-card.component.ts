@@ -79,20 +79,29 @@ export class BingoCardComponent implements OnInit {
   }
 
   public downloadPDF(): void {
-    const data = this.bingocardsData.nativeElement;
-    let doc = new jsPDF('p','mm', this.bingoCardFormGroup.get('paperSize').value);
+    let document = new jsPDF('p','mm', this.bingoCardFormGroup.get('paperSize').value);
 
     let handleElement = {
       '#editor':function(element,renderer){
         return true;
       }
     };
-    doc.fromHTML(data.innerHTML,15,15,{
-      'width': 200,
-      'elementHandlers': handleElement
-    });
 
-    doc.save('bingocards');
+    this.addBingoCardsToPDF(document, handleElement);
+
+    document.save('bingocards');
+  }
+
+  private addBingoCardsToPDF(document: jsPDF, handleElement): void {
+    this.bingoCards.forEach(bingoCard => {
+      document.text(20, 20, bingoCard.name);
+      document.fromHTML(bingoCard.grid,15,15,{
+        'width': 200,
+        'elementHandlers': handleElement
+      });
+
+      document.addPage();
+    });
   }
 
   private setCenterTileFreeSpace() {

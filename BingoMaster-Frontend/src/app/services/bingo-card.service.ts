@@ -11,5 +11,6 @@ export class BingoCardService {
 
   generateBingoCards(model: BingoCardCreationModel) {
     return this.bingoCardClient.generateBingoCards(model);
+    console.log("sdfsfsdf");
   }
 }
