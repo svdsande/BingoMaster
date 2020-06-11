@@ -5,6 +5,7 @@ import { MatCheckboxChange } from '@angular/material/checkbox';
 import { BingoCardCreationModel, BingoCardModel } from 'src/api/api';
 import { BingoCardService } from '../services/bingo-card.service';
 import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 export interface Tile {
   cols: number;
@@ -38,6 +39,7 @@ export class BingoCardComponent implements OnInit {
 
   ngOnInit(): void {
     this.gridTiles = this.generateTiles(3);
+    this.generateBingoCards();
   }
 
   public selectChange(event: MatSelectChange): void {
@@ -51,10 +53,12 @@ export class BingoCardComponent implements OnInit {
 
   public generateBingoCards(): void {
     const bingoCardModel: BingoCardCreationModel = new BingoCardCreationModel();
-    bingoCardModel.name = this.bingoCardFormGroup.get('name').value;
+    // bingoCardModel.name = this.bingoCardFormGroup.get('name').value;
+    bingoCardModel.name = 'Foo';
     bingoCardModel.size = this.bingoCardFormGroup.get('size').value;
     bingoCardModel.isCenterSquareFree = this.bingoCardFormGroup.get('centerSquareFree').value;
-    bingoCardModel.amount = this.bingoCardFormGroup.get('amount').value;
+    // bingoCardModel.amount = this.bingoCardFormGroup.get('amount').value;
+    bingoCardModel.amount = 5;
 
     this.bingoCardService.generateBingoCards(bingoCardModel).subscribe((result) => {
       this.bingoCards = result;
@@ -79,28 +83,28 @@ export class BingoCardComponent implements OnInit {
   }
 
   public downloadPDF(): void {
-    let document = new jsPDF('p','mm', this.bingoCardFormGroup.get('paperSize').value);
+    window.scrollTo(0,0);
+    let doc = new jsPDF('p', 'mm', this.bingoCardFormGroup.get('paperSize').value);
+    const element = document.getElementById('bingocard-container');
 
-    let handleElement = {
-      '#editor':function(element,renderer){
-        return true;
+    html2canvas(element).then(function (canvas) {
+      let image = canvas.toDataURL('image/png');
+      const imageWidth = 210; 
+      const pageHeight = 295;  
+      let imgHeight = canvas.height * imageWidth / canvas.width;
+      let heightLeft = imgHeight;
+      let position = 0;
+
+      doc.addImage(image, 'PNG', 0, position, imageWidth, imgHeight);
+      heightLeft -= pageHeight;
+
+      while (heightLeft >= 0) {
+        position = heightLeft - imgHeight;
+        doc.addPage();
+        doc.addImage(image, 'PNG', 0, position, imageWidth, imgHeight);
+        heightLeft -= pageHeight;
       }
-    };
-
-    this.addBingoCardsToPDF(document, handleElement);
-
-    document.save('bingocards');
-  }
-
-  private addBingoCardsToPDF(document: jsPDF, handleElement): void {
-    this.bingoCards.forEach(bingoCard => {
-      document.text(20, 20, bingoCard.name);
-      document.fromHTML(bingoCard.grid,15,15,{
-        'width': 200,
-        'elementHandlers': handleElement
-      });
-
-      document.addPage();
+      doc.save( 'bingo-cards.pdf');
     });
   }
 
@@ -121,7 +125,7 @@ export class BingoCardComponent implements OnInit {
 
   private generateTiles(columns: number): Tile[] {
     return Array.from(new Array(columns * columns), (_value, _index: number) => {
-      return { cols: 1, rows: 1, text: '' } as Tile
+      return { cols: 1, rows: 1, text: '' } as Tile;
     });
   }
 }
