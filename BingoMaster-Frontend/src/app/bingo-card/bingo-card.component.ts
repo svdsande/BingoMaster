@@ -86,26 +86,20 @@ export class BingoCardComponent implements OnInit {
     window.scrollTo(0,0);
     let doc = new jsPDF('p', 'mm', this.bingoCardFormGroup.get('paperSize').value);
     const element = document.getElementById('bingocard-container');
+    const bingocards = document.querySelectorAll('.bingocard');
 
-    html2canvas(element).then(function (canvas) {
-      let image = canvas.toDataURL('image/png');
-      const imageWidth = 210; 
-      const pageHeight = 295;  
-      let imgHeight = canvas.height * imageWidth / canvas.width;
-      let heightLeft = imgHeight;
-      let position = 0;
+    for (let i = 0; i < bingocards.length; i++) {
+      html2canvas(bingocards[i] as HTMLElement).then(function (canvas) {
+        let image = canvas.toDataURL('image/png');
+        doc.addImage(image, 'PNG', 3, 10, 200, 200);
 
-      doc.addImage(image, 'PNG', 0, position, imageWidth, imgHeight);
-      heightLeft -= pageHeight;
-
-      while (heightLeft >= 0) {
-        position = heightLeft - imgHeight;
-        doc.addPage();
-        doc.addImage(image, 'PNG', 0, position, imageWidth, imgHeight);
-        heightLeft -= pageHeight;
-      }
-      doc.save( 'bingo-cards.pdf');
-    });
+        if (i + 1 === bingocards.length) {
+          doc.save( 'bingo-cards.pdf');
+        } else {
+          doc.addPage();
+        }
+      });
+    }
   }
 
   private setCenterTileFreeSpace() {
