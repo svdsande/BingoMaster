@@ -1,10 +1,12 @@
 ﻿using BingoMaster_API;
 using BingoMaster_Models;
+using HtmlAgilityPack;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Web;
 
 namespace BingoMaster_Logic
 {
@@ -20,8 +22,17 @@ namespace BingoMaster_Logic
             return Enumerable.Range(1, bingoCardModel.Amount).Select(item => new BingoCardModel()
             {
                 Name = bingoCardModel.Name,
-                Grid = BuildHtmlBingoCardGrid(bingoCardModel)
+                Grid = GetHtmlBingoCardGrid(bingoCardModel)
             });
+        }
+
+        private string GetHtmlBingoCardGrid(BingoCardCreationModel bingoCardModel)
+        {
+            var document = new HtmlDocument();
+            var bingoCardHtml = BuildHtmlBingoCardGrid(bingoCardModel);
+            document.LoadHtml(bingoCardHtml);
+
+            return document.DocumentNode.OuterHtml;
         }
 
         private string BuildHtmlBingoCardGrid(BingoCardCreationModel bingoCardModel)
