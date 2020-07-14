@@ -44,7 +44,7 @@ namespace BingoMaster_Logic
 
             var stringBuilder = new StringBuilder();
 
-            stringBuilder.Append($@"<table style=""background-color:{bingoCardModel.BackgroundColor};"">");
+            stringBuilder.Append($@"<table style=""background-color:{bingoCardModel.BackgroundColor}"">");
 
             for (int i = 0; i < grid.GetLength(0); i++)
             {

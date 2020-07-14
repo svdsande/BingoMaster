@@ -17,14 +17,16 @@ namespace BingoMaster_Tests
         }
 
         [Fact]
-        public void GenerateBingoCards_OneCard_Succeeds()
+        public void GenerateBingoCards_OneCard_3x3_FreeCenter_Succeeds()
         {
             var input = new BingoCardCreationModel()
             {
                 Name = "Pearl Jam",
                 Amount = 1,
                 IsCenterSquareFree = true,
-                Size = 3
+                Size = 3,
+                BackgroundColor = "#ADD8E6",
+                BorderColor = "#FFFFFF"
             };
 
             var actual = _bingoCardLogic.GenerateBingoCards(input);
@@ -36,17 +38,21 @@ namespace BingoMaster_Tests
             Assert.Equal(3, document.DocumentNode.SelectNodes("//tr").Count);
             Assert.Equal(9, document.DocumentNode.SelectNodes("//tr/td").Count);
             Assert.Equal("X", document.DocumentNode.SelectNodes("//tr/td")[4].InnerText);
+            Assert.Equal("background-color:#ADD8E6", document.DocumentNode.SelectSingleNode("table").Attributes["style"].Value);
+            Assert.All(document.DocumentNode.SelectNodes("//tr/td"), node => Assert.Equal("border: 1px solid #FFFFFF", node.Attributes["style"].Value));
         }
 
         [Fact]
-        public void GenerateBingoCards_OneCard_FreeCenter_Succeeds()
+        public void GenerateBingoCards_OneCard_3x3_Succeeds()
         {
             var input = new BingoCardCreationModel()
             {
                 Name = "Pearl Jam",
                 Amount = 1,
                 IsCenterSquareFree = false,
-                Size = 3
+                Size = 3,
+                BackgroundColor = "#ADD8E6",
+                BorderColor = "#FFFFFF"
             };
 
             var actual = _bingoCardLogic.GenerateBingoCards(input);
@@ -57,6 +63,8 @@ namespace BingoMaster_Tests
             Assert.Equal(input.Name, actual.First().Name);
             Assert.Equal(3, document.DocumentNode.SelectNodes("//tr").Count);
             Assert.Equal(9, document.DocumentNode.SelectNodes("//tr/td").Count);
+            Assert.Equal("background-color:#ADD8E6", document.DocumentNode.SelectSingleNode("table").Attributes["style"].Value);
+            Assert.All(document.DocumentNode.SelectNodes("//tr/td"), node => Assert.Equal("border: 1px solid #FFFFFF", node.Attributes["style"].Value));
         }
 
         [Fact]
