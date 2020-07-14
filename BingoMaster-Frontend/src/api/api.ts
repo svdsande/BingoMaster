@@ -133,6 +133,8 @@ export class BingoCardCreationModel implements IBingoCardCreationModel {
     name?: string | undefined;
     size!: number;
     isCenterSquareFree!: boolean;
+    backgroundColor?: string | undefined;
+    borderColor?: string | undefined;
     amount!: number;
 
     constructor(data?: IBingoCardCreationModel) {
@@ -149,6 +151,8 @@ export class BingoCardCreationModel implements IBingoCardCreationModel {
             this.name = _data["name"];
             this.size = _data["size"];
             this.isCenterSquareFree = _data["isCenterSquareFree"];
+            this.backgroundColor = _data["backgroundColor"];
+            this.borderColor = _data["borderColor"];
             this.amount = _data["amount"];
         }
     }
@@ -165,6 +169,8 @@ export class BingoCardCreationModel implements IBingoCardCreationModel {
         data["name"] = this.name;
         data["size"] = this.size;
         data["isCenterSquareFree"] = this.isCenterSquareFree;
+        data["backgroundColor"] = this.backgroundColor;
+        data["borderColor"] = this.borderColor;
         data["amount"] = this.amount;
         return data; 
     }
@@ -174,6 +180,8 @@ export interface IBingoCardCreationModel {
     name?: string | undefined;
     size: number;
     isCenterSquareFree: boolean;
+    backgroundColor?: string | undefined;
+    borderColor?: string | undefined;
     amount: number;
 }
 

@@ -64,7 +64,7 @@
         <button mat-raised-button color="primary" type="button" (click)="this.downloadPDF()">Download PDF</button>
         <div id="bingocard-container" #bingocardsData>
             <div class="bingocard" *ngFor="let bingoCard of this.bingoCards">
-                <div [ngStyle]="{'background-color': this.backgroundColor}" class="grid" [innerHTML]="bingoCard.grid"></div>
+                <div class="grid" [innerHTML]="bingoCard.grid | safeHtml"></div>
             </div>
         </div>
     </div>

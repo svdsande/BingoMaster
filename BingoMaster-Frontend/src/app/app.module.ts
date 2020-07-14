@@ -18,13 +18,15 @@ import { BingoCardComponent } from './bingo-card/bingo-card.component';
 import { FooterComponent } from './footer/footer.component';
 import { HeaderComponent } from './header/header.component';
 import { BingoCardService } from './services/bingo-card.service';
+import { SafeHtmlPipe } from './pipes/safeHtml/safe-html.pipe';
 
 @NgModule({
   declarations: [
     AppComponent,
     FooterComponent,
     HeaderComponent,
-    BingoCardComponent
+    BingoCardComponent,
+    SafeHtmlPipe
   ],
   imports: [
     BrowserModule,

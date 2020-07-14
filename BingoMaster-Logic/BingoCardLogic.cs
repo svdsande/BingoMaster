@@ -1,12 +1,10 @@
 ﻿using BingoMaster_API;
 using BingoMaster_Models;
 using HtmlAgilityPack;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Web;
 
 namespace BingoMaster_Logic
 {
@@ -39,9 +37,14 @@ namespace BingoMaster_Logic
         {
             var grid = GenerateCardGrid(bingoCardModel.Size);
 
+            if (bingoCardModel.IsCenterSquareFree)
+            {
+                SetCenterSquareFree(grid);
+            }
+
             var stringBuilder = new StringBuilder();
 
-            stringBuilder.Append("<table>");
+            stringBuilder.Append($@"<table style=""background-color:{bingoCardModel.BackgroundColor};"">");
 
             for (int i = 0; i < grid.GetLength(0); i++)
             {
@@ -49,7 +52,14 @@ namespace BingoMaster_Logic
 
                 for (int j = 0; j < grid.GetLength(1); j++)
                 {
-                    stringBuilder.Append($"<td>{grid[i, j]}</td>");
+                    if (grid[i, j] != null)
+                    {
+                        stringBuilder.Append($@"<td style=""border: 1px solid {bingoCardModel.BorderColor}"">{grid[i, j]}</td>");
+                    }
+                     else
+                    {
+                        stringBuilder.Append($@"<td style=""border: 1px solid {bingoCardModel.BorderColor}"">X</td>");
+                    }
                 }
 
                 stringBuilder.Append("</tr>");
@@ -60,9 +70,17 @@ namespace BingoMaster_Logic
             return stringBuilder.ToString();
         }
 
-        private int[,] GenerateCardGrid(int size)
+        private void SetCenterSquareFree(int?[,] grid)
         {
-            var grid = new int[size, size];
+            var lengthFirstDimension = grid.GetLength(0);
+            var lengthSecondDimension = grid.GetLength(1);
+
+            grid[lengthFirstDimension / 2, lengthSecondDimension / 2] = null;
+        }
+
+        private int?[,] GenerateCardGrid(int size)
+        {
+            var grid = new int?[size, size];
             var random = new Random();
 
             for (int i = 0; i < size; i++)

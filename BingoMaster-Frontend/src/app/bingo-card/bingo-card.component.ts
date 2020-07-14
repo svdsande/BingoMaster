@@ -1,11 +1,12 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { MatSelectChange } from '@angular/material/select';
+import { Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatCheckboxChange } from '@angular/material/checkbox';
+import { MatSelectChange } from '@angular/material/select';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
+import { take } from 'rxjs/operators';
 import { BingoCardCreationModel, BingoCardModel } from 'src/api/api';
 import { BingoCardService } from '../services/bingo-card.service';
-import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
 
 export interface Tile {
   cols: number;
@@ -21,7 +22,6 @@ export interface Tile {
 })
 export class BingoCardComponent implements OnInit {
 
-  @ViewChild('bingocardsData') bingocardsData: ElementRef<HTMLElement>;
   public bingoCards: BingoCardModel[];
   public gridTiles: Tile[];
   public gridColumns: number = 3;
@@ -39,7 +39,6 @@ export class BingoCardComponent implements OnInit {
 
   ngOnInit(): void {
     this.gridTiles = this.generateTiles(3);
-    this.generateBingoCards();
   }
 
   public selectChange(event: MatSelectChange): void {
@@ -53,16 +52,18 @@ export class BingoCardComponent implements OnInit {
 
   public generateBingoCards(): void {
     const bingoCardModel: BingoCardCreationModel = new BingoCardCreationModel();
-    // bingoCardModel.name = this.bingoCardFormGroup.get('name').value;
-    bingoCardModel.name = 'Foo';
+    bingoCardModel.name = this.bingoCardFormGroup.get('name').value;
     bingoCardModel.size = this.bingoCardFormGroup.get('size').value;
     bingoCardModel.isCenterSquareFree = this.bingoCardFormGroup.get('centerSquareFree').value;
-    // bingoCardModel.amount = this.bingoCardFormGroup.get('amount').value;
-    bingoCardModel.amount = 5;
+    bingoCardModel.amount = this.bingoCardFormGroup.get('amount').value;
+    bingoCardModel.backgroundColor = this.backgroundColor;
+    bingoCardModel.borderColor = this.borderColor;
 
-    this.bingoCardService.generateBingoCards(bingoCardModel).subscribe((result) => {
-      this.bingoCards = result;
-    });
+    this.bingoCardService.generateBingoCards(bingoCardModel)
+      .pipe(take(1))
+      .subscribe((result) => {
+        this.bingoCards = result;
+      });
   }
 
   public centerSquareChange(_changeEvent: MatCheckboxChange): void {
@@ -85,7 +86,6 @@ export class BingoCardComponent implements OnInit {
   public downloadPDF(): void {
     window.scrollTo(0,0);
     let doc = new jsPDF('p', 'mm', this.bingoCardFormGroup.get('paperSize').value);
-    const element = document.getElementById('bingocard-container');
     const bingocards = document.querySelectorAll('.bingocard');
 
     for (let i = 0; i < bingocards.length; i++) {
@@ -94,7 +94,7 @@ export class BingoCardComponent implements OnInit {
         doc.addImage(image, 'PNG', 3, 10, 200, 200);
 
         if (i + 1 === bingocards.length) {
-          doc.save( 'bingo-cards.pdf');
+          doc.save('bingo-cards.pdf');
         } else {
           doc.addPage();
         }
