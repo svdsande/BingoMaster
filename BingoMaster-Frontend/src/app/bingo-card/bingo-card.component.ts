@@ -5,6 +5,7 @@ import { MatSelectChange } from '@angular/material/select';
 import { take } from 'rxjs/operators';
 import { BingoCardCreationModel, BingoCardModel } from 'src/api/api';
 import { BingoCardService } from '../services/bingo-card.service';
+import { trigger, transition, style, animate } from '@angular/animations';
 
 export interface Tile {
   cols: number;
@@ -16,11 +17,31 @@ export interface Tile {
 @Component({
   selector: 'bingo-card',
   templateUrl: './bingo-card.component.html',
-  styleUrls: ['./bingo-card.component.scss']
+  styleUrls: ['./bingo-card.component.scss'],
+  animations: [
+    trigger('createBingoCards', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'translateY(-100px)' }),
+        animate('300ms ease-out', style({ opacity: 1, transform: 'none' }))
+      ]),
+      transition(':leave', [
+        animate('300ms', style({ opacity: 0 }))
+      ])
+    ]),
+    trigger('generateBingoCards', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'translateY(-100px)', }),
+        animate('300ms 1000ms ease-out', style({ opacity: 1, transform: 'none' }))
+      ]),
+      transition(':leave', [
+        animate('0.3s', style({ opacity: 0 }))
+      ])
+    ]),
+  ]
 })
 export class BingoCardComponent implements OnInit {
 
-  public bingoCards: BingoCardModel[];
+  public bingoCards: BingoCardModel[] = [];
   public gridTiles: Tile[];
   public gridColumns: number = 3;
   public backgroundColor: string = '#add8e6';
