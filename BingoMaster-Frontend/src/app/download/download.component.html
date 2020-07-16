@@ -1,0 +1,21 @@
+<form [formGroup]="this.downloadFormGroup" (ngSubmit)="this.downloadPDF()" id="download-form">
+    <div class="form-field-row">
+        <mat-form-field class="form-field">
+            <mat-label>Paper size</mat-label>
+            <mat-select name="size" formControlName="paperSize">
+                <mat-option [value]="'A3'">A3</mat-option>
+                <mat-option [value]="'A4'">A4</mat-option>
+                <mat-option [value]="'A5'">A5</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <div class="form-field-row">
+        <button mat-raised-button color="primary" type="submit" [disabled]="!this.downloadFormGroup.valid">Download
+            PDF</button>
+    </div>
+</form>
+<div id="bingocard-container">
+    <div class="bingocard" *ngFor="let bingoCard of this.bingoCards">
+        <div class="grid" [innerHTML]="bingoCard.grid | safeHtml"></div>
+    </div>
+</div>
