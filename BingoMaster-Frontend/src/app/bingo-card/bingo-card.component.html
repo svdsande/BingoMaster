@@ -12,6 +12,8 @@
                     <mat-option [value]="3">3x3</mat-option>
                     <mat-option [value]="4">4x4</mat-option>
                     <mat-option [value]="5">5x5</mat-option>
+                    <mat-option [value]="6">6x6</mat-option>
+                    <mat-option [value]="7">7x7</mat-option>
                 </mat-select>
             </mat-form-field>
         </div>
@@ -52,8 +54,8 @@
         </div>
     </form>
 
-    <div *ngIf="this.bingoCards.length > 0" @generateBingoCards>
-        <app-download [bingoCards]="this.bingoCards"></app-download>        
-    </div>
+</div>
 
+<div *ngIf="this.bingoCards.length > 0" @generateBingoCards>
+    <app-download [bingoCards]="this.bingoCards"></app-download>        
 </div>

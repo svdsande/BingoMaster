@@ -109,7 +109,11 @@ export class BingoCardComponent implements OnInit {
   }
 
   private getCenterTileIndex(): number {
-    return Math.floor(this.gridTiles.length / 2);
+    if (this.gridTiles.length % 2 === 0) {
+      return (this.gridTiles.length / 2) - 1;
+    } else {
+      return Math.floor(this.gridTiles.length / 2);
+    }
   }
 
   private generateTiles(columns: number): Tile[] {
