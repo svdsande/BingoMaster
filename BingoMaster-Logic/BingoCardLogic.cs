@@ -56,7 +56,7 @@ namespace BingoMaster_Logic
                     {
                         stringBuilder.Append($@"<td style=""border: 1px solid {bingoCardModel.BorderColor}"">{grid[i, j]}</td>");
                     }
-                     else
+                    else
                     {
                         stringBuilder.Append($@"<td style=""border: 1px solid {bingoCardModel.BorderColor}"">X</td>");
                     }
@@ -72,10 +72,17 @@ namespace BingoMaster_Logic
 
         private void SetCenterSquareFree(int?[,] grid)
         {
-            var lengthFirstDimension = grid.GetLength(0);
-            var lengthSecondDimension = grid.GetLength(1);
+            var length = grid.GetLength(0);
+            var amountOfCells = length * length;
 
-            grid[lengthFirstDimension / 2, lengthSecondDimension / 2] = null;
+            if (amountOfCells % 2 == 0)
+            {
+                grid[(length / 2) - 1, length - 1] = null;
+            }
+            else
+            {
+                grid[length / 2, length / 2] = null;
+            }
         }
 
         private int?[,] GenerateCardGrid(int size)
