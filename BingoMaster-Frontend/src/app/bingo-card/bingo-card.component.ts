@@ -76,6 +76,7 @@ export class BingoCardComponent implements OnInit {
     this.bingoCardService.generateBingoCards(bingoCardModel)
       .pipe(take(1))
       .subscribe((result) => {
+        window.scrollTo(0,0);
         this.bingoCards = result;
       });
   }
