@@ -47,6 +47,7 @@ export class BingoCardComponent implements OnInit {
   public backgroundColor: string = '#add8e6';
   public borderColor: string = '#ffffff';
   public bingoCardFormGroup: FormGroup;
+  public loading: boolean = false;
 
   constructor(private bingoCardService: BingoCardService) { }
 
@@ -65,6 +66,8 @@ export class BingoCardComponent implements OnInit {
   }
 
   public generateBingoCards(): void {
+    this.loading = true;
+
     const bingoCardModel: BingoCardCreationModel = new BingoCardCreationModel();
     bingoCardModel.name = this.bingoCardFormGroup.get('name').value;
     bingoCardModel.size = this.bingoCardFormGroup.get('size').value;
@@ -77,6 +80,7 @@ export class BingoCardComponent implements OnInit {
       .pipe(take(1))
       .subscribe((result) => {
         window.scrollTo(0,0);
+        this.loading = false;
         this.bingoCards = result;
       });
   }

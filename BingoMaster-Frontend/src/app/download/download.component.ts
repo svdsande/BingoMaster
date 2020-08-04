@@ -14,6 +14,7 @@ export class DownloadComponent implements OnInit {
   @Input() bingoCards: BingoCardModel[];
   @Output() bingoCardsChange: EventEmitter<BingoCardModel[]> = new EventEmitter<BingoCardModel[]>()
   public downloadFormGroup: FormGroup;
+  public loading: boolean = false;
 
   constructor() { }
 
@@ -22,7 +23,16 @@ export class DownloadComponent implements OnInit {
   }
 
   public downloadPDF(): void {
+    this.loading = true;
     window.scrollTo(0,0);
+    this.buildPDF();
+  }
+
+  public navigateBack(): void {
+    this.bingoCardsChange.emit([]);
+  }
+
+  private buildPDF(): void {
     let doc = new jsPDF('p', 'mm', this.downloadFormGroup.get('paperSize').value);
     const bingocards = document.querySelectorAll('.bingocard');
 
@@ -33,15 +43,12 @@ export class DownloadComponent implements OnInit {
 
         if (i + 1 === bingocards.length) {
           doc.save('bingo-cards.pdf');
+          this.loading = false;
         } else {
           doc.addPage();
         }
-      });
+      }.bind(this));
     }
-  }
-
-  public navigateBack(): void {
-    this.bingoCardsChange.emit([]);
   }
 
   private buildForm(): void {
