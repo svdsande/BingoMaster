@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { BingoCardModel } from 'src/api/api';
@@ -12,6 +12,7 @@ import { FormGroup, FormControl } from '@angular/forms';
 export class DownloadComponent implements OnInit {
 
   @Input() bingoCards: BingoCardModel[];
+  @Output() bingoCardsChange: EventEmitter<BingoCardModel[]> = new EventEmitter<BingoCardModel[]>()
   public downloadFormGroup: FormGroup;
 
   constructor() { }
@@ -37,6 +38,10 @@ export class DownloadComponent implements OnInit {
         }
       });
     }
+  }
+
+  public navigateBack(): void {
+    this.bingoCardsChange.emit([]);
   }
 
   private buildForm(): void {

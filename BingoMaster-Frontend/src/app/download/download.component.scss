@@ -34,11 +34,19 @@
     }
 }
 
+
 #bingocard-container {
     display: flex;
     flex-direction: column;
     flex: 1;
     min-width: 650px;
+    
+    .divider {
+        padding: 15px 0px;
+        margin-bottom: 50px;
+        height: 15px;
+        box-shadow: 0 1em 1em -1em rgba(0, 0, 0, .25);
+    }
 
     .bingocard ::ng-deep {
         display: flex;
