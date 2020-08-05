@@ -23,6 +23,7 @@ import { BingoCardService } from './services/bingo-card.service';
 import { SafeHtmlPipe } from './pipes/safeHtml/safe-html.pipe';
 import { DownloadComponent } from './download/download.component';
 import { AppRoutingModule } from './app-routing/app-routing.module';
+import { HomeComponent } from './home/home.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import { AppRoutingModule } from './app-routing/app-routing.module';
     HeaderComponent,
     BingoCardComponent,
     DownloadComponent,
-    SafeHtmlPipe
+    SafeHtmlPipe,
+    HomeComponent
   ],
   imports: [
     BrowserModule,
