@@ -22,6 +22,7 @@ import { HeaderComponent } from './header/header.component';
 import { BingoCardService } from './services/bingo-card.service';
 import { SafeHtmlPipe } from './pipes/safeHtml/safe-html.pipe';
 import { DownloadComponent } from './download/download.component';
+import { AppRoutingModule } from './app-routing/app-routing.module';
 
 @NgModule({
   declarations: [
@@ -34,6 +35,7 @@ import { DownloadComponent } from './download/download.component';
   ],
   imports: [
     BrowserModule,
+    AppRoutingModule,
     BrowserAnimationsModule,
     HttpClientModule,
     ReactiveFormsModule,
