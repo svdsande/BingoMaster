@@ -92,6 +92,7 @@ export class BingoCardClient {
 export class BingoCardModel implements IBingoCardModel {
     name?: string | undefined;
     grid?: string | undefined;
+    gridArray?: number[][] | undefined;
 
     constructor(data?: IBingoCardModel) {
         if (data) {
@@ -106,6 +107,11 @@ export class BingoCardModel implements IBingoCardModel {
         if (_data) {
             this.name = _data["name"];
             this.grid = _data["grid"];
+            if (Array.isArray(_data["gridArray"])) {
+                this.gridArray = [] as any;
+                for (let item of _data["gridArray"])
+                    this.gridArray!.push(item);
+            }
         }
     }
 
@@ -120,6 +126,11 @@ export class BingoCardModel implements IBingoCardModel {
         data = typeof data === 'object' ? data : {};
         data["name"] = this.name;
         data["grid"] = this.grid;
+        if (Array.isArray(this.gridArray)) {
+            data["gridArray"] = [];
+            for (let item of this.gridArray)
+                data["gridArray"].push(item);
+        }
         return data; 
     }
 }
@@ -127,6 +138,7 @@ export class BingoCardModel implements IBingoCardModel {
 export interface IBingoCardModel {
     name?: string | undefined;
     grid?: string | undefined;
+    gridArray?: number[][] | undefined;
 }
 
 export class BingoCardCreationModel implements IBingoCardCreationModel {

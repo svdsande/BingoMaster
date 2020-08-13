@@ -20,20 +20,11 @@ namespace BingoMaster_Logic
             return Enumerable.Range(1, bingoCardModel.Amount).Select(item => new BingoCardModel()
             {
                 Name = bingoCardModel.Name,
-                Grid = GetHtmlBingoCardGrid(bingoCardModel)
+                Grid = BuildBingoCardGrid(bingoCardModel)
             });
         }
 
-        private string GetHtmlBingoCardGrid(BingoCardCreationModel bingoCardModel)
-        {
-            var document = new HtmlDocument();
-            var bingoCardHtml = BuildHtmlBingoCardGrid(bingoCardModel);
-            document.LoadHtml(bingoCardHtml);
-
-            return document.DocumentNode.OuterHtml;
-        }
-
-        private string BuildHtmlBingoCardGrid(BingoCardCreationModel bingoCardModel)
+        private int?[][] BuildBingoCardGrid(BingoCardCreationModel bingoCardModel)
         {
             var grid = GenerateCardGrid(bingoCardModel.Size);
 
@@ -42,59 +33,31 @@ namespace BingoMaster_Logic
                 SetCenterSquareFree(grid);
             }
 
-            var stringBuilder = new StringBuilder();
-
-            stringBuilder.Append($@"<table style=""background-color:{bingoCardModel.BackgroundColor}"">");
-
-            for (int i = 0; i < grid.GetLength(0); i++)
-            {
-                stringBuilder.Append("<tr>");
-
-                for (int j = 0; j < grid.GetLength(1); j++)
-                {
-                    if (grid[i, j] != null)
-                    {
-                        stringBuilder.Append($@"<td style=""border: 1px solid {bingoCardModel.BorderColor}"">{grid[i, j]}</td>");
-                    }
-                    else
-                    {
-                        stringBuilder.Append($@"<td style=""border: 1px solid {bingoCardModel.BorderColor}"">X</td>");
-                    }
-                }
-
-                stringBuilder.Append("</tr>");
-            }
-
-            stringBuilder.Append("</table>");
-
-            return stringBuilder.ToString();
+            return grid;
         }
 
-        private void SetCenterSquareFree(int?[,] grid)
+        private void SetCenterSquareFree(int?[][] grid)
         {
-            var length = grid.GetLength(0);
-            var amountOfCells = length * length;
+            var height = grid.Length;
+            var width = grid[0].Length;
+            var amountOfCells = height * width;
+            var centerCellIndex = (int)Math.Floor(amountOfCells / 2.0);
 
-            if (amountOfCells % 2 == 0)
-            {
-                grid[(length / 2) - 1, length - 1] = null;
-            }
-            else
-            {
-                grid[length / 2, length / 2] = null;
-            }
+
+            grid[centerCellIndex / height][centerCellIndex % width] = null;
         }
 
-        private int?[,] GenerateCardGrid(int size)
+        private int?[][] GenerateCardGrid(int size)
         {
-            var grid = new int?[size, size];
+            var grid = new int?[size][];
             var random = new Random();
 
             for (int i = 0; i < size; i++)
             {
+                grid[i] = new int?[size];
                 for (int j = 0; j < size; j++)
                 {
-                    grid[i, j] = random.Next(1, 91);
+                    grid[i][j] = random.Next(1, 91);
                 }
             }
 

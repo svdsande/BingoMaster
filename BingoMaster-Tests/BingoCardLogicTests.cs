@@ -17,13 +17,13 @@ namespace BingoMaster_Tests
         }
 
         [Theory]
-        [InlineData(3, 1)]
-        [InlineData(3, 2)]
-        [InlineData(4, 1)]
-        [InlineData(4, 2)]
-        [InlineData(5, 1)]
-        [InlineData(5, 2)]
-        public void GenerateBingoCards_FreeCenter_Succeeds(int size, int amount)
+        [InlineData(3, 1, 9, 5)]
+        [InlineData(3, 2, 9, 5)]
+        [InlineData(4, 1, 16, 9)]
+        [InlineData(4, 2, 16, 9)]
+        [InlineData(5, 1, 25, 12)]
+        [InlineData(5, 2, 25, 12)]
+        public void GenerateBingoCards_FreeCenter_Succeeds(int size, int amount, int amountOfCells, int centerIndex)
         {
             var input = new BingoCardCreationModel()
             {
@@ -31,49 +31,15 @@ namespace BingoMaster_Tests
                 Amount = amount,
                 IsCenterSquareFree = true,
                 Size = size,
-                BackgroundColor = "#ADD8E6",
-                BorderColor = "#FFFFFF"
             };
 
             var actual = _bingoCardLogic.GenerateBingoCards(input);
-            var document = new HtmlDocument();
-            document.LoadHtml(actual.First().Grid);
-
-            var amountOfCells = size * size;
-            var centerSquareIndex = (int)Math.Ceiling((double)amountOfCells / 2 - 1);
 
             Assert.Equal(amount, actual.Count());
             Assert.Equal(input.Name, actual.First().Name);
-            Assert.Equal(size, document.DocumentNode.SelectNodes("//tr").Count);
-            Assert.Equal(amountOfCells, document.DocumentNode.SelectNodes("//tr/td").Count);
-            Assert.Equal("X", document.DocumentNode.SelectNodes("//tr/td")[centerSquareIndex].InnerText);
-            Assert.Equal("background-color:#ADD8E6", document.DocumentNode.SelectSingleNode("table").Attributes["style"].Value);
-            Assert.All(document.DocumentNode.SelectNodes("//tr/td"), node => Assert.Equal("border: 1px solid #FFFFFF", node.Attributes["style"].Value));
-        }
-
-        [Fact]
-        public void GenerateBingoCards_OneCard_3x3_Succeeds()
-        {
-            var input = new BingoCardCreationModel()
-            {
-                Name = "Pearl Jam",
-                Amount = 1,
-                IsCenterSquareFree = false,
-                Size = 3,
-                BackgroundColor = "#ADD8E6",
-                BorderColor = "#FFFFFF"
-            };
-
-            var actual = _bingoCardLogic.GenerateBingoCards(input);
-            var document = new HtmlDocument();
-            document.LoadHtml(actual.First().Grid);
-
-            Assert.Single(actual);
-            Assert.Equal(input.Name, actual.First().Name);
-            Assert.Equal(3, document.DocumentNode.SelectNodes("//tr").Count);
-            Assert.Equal(9, document.DocumentNode.SelectNodes("//tr/td").Count);
-            Assert.Equal("background-color:#ADD8E6", document.DocumentNode.SelectSingleNode("table").Attributes["style"].Value);
-            Assert.All(document.DocumentNode.SelectNodes("//tr/td"), node => Assert.Equal("border: 1px solid #FFFFFF", node.Attributes["style"].Value));
+            Assert.Equal(size, actual.First().Grid.Length);
+            Assert.Equal(amountOfCells, GetNumberOfCells(actual.First().Grid));
+            Assert.Equal(centerIndex, GetCenterFreeIndex(actual.First().Grid));
         }
 
         [Fact]
@@ -108,6 +74,26 @@ namespace BingoMaster_Tests
             };
 
             Assert.Throws<ArgumentException>(() => _bingoCardLogic.GenerateBingoCards(input));
+        }
+
+        private int GetNumberOfCells(int?[][] grid)
+        {
+            var count = 0;
+
+            for (int i = 0; i < grid.Length; i++)
+            {
+                count += grid[i].Length;
+            }
+
+            return count;
+        }
+
+        private int GetCenterFreeIndex(int?[][] grid)
+        {
+            return grid.Select((value, index) => new { value, index })
+                .Where(pair => pair.value == null)
+                .Select(pair => pair.index)
+                .SingleOrDefault();
         }
     }
 }
