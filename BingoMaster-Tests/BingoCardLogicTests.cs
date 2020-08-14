@@ -17,10 +17,10 @@ namespace BingoMaster_Tests
         }
 
         [Theory]
-        [InlineData(3, 1, 9, 5)]
-        [InlineData(3, 2, 9, 5)]
-        [InlineData(4, 1, 16, 9)]
-        [InlineData(4, 2, 16, 9)]
+        [InlineData(3, 1, 9, 4)]
+        [InlineData(3, 2, 9, 4)]
+        [InlineData(4, 1, 16, 8)]
+        [InlineData(4, 2, 16, 8)]
         [InlineData(5, 1, 25, 12)]
         [InlineData(5, 2, 25, 12)]
         public void GenerateBingoCards_FreeCenter_Succeeds(int size, int amount, int amountOfCells, int centerIndex)
@@ -90,7 +90,9 @@ namespace BingoMaster_Tests
 
         private int GetCenterFreeIndex(int?[][] grid)
         {
-            return grid.Select((value, index) => new { value, index })
+            var flatGrid = grid.SelectMany(item => item);
+
+            return flatGrid.Select((value, index) => new { value, index })
                 .Where(pair => pair.value == null)
                 .Select(pair => pair.index)
                 .SingleOrDefault();
