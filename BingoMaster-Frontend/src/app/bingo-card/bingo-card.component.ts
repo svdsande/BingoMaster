@@ -73,8 +73,6 @@ export class BingoCardComponent implements OnInit {
     bingoCardModel.size = this.bingoCardFormGroup.get('size').value;
     bingoCardModel.isCenterSquareFree = this.bingoCardFormGroup.get('centerSquareFree').value;
     bingoCardModel.amount = this.bingoCardFormGroup.get('amount').value;
-    bingoCardModel.backgroundColor = this.backgroundColor;
-    bingoCardModel.borderColor = this.borderColor;
 
     this.bingoCardService.generateBingoCards(bingoCardModel)
       .pipe(take(1))

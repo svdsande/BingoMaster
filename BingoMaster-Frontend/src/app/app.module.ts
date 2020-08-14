@@ -23,7 +23,6 @@ import { DownloadComponent } from './download/download.component';
 import { FooterComponent } from './footer/footer.component';
 import { HeaderComponent } from './header/header.component';
 import { HomeComponent } from './home/home.component';
-import { SafeHtmlPipe } from './pipes/safeHtml/safe-html.pipe';
 import { BingoCardService } from './services/bingo-card.service';
 
 @NgModule({
@@ -33,7 +32,6 @@ import { BingoCardService } from './services/bingo-card.service';
     HeaderComponent,
     BingoCardComponent,
     DownloadComponent,
-    SafeHtmlPipe,
     HomeComponent
   ],
   imports: [
