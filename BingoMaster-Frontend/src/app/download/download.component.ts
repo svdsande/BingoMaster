@@ -12,6 +12,8 @@ import { FormGroup, FormControl } from '@angular/forms';
 export class DownloadComponent implements OnInit {
 
   @Input() bingoCards: BingoCardModel[];
+  @Input() backgroundColor: string;
+  @Input() borderColor: string;
   @Output() bingoCardsChange: EventEmitter<BingoCardModel[]> = new EventEmitter<BingoCardModel[]>()
   public downloadFormGroup: FormGroup;
   public loading: boolean = false;

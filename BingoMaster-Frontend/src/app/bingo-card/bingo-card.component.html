@@ -63,5 +63,5 @@
 </div>
 
 <div *ngIf="this.bingoCards.length > 0" @generateBingoCards>
-    <app-download [(bingoCards)]="this.bingoCards"></app-download>        
+    <app-download [borderColor]="this.borderColor" [backgroundColor]="this.backgroundColor" [(bingoCards)]="this.bingoCards"></app-download>
 </div>

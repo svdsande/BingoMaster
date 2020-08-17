@@ -91,8 +91,7 @@ export class BingoCardClient {
 
 export class BingoCardModel implements IBingoCardModel {
     name?: string | undefined;
-    grid?: string | undefined;
-    gridArray?: number[][] | undefined;
+    grid?: number[][] | undefined;
 
     constructor(data?: IBingoCardModel) {
         if (data) {
@@ -106,11 +105,10 @@ export class BingoCardModel implements IBingoCardModel {
     init(_data?: any) {
         if (_data) {
             this.name = _data["name"];
-            this.grid = _data["grid"];
-            if (Array.isArray(_data["gridArray"])) {
-                this.gridArray = [] as any;
-                for (let item of _data["gridArray"])
-                    this.gridArray!.push(item);
+            if (Array.isArray(_data["grid"])) {
+                this.grid = [] as any;
+                for (let item of _data["grid"])
+                    this.grid!.push(item);
             }
         }
     }
@@ -125,11 +123,10 @@ export class BingoCardModel implements IBingoCardModel {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["name"] = this.name;
-        data["grid"] = this.grid;
-        if (Array.isArray(this.gridArray)) {
-            data["gridArray"] = [];
-            for (let item of this.gridArray)
-                data["gridArray"].push(item);
+        if (Array.isArray(this.grid)) {
+            data["grid"] = [];
+            for (let item of this.grid)
+                data["grid"].push(item);
         }
         return data; 
     }
@@ -137,16 +134,13 @@ export class BingoCardModel implements IBingoCardModel {
 
 export interface IBingoCardModel {
     name?: string | undefined;
-    grid?: string | undefined;
-    gridArray?: number[][] | undefined;
+    grid?: number[][] | undefined;
 }
 
 export class BingoCardCreationModel implements IBingoCardCreationModel {
     name?: string | undefined;
     size!: number;
     isCenterSquareFree!: boolean;
-    backgroundColor?: string | undefined;
-    borderColor?: string | undefined;
     amount!: number;
 
     constructor(data?: IBingoCardCreationModel) {
@@ -163,8 +157,6 @@ export class BingoCardCreationModel implements IBingoCardCreationModel {
             this.name = _data["name"];
             this.size = _data["size"];
             this.isCenterSquareFree = _data["isCenterSquareFree"];
-            this.backgroundColor = _data["backgroundColor"];
-            this.borderColor = _data["borderColor"];
             this.amount = _data["amount"];
         }
     }
@@ -181,8 +173,6 @@ export class BingoCardCreationModel implements IBingoCardCreationModel {
         data["name"] = this.name;
         data["size"] = this.size;
         data["isCenterSquareFree"] = this.isCenterSquareFree;
-        data["backgroundColor"] = this.backgroundColor;
-        data["borderColor"] = this.borderColor;
         data["amount"] = this.amount;
         return data; 
     }
@@ -192,8 +182,6 @@ export interface IBingoCardCreationModel {
     name?: string | undefined;
     size: number;
     isCenterSquareFree: boolean;
-    backgroundColor?: string | undefined;
-    borderColor?: string | undefined;
     amount: number;
 }
 

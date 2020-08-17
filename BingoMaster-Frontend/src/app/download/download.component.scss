@@ -22,7 +22,7 @@
             align-items: center;
             justify-content: center;
         }
-          
+
         .button-container {
             display: inline-block;
             position: relative;
@@ -61,7 +61,7 @@
     flex-direction: column;
     flex: 1;
     min-width: 650px;
-    
+
     .divider {
         padding: 15px 0px;
         margin-bottom: 50px;
@@ -69,7 +69,7 @@
         box-shadow: 0 1em 1em -1em rgba(0, 0, 0, .25);
     }
 
-    .bingocard ::ng-deep {
+    .bingocard {
         display: flex;
 
         .grid {
