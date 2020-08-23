@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { BingoCardComponent } from '../bingo-card/bingo-card.component';
 import { HomeComponent } from '../home/home.component';
+import { BingoCardDetailComponent } from '../bingo-card-detail/bingo-card-detail.component';
 
 const routes: Routes = [
   {
@@ -11,7 +11,7 @@ const routes: Routes = [
   },
   {
     path: 'bingo-cards',
-    component: BingoCardComponent,
+    component: BingoCardDetailComponent,
     data: { title: 'Bingo cards' }
   },
   {

@@ -4,7 +4,7 @@ import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatSelectChange } from '@angular/material/select';
 import { take } from 'rxjs/operators';
 import { BingoCardCreationModel, BingoCardModel } from 'src/api/api';
-import { BingoCardService } from '../services/bingo-card.service';
+import { BingoCardService } from '../../services/bingo-card.service';
 import { trigger, transition, style, animate } from '@angular/animations';
 
 export interface Tile {
