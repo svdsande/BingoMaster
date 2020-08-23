@@ -6,11 +6,13 @@ import { HomeComponent } from '../home/home.component';
 const routes: Routes = [
   {
     path: 'home',
-    component: HomeComponent
+    component: HomeComponent,
+    data: { title: 'Home' }
   },
   {
     path: 'bingo-cards',
-    component: BingoCardComponent
+    component: BingoCardComponent,
+    data: { title: 'Bingo cards' }
   },
   {
     path: '',

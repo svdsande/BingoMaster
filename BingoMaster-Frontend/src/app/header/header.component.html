@@ -1,8 +1,13 @@
 <mat-toolbar color="primary">
-  <mat-toolbar-row id="toolbar-row">
+  <mat-toolbar-row id="toolbar-row-top">
     <a routerLink="/home" id="home-link">
       <mat-icon [svgIcon]="'bingo_card'" id="logo-icon"></mat-icon>
-      <h1 id="logo-title">BingoMaster</h1>
     </a>
+    <button mat-button class="menu-item" [routerLink]="'/bingo-cards'">
+      Cards
+    </button>
+    <button mat-button class="menu-item" [routerLink]="'/bingo-cards'">
+      Games
+    </button>
   </mat-toolbar-row>
 </mat-toolbar>
