@@ -6,6 +6,7 @@ import { take } from 'rxjs/operators';
 import { BingoCardCreationModel, BingoCardModel } from 'src/api/api';
 import { BingoCardService } from '../../services/bingo-card.service';
 import { trigger, transition, style, animate } from '@angular/animations';
+import { BehaviorSubject } from 'rxjs';
 
 export interface Tile {
   cols: number;
@@ -41,7 +42,7 @@ export interface Tile {
 })
 export class BingoCardComponent implements OnInit {
 
-  public bingoCards: BingoCardModel[] = [];
+  public bingoCards$: BehaviorSubject<BingoCardModel[]> = new BehaviorSubject<BingoCardModel[]>([]);
   public gridTiles: Tile[];
   public gridColumns: number = 3;
   public backgroundColor: string = '#add8e6';
@@ -79,7 +80,7 @@ export class BingoCardComponent implements OnInit {
       .subscribe((result) => {
         window.scrollTo(0,0);
         this.loading = false;
-        this.bingoCards = result;
+        this.bingoCards$.next(result);
       });
   }
 

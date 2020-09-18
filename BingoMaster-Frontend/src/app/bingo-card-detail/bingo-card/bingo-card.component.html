@@ -1,5 +1,5 @@
 <div id="container">
-    <form [formGroup]="this.bingoCardFormGroup" (ngSubmit)="this.generateBingoCards()" id="bingo-card-form" *ngIf="this.bingoCards.length === 0" @createBingoCards>
+    <form [formGroup]="this.bingoCardFormGroup" (ngSubmit)="this.generateBingoCards()" id="bingo-card-form" *ngIf="(this.bingoCards$ | async).length === 0; else downloadBingoCards" @createBingoCards>
         <div class="form-field-row">
             <mat-form-field class="form-field">
                 <mat-label>Name</mat-label>
@@ -62,6 +62,8 @@
 
 </div>
 
-<div *ngIf="this.bingoCards.length > 0" @generateBingoCards>
-    <app-download [borderColor]="this.borderColor" [backgroundColor]="this.backgroundColor" [(bingoCards)]="this.bingoCards"></app-download>
-</div>
+<ng-template #downloadBingoCards>
+  <div @generateBingoCards>
+      <app-download [borderColor]="this.borderColor" [backgroundColor]="this.backgroundColor" [bingoCards$]="this.bingoCards$"></app-download>
+  </div>
+</ng-template>

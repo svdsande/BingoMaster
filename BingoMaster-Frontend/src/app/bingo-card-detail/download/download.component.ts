@@ -3,6 +3,7 @@ import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { BingoCardModel } from 'src/api/api';
 import { FormGroup, FormControl } from '@angular/forms';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-download',
@@ -11,10 +12,9 @@ import { FormGroup, FormControl } from '@angular/forms';
 })
 export class DownloadComponent implements OnInit {
 
-  @Input() bingoCards: BingoCardModel[];
+  @Input() bingoCards$: BehaviorSubject<BingoCardModel[]>;
   @Input() backgroundColor: string;
   @Input() borderColor: string;
-  @Output() bingoCardsChange: EventEmitter<BingoCardModel[]> = new EventEmitter<BingoCardModel[]>()
   public downloadFormGroup: FormGroup;
   public loading: boolean = false;
 
@@ -31,19 +31,19 @@ export class DownloadComponent implements OnInit {
   }
 
   public navigateBack(): void {
-    this.bingoCardsChange.emit([]);
+    this.bingoCards$.next([]);
   }
 
   private buildPDF(): void {
     let doc = new jsPDF('p', 'mm', this.downloadFormGroup.get('paperSize').value);
-    const bingocards = document.querySelectorAll('.bingocard');
+    const bingoCards = document.querySelectorAll('.bingocard');
 
-    for (let i = 0; i < bingocards.length; i++) {
-      html2canvas(bingocards[i] as HTMLElement).then(function (canvas) {
+    for (let i = 0; i < bingoCards.length; i++) {
+      html2canvas(bingoCards[i] as HTMLElement).then(function (canvas) {
         let image = canvas.toDataURL('image/png');
         doc.addImage(image, 'PNG', 3, 10, 200, 200, '', 'MEDIUM');
 
-        if (i + 1 === bingocards.length) {
+        if (i + 1 === bingoCards.length) {
           doc.save('bingo-cards.pdf');
           this.loading = false;
         } else {

@@ -43,7 +43,6 @@ namespace BingoMaster_Logic
             var amountOfCells = height * width;
             var centerCellIndex = (int)Math.Floor(amountOfCells / 2.0);
 
-
             grid[centerCellIndex / height][centerCellIndex % width] = null;
         }
 
