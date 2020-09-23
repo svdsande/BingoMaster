@@ -26,6 +26,8 @@ import { HomeComponent } from './home/home.component';
 import { BingoCardService } from './services/bingo-card.service';
 import { BingoCardDetailComponent } from './bingo-card-detail/bingo-card-detail.component';
 import { PageHeaderComponent } from './page-header/page-header.component';
+import { BingoGameComponent } from './bingo-game/bingo-game.component';
+import { BingoGameService } from './services/bingo-game.service';
 
 @NgModule({
   declarations: [
@@ -36,7 +38,8 @@ import { PageHeaderComponent } from './page-header/page-header.component';
     DownloadComponent,
     HomeComponent,
     BingoCardDetailComponent,
-    PageHeaderComponent
+    PageHeaderComponent,
+    BingoGameComponent
   ],
   imports: [
     BrowserModule,
@@ -58,7 +61,6 @@ import { PageHeaderComponent } from './page-header/page-header.component';
   ],
   providers: [
     BingoCardClient,
-    BingoCardService,
     {
       provide: API_BASE_URL,
       useValue: environment.apiUrl

@@ -1,20 +1,15 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using BingoMaster_API.HubConfig;
 using BingoMaster_Logic;
+using BingoMaster_Logic.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 
 namespace BingoMaster_API
 {
-    public class Startup
+	public class Startup
     {
         public Startup(IConfiguration configuration)
         {
@@ -28,8 +23,10 @@ namespace BingoMaster_API
         {
             services.AddControllers();
             services.AddTransient<IBingoCardLogic, BingoCardLogic>();
+            services.AddTransient<IBingoGameLogic, BingoGameLogic>();
 
             services.AddCors();
+            services.AddSignalR();
 
             services.AddSwaggerDocument(config =>
             {
@@ -70,6 +67,7 @@ namespace BingoMaster_API
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<BingoGameHub>("/BingoGame");
             });
 
             app.UseOpenApi();
