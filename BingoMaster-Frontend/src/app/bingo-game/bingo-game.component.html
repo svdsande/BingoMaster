@@ -1,5 +1,9 @@
-<button mat-raised-button (click)="this.requestNextNumber()">Request next number</button>
+<page-header></page-header>
 
-<span *ngFor="let number of this.numbers">
-  {{ number }}
-</span>
+<div id="container">
+  <button mat-raised-button (click)="this.requestNextNumber()">Request next number</button>
+
+  <span *ngFor="let number of this.numbers">
+    {{ number }}
+  </span>
+</div>
