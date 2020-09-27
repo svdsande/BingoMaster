@@ -1,4 +1,5 @@
 ﻿using BingoMaster_Logic.Interfaces;
+using BingoMaster_Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,12 +9,34 @@ namespace BingoMaster_Logic
 {
 	public class BingoGameLogic : IBingoGameLogic
 	{
+		#region Fields
+
+		private readonly IBingoCardLogic _bingoCardLogic;
 		private readonly int[] numbers;
 		private int totalDrawnNumbers = 0;
 
-		public BingoGameLogic()
+		#endregion
+
+		public BingoGameLogic(IBingoCardLogic bingoCardLogic)
 		{
+			_bingoCardLogic = bingoCardLogic;
 			numbers = GetRandomNumbers();
+		}
+
+		public IEnumerable<BingoCardModel> CreateNewGame(string name, int amountOfPlayers)
+		{
+			if (amountOfPlayers <= 0)
+			{
+				throw new ArgumentException("Invalid number players");
+			}
+
+			return _bingoCardLogic.GenerateBingoCards(new BingoCardCreationModel()
+			{
+				Amount = amountOfPlayers,
+				Name = name,
+				IsCenterSquareFree = true,
+				Size = 3
+			});
 		}
 
 		public int GetNextNumber()
