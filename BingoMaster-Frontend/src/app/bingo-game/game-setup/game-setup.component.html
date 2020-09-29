@@ -1,0 +1,40 @@
+<div id="container">
+  <form [formGroup]="this.gameSetupFormGroup" (ngSubmit)="this.createBingoGame()" id="game-setup-form">
+    <div class="form-field-row">
+      <mat-form-field class="form-field">
+        <mat-label>Name</mat-label>
+        <input matInput type="text" formControlName="name">
+        <mat-error *ngIf="this.gameSetupFormGroup.get('name').invalid">Name is required</mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="form-field quarter">
+        <mat-label>Size</mat-label>
+        <mat-select name="size" formControlName="size">
+          <mat-option [value]="3">3x3</mat-option>
+          <mat-option [value]="4">4x4</mat-option>
+          <mat-option [value]="5">5x5</mat-option>
+          <mat-option [value]="6">6x6</mat-option>
+          <mat-option [value]="7">7x7</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div class="form-field-row">
+      <mat-form-field class="form-field">
+        <mat-label>Amount of players:</mat-label>
+        <input matInput type="number" min="1" max="50" formControlName="amountOfPlayers">
+        <mat-error *ngIf="this.gameSetupFormGroup.get('amountOfPlayers').invalid">Amount of players is required</mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-field-row">
+      <div class="button-container">
+        <div class="spinner-container" *ngIf="this.loading">
+          <mat-spinner diameter="24"></mat-spinner>
+        </div>
+        <button mat-raised-button color="primary" type="submit"
+          [disabled]="!this.gameSetupFormGroup.valid || this.loading" id="generate-button">Create Game</button>
+      </div>
+    </div>
+  </form>
+</div>

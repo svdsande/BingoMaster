@@ -22,6 +22,24 @@ namespace BingoMaster_Tests
 		}
 
 		[Fact]
+		public void CreateNewGame_TwoPlayers_Succeeds()
+		{
+			var bingoCardModels = new List<BingoCardModel>()
+			{
+				new BingoCardModel() { Name = "Pearl Jam", Grid = new int?[3][] },
+				new BingoCardModel() { Name = "Pearl Jam", Grid = new int?[3][] }
+			};
+
+			_bingoCardLogicMock.Setup(logic => logic.GenerateBingoCards(It.IsAny<BingoCardCreationModel>())).Returns(bingoCardModels);
+
+			var actual = _bingoGameLogic.CreateNewGame("Pearl Jam", 2);
+
+			Assert.Equal(2, actual.Count());
+			Assert.Equal("Pearl Jam", actual.First().Name);
+			Assert.Equal(3, actual.First().Grid.Length);
+		}
+
+		[Fact]
 		public void CreateNewGame_ZeroAmountOfPlayers_ExceptionExpected()
 		{
 			_bingoCardLogicMock.Setup(logic => logic.GenerateBingoCards(It.IsAny<BingoCardCreationModel>())).Returns(Enumerable.Empty<BingoCardModel>());

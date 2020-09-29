@@ -23,11 +23,11 @@ namespace BingoMaster_Logic
 			numbers = GetRandomNumbers();
 		}
 
-		public IEnumerable<BingoCardModel> CreateNewGame(string name, int amountOfPlayers)
+		public IEnumerable<BingoCardModel> CreateNewGame(string name, int amountOfPlayers, int size)
 		{
-			if (amountOfPlayers <= 0)
+			if (string.IsNullOrWhiteSpace(name) || amountOfPlayers <= 0 || size <= 0)
 			{
-				throw new ArgumentException("Invalid number players");
+				throw new ArgumentException("Invalid number players or grid size");
 			}
 
 			return _bingoCardLogic.GenerateBingoCards(new BingoCardCreationModel()
@@ -35,7 +35,7 @@ namespace BingoMaster_Logic
 				Amount = amountOfPlayers,
 				Name = name,
 				IsCenterSquareFree = true,
-				Size = 3
+				Size = size
 			});
 		}
 

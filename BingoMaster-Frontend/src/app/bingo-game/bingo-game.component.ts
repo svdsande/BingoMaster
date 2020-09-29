@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { BingoCardModel } from 'src/api/api';
 import { BingoGameService } from '../services/bingo-game.service';
 
 @Component({
@@ -9,6 +10,7 @@ import { BingoGameService } from '../services/bingo-game.service';
 export class BingoGameComponent implements OnInit {
 
   public numbers: number[] = [];
+  public bingoCards: BingoCardModel[] = [];
 
   constructor(private bingoGameService: BingoGameService) { }
 

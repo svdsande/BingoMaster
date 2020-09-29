@@ -14,7 +14,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MccColorPickerModule } from 'material-community-components';
-import { API_BASE_URL, BingoCardClient } from 'src/api/api';
+import { API_BASE_URL, BingoCardClient, BingoGameClient } from 'src/api/api';
 import { environment } from 'src/environments/environment';
 import { AppRoutingModule } from './app-routing/app-routing.module';
 import { AppComponent } from './app.component';
@@ -23,11 +23,10 @@ import { DownloadComponent } from './bingo-card-detail/download/download.compone
 import { FooterComponent } from './footer/footer.component';
 import { HeaderComponent } from './header/header.component';
 import { HomeComponent } from './home/home.component';
-import { BingoCardService } from './services/bingo-card.service';
 import { BingoCardDetailComponent } from './bingo-card-detail/bingo-card-detail.component';
 import { PageHeaderComponent } from './page-header/page-header.component';
 import { BingoGameComponent } from './bingo-game/bingo-game.component';
-import { BingoGameService } from './services/bingo-game.service';
+import { GameSetupComponent } from './bingo-game/game-setup/game-setup.component';
 
 @NgModule({
   declarations: [
@@ -39,7 +38,8 @@ import { BingoGameService } from './services/bingo-game.service';
     HomeComponent,
     BingoCardDetailComponent,
     PageHeaderComponent,
-    BingoGameComponent
+    BingoGameComponent,
+    GameSetupComponent
   ],
   imports: [
     BrowserModule,
@@ -61,6 +61,7 @@ import { BingoGameService } from './services/bingo-game.service';
   ],
   providers: [
     BingoCardClient,
+    BingoGameClient,
     {
       provide: API_BASE_URL,
       useValue: environment.apiUrl

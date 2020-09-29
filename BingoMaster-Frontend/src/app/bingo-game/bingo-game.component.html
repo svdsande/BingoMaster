@@ -1,9 +1,16 @@
 <page-header></page-header>
 
 <div id="container">
-  <button mat-raised-button (click)="this.requestNextNumber()">Request next number</button>
+  <div *ngIf="this.bingoCards.length === 0">
+    <game-setup (onBingoGameCreated)="this.bingoCards = $event"></game-setup>
+  </div>
 
-  <span *ngFor="let number of this.numbers">
-    {{ number }}
-  </span>
+  <ng-template #playGame>
+    <button mat-raised-button (click)="this.requestNextNumber()">Request next number</button>
+
+    <span *ngFor="let number of this.numbers">
+      {{ number }}
+    </span>
+  </ng-template>
+
 </div>
