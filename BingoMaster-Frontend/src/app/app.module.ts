@@ -7,7 +7,6 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatRippleModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -27,6 +26,7 @@ import { BingoCardDetailComponent } from './bingo-card-detail/bingo-card-detail.
 import { PageHeaderComponent } from './page-header/page-header.component';
 import { BingoGameComponent } from './bingo-game/bingo-game.component';
 import { GameSetupComponent } from './bingo-game/game-setup/game-setup.component';
+import { SharedModule } from './shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -53,11 +53,11 @@ import { GameSetupComponent } from './bingo-game/game-setup/game-setup.component
     MatGridListModule,
     MatIconModule,
     MatInputModule,
-    MatProgressSpinnerModule,
     MatRippleModule,
     MatSelectModule,
     MatToolbarModule,
-    MccColorPickerModule
+    MccColorPickerModule,
+    SharedModule
   ],
   providers: [
     BingoCardClient,

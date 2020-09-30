@@ -11,12 +11,9 @@
     </div>
     <div class="form-field-row">
         <button mat-raised-button color="accent" type="button" (click)="this.navigateBack()" id="back-button">&#60; Back</button>
-        <div class="button-container">
-            <div class="spinner-container" *ngIf="this.loading">
-                <mat-spinner diameter="24"></mat-spinner>
-            </div>
-            <button mat-raised-button color="primary" type="submit" [disabled]="!this.downloadFormGroup.valid || this.loading">Download PDF</button>
-        </div>
+        <spinner-button [loading]="this.loading">
+          <button mat-raised-button color="primary" type="submit" [disabled]="!this.downloadFormGroup.valid || this.loading">Download PDF</button>
+        </spinner-button>
     </div>
 </form>
 

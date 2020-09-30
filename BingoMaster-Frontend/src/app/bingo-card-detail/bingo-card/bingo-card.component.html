@@ -49,12 +49,9 @@
             </mat-form-field>
         </div>
         <div class="form-field-row">
-            <div class="button-container">
-                <div class="spinner-container" *ngIf="this.loading">
-                    <mat-spinner diameter="24"></mat-spinner>
-                </div>
-                <button mat-raised-button color="primary" type="submit" [disabled]="!this.bingoCardFormGroup.valid || this.loading" id="generate-button">Generate Cards</button>
-            </div>
+            <spinner-button [loading]="this.loading">
+              <button mat-raised-button color="primary" type="submit" [disabled]="!this.bingoCardFormGroup.valid || this.loading">Generate Cards</button>
+            </spinner-button>
 
             <button mat-raised-button color="accent" type="button" (click)="this.resetBingoCardForm()">Reset</button>
         </div>

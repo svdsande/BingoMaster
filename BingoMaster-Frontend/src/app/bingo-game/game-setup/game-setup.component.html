@@ -28,13 +28,9 @@
     </div>
 
     <div class="form-field-row">
-      <div class="button-container">
-        <div class="spinner-container" *ngIf="this.loading">
-          <mat-spinner diameter="24"></mat-spinner>
-        </div>
-        <button mat-raised-button color="primary" type="submit"
-          [disabled]="!this.gameSetupFormGroup.valid || this.loading" id="generate-button">Create Game</button>
-      </div>
+        <spinner-button [loading]="this.loading">
+          <button mat-raised-button color="primary" type="submit" [disabled]="!this.gameSetupFormGroup.valid || this.loading" id="generate-button">Create Game</button>
+        </spinner-button>
     </div>
   </form>
 </div>
