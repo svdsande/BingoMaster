@@ -27,6 +27,7 @@ import { PageHeaderComponent } from './page-header/page-header.component';
 import { BingoGameComponent } from './bingo-game/bingo-game.component';
 import { GameSetupComponent } from './bingo-game/game-setup/game-setup.component';
 import { SharedModule } from './shared/shared.module';
+import { CounterDirective } from './directives/counter.directive';
 
 @NgModule({
   declarations: [
@@ -39,7 +40,8 @@ import { SharedModule } from './shared/shared.module';
     BingoCardDetailComponent,
     PageHeaderComponent,
     BingoGameComponent,
-    GameSetupComponent
+    GameSetupComponent,
+    CounterDirective
   ],
   imports: [
     BrowserModule,
