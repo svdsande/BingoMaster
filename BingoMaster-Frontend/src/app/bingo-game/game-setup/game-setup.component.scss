@@ -1,35 +1,28 @@
-#container {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  align-items: center;
+#game-setup-form {
+  width: 650px;
 
-  #game-setup-form {
-    width: 650px;
+  .form-field-row {
+    display: flex;
+    margin: 15px 0px;
 
-    .form-field-row {
+    .form-field {
       display: flex;
-      margin: 15px 0px;
+      flex: 1 1 0;
+      width: 0;
+      margin-right: 25px;
+      align-items: center;
+      justify-content: center;
 
-      .form-field {
-        display: flex;
-        flex: 1 1 0;
-        width: 0;
-        margin-right: 25px;
-        align-items: center;
-        justify-content: center;
+      &:last-child {
+          margin-right: 0px;
+      }
 
-        &:last-child {
-            margin-right: 0px;
-        }
+      &.quarter {
+          flex: 0 0 25%;
+      }
 
-        &.quarter {
-            flex: 0 0 25%;
-        }
-
-        ::ng-deep .mat-form-field-wrapper {
-            width: 100%;
-        }
+      ::ng-deep .mat-form-field-wrapper {
+          width: 100%;
       }
     }
   }

@@ -3,7 +3,7 @@ import { Subject, Subscription, timer } from 'rxjs';
 import { switchMap, take, tap } from 'rxjs/operators';
 
 @Directive({
-  selector: '[countDown]'
+  selector: '[counter]'
 })
 export class CounterDirective implements OnChanges, OnDestroy {
 

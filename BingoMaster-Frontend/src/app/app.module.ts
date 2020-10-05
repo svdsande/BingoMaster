@@ -28,6 +28,7 @@ import { BingoGameComponent } from './bingo-game/bingo-game.component';
 import { GameSetupComponent } from './bingo-game/game-setup/game-setup.component';
 import { SharedModule } from './shared/shared.module';
 import { CounterDirective } from './directives/counter.directive';
+import { CountDownComponent } from './bingo-game/count-down/count-down.component';
 
 @NgModule({
   declarations: [
@@ -41,7 +42,8 @@ import { CounterDirective } from './directives/counter.directive';
     PageHeaderComponent,
     BingoGameComponent,
     GameSetupComponent,
-    CounterDirective
+    CounterDirective,
+    CountDownComponent
   ],
   imports: [
     BrowserModule,
