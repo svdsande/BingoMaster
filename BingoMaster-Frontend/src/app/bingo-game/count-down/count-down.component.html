@@ -1,7 +1,7 @@
 <div id="container">
-  <div id="countdown" class="countdown countdown--wide" [counter]="this.counter" [interval]="1000" (value)="this.onValueChange($event)" [ngClass]="{'countdown--ended' : this.count === 0}">
-    <div id="ticker" class="countdown__fill" [ngStyle]="{'height': this.tickerHeight}"></div>
-    <div id="seconds" class="countdown__digit">
+  <div class="countdown countdown--wide" [counter]="this.counter" [interval]="1000" (value)="this.onValueChange($event)" [ngClass]="{'countdown--ended' : this.count === 0}">
+    <div class="countdown__fill" [ngStyle]="{'height': this.tickerHeight}"></div>
+    <div class="countdown__digit">
       {{ this.count }}
     </div>
   </div>

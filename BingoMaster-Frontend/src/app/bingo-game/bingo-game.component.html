@@ -1,16 +1,35 @@
 <page-header></page-header>
 
 <div id="container">
-  <game-setup (onBingoGameCreated)="this.bingoCards = $event" *ngIf="this.bingoCards.length === 0; else playGame"></game-setup>
-
+  <game-setup (onBingoGameCreated)="this.bingoCards = $event" *ngIf="this.bingoCards.length === 0; else playGame">
+  </game-setup>
 
   <ng-template #playGame>
-    <count-down></count-down>
-    <!-- <button mat-raised-button (click)="this.requestNextNumber()">Request next number</button>
+    <count-down *ngIf="!this.countDownDone; else game" (done)="this.onCountDownDone()"></count-down>
 
-    <span *ngFor="let number of this.numbers">
-      {{ number }}
-    </span> -->
+    <ng-template #game>
+      <div id="game-container">
+        <div id="controls-container">
+          <button mat-raised-button (click)="this.requestNextNumber()">Request next number</button>
+
+          <span *ngFor="let number of this.numbers">
+            {{ number }}
+          </span>
+        </div>
+
+        <div id="bingocard-container">
+          <div class="bingocard" *ngFor="let bingoCard of this.bingoCards">
+            <table class="grid">
+              <tr *ngFor="let row of bingoCard.grid">
+                <td *ngFor="let cell of row">
+                  {{ cell }}
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </ng-template>
   </ng-template>
 
 </div>

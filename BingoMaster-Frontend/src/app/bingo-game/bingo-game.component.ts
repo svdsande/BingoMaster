@@ -11,6 +11,7 @@ export class BingoGameComponent implements OnInit {
 
   public numbers: number[] = [];
   public bingoCards: BingoCardModel[] = [];
+  public countDownDone: boolean = false;
 
   constructor(private bingoGameService: BingoGameService) { }
 
@@ -22,5 +23,9 @@ export class BingoGameComponent implements OnInit {
 
   public requestNextNumber(): void {
     this.bingoGameService.requestNextNumber();
+  }
+
+  public onCountDownDone(): void {
+    this.countDownDone = true;
   }
 }
