@@ -16,9 +16,9 @@ export interface Tile {
 }
 
 @Component({
-  selector: 'bingo-card',
-  templateUrl: './bingo-card.component.html',
-  styleUrls: ['./bingo-card.component.scss'],
+  selector: 'generate-bingo-card',
+  templateUrl: './generate-bingo-card.component.html',
+  styleUrls: ['./generate-bingo-card.component.scss'],
   animations: [
     trigger('createBingoCards', [
       transition(':enter', [
@@ -40,7 +40,7 @@ export interface Tile {
     ]),
   ]
 })
-export class BingoCardComponent implements OnInit {
+export class GenerateBingoCardComponent implements OnInit {
 
   public bingoCards$: BehaviorSubject<BingoCardModel[]> = new BehaviorSubject<BingoCardModel[]>([]);
   public gridTiles: Tile[];

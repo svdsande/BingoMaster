@@ -17,7 +17,7 @@ import { API_BASE_URL, BingoCardClient, BingoGameClient } from 'src/api/api';
 import { environment } from 'src/environments/environment';
 import { AppRoutingModule } from './app-routing/app-routing.module';
 import { AppComponent } from './app.component';
-import { BingoCardComponent } from './bingo-card-detail/bingo-card/bingo-card.component';
+import { GenerateBingoCardComponent } from './bingo-card-detail/generate-bingo-card/generate-bingo-card.component';
 import { DownloadComponent } from './bingo-card-detail/download/download.component';
 import { FooterComponent } from './footer/footer.component';
 import { HeaderComponent } from './header/header.component';
@@ -35,7 +35,7 @@ import { CountDownComponent } from './bingo-game/count-down/count-down.component
     AppComponent,
     FooterComponent,
     HeaderComponent,
-    BingoCardComponent,
+    GenerateBingoCardComponent,
     DownloadComponent,
     HomeComponent,
     BingoCardDetailComponent,
