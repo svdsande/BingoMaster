@@ -16,5 +16,6 @@ namespace BingoMaster_Logic
         /// <exception cref="ArgumentException">Thrown when the amount or size is less then or equal to 0</exception>
         /// <returns>Collection of the generated bingo cards</returns>
         IEnumerable<BingoCardModel> GenerateBingoCards(BingoCardCreationModel bingoCard);
+        BingoCardModel GenerateBingoCard(BingoCardCreationModel bingoCard);
     }
 }

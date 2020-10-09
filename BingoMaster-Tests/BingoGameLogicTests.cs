@@ -24,29 +24,154 @@ namespace BingoMaster_Tests
 		[Fact]
 		public void CreateNewGame_TwoPlayers_Succeeds()
 		{
-			var bingoCardModels = new List<BingoCardModel>()
+			var input = new BingoGameCreationModel()
 			{
-				new BingoCardModel() { Name = "Pearl Jam", Grid = new int?[3][] },
-				new BingoCardModel() { Name = "Pearl Jam", Grid = new int?[3][] }
+				Name = "Pearl Jam",
+				Players = new List<PlayerModel>()
+				{
+					new PlayerModel() { Name = "Eddie Vedder" },
+					new PlayerModel() { Name = "Mike McCready" }
+				},
+				Size = 3
 			};
 
-			_bingoCardLogicMock.Setup(logic => logic.GenerateBingoCards(It.IsAny<BingoCardCreationModel>())).Returns(bingoCardModels);
+			_bingoCardLogicMock.Setup(logic => logic.GenerateBingoCard(It.IsAny<BingoCardCreationModel>())).Returns(new BingoCardModel()
+			{
+				Name = "Pearl Jam",
+				Grid = new int?[][]
+				{
+					new int?[] { 1, 2, 3 },
+					new int?[] { 4, 5, 6 },
+					new int?[] { 7, 8, 9 }
+				}
+			});
 
-			var actual = _bingoGameLogic.CreateNewGame("Pearl Jam", 2, 3);
+			var actual = _bingoGameLogic.CreateNewGame(input);
 
-			Assert.Equal(2, actual.Count());
-			Assert.Equal("Pearl Jam", actual.First().Name);
-			Assert.Equal(3, actual.First().Grid.Length);
+			Assert.Equal(2, actual.Players.Count());
+			Assert.Equal("Eddie Vedder", actual.Players.First().Name);
+			Assert.Equal(3, actual.Players.First().BingoCard.Grid.Length);
+		}
+
+		[Fact]
+		public void CreateNewGame_ZeroAmountOfPlayers_ExceptionExpected()
+		{
+			var input = new BingoGameCreationModel()
+			{
+				Name = "Pearl Jam",
+				Players = new List<PlayerModel>() { },
+				Size = 3
+			};
+
+			Assert.Throws<ArgumentException>(() => _bingoGameLogic.CreateNewGame(input));
+		}
+
+		[Fact]
+		public void CreateNewGame_ZeroSize_ExceptionExpected()
+		{
+			var input = new BingoGameCreationModel()
+			{
+				Name = "Pearl Jam",
+				Players = new List<PlayerModel>()
+				{
+					new PlayerModel() { Name = "Eddie Vedder" },
+					new PlayerModel() { Name = "Mike McCready" }
+				},
+				Size = 0
+			};
+
+			Assert.Throws<ArgumentException>(() => _bingoGameLogic.CreateNewGame(input));
+		}
+
+		[Fact]
+		public void CreateNewGame_NoName_ExceptionExpected()
+		{
+			var input = new BingoGameCreationModel()
+			{
+				Name = "",
+				Players = new List<PlayerModel>()
+				{
+					new PlayerModel() { Name = "Eddie Vedder" },
+					new PlayerModel() { Name = "Mike McCready" }
+				},
+				Size = 0
+			};
+
+			Assert.Throws<ArgumentException>(() => _bingoGameLogic.CreateNewGame(input));
 		}
 
 		[Theory]
-		[InlineData("", 5, 3)]
-		[InlineData("Pearl Jam", 0, 3)]
-		[InlineData("Pearl Jam", 5, 0)]
-		public void CreateNewGame_ZeroAmountOfPlayers_ExceptionExpected(string name, int amountOfPlayers, int size)
+		[InlineData(new int[] { 1, 2, 3 })]
+		[InlineData(new int[] { 3, 1, 2 })]
+		[InlineData(new int[] { 2, 3, 1 })]
+		public void PlayRound_HorizontalLineDone_Succeeds(int[] drawnNumbers)
 		{
-			_bingoCardLogicMock.Setup(logic => logic.GenerateBingoCards(It.IsAny<BingoCardCreationModel>())).Returns(Enumerable.Empty<BingoCardModel>());
-			Assert.Throws<ArgumentException>(() => _bingoGameLogic.CreateNewGame(name, amountOfPlayers, size));
+			var input = new List<PlayerModel>()
+			{
+				new PlayerModel() 
+				{ 
+					Name = "Eddie Vedder",
+					BingoCard = new BingoCardModel()
+					{
+						Grid = new int?[][]
+						{
+							new int?[] { 1, 2, 3 },
+							new int?[] { 4, 5, 6 },
+							new int?[] { 7, 8, 9 }
+						}
+					}
+				}
+			};
+
+			var actual = _bingoGameLogic.PlayRound(input, drawnNumbers);
+
+			Assert.True(actual.Players.First().IsHorizontalLineDone);
+		}
+
+		[Theory]
+		[InlineData(new int[] { 1, 2 })]
+		[InlineData(new int[] { 4, 5, 9 })]
+		[InlineData(new int[] { 7, 5, 6 })]
+		[InlineData(new int[] { 2, 3 })]
+		public void PlayRound_HorizontalLineDone_Failes(int[] drawnNumbers)
+		{
+			var input = new List<PlayerModel>()
+			{
+				new PlayerModel()
+				{
+					Name = "Eddie Vedder",
+					BingoCard = new BingoCardModel()
+					{
+						Grid = new int?[][]
+						{
+							new int?[] { 1, 2, 3 },
+							new int?[] { 4, 5, 6 },
+							new int?[] { 7, 8, 9 }
+						}
+					}
+				}
+			};
+
+			var actual = _bingoGameLogic.PlayRound(input, drawnNumbers);
+
+			Assert.False(actual.Players.First().IsHorizontalLineDone);
+		}
+		[Fact]
+		public void PlayRound_NoPlayers_ExceptionExpected()
+		{
+			var input = new List<PlayerModel>() { };
+			Assert.Throws<ArgumentException>(() => _bingoGameLogic.PlayRound(input, new int[] { 1, 2, 3 }));
+		}
+
+		[Fact]
+		public void PlayRound_NoDrawnNumbers_ExceptionExpected()
+		{
+			var input = new List<PlayerModel>()
+			{
+				new PlayerModel() { Name = "Eddie Vedder" },
+				new PlayerModel() { Name = "Mike McCready" }
+			};
+			Assert.Throws<ArgumentException>(() => _bingoGameLogic.PlayRound(input, new int[] {}));
 		}
 	}
 }

@@ -7,7 +7,8 @@ namespace BingoMaster_Logic.Interfaces
 {
 	public interface IBingoGameLogic
 	{
-		IEnumerable<BingoCardModel> CreateNewGame(string name, int amountOfPlayers, int size);
+		BingoGameModel CreateNewGame(BingoGameCreationModel gameCreationModel);
+		BingoGameModel PlayRound(IEnumerable<PlayerModel> players, int[] drawnNumbers);
 		int GetNextNumber();
 	}
 }

@@ -11,9 +11,9 @@ namespace BingoMaster_Logic
     {
         public IEnumerable<BingoCardModel> GenerateBingoCards(BingoCardCreationModel bingoCardModel)
         {
-            if (bingoCardModel == null || bingoCardModel.Amount <= 0 || bingoCardModel.Size <= 0)
+            if (bingoCardModel == null || string.IsNullOrWhiteSpace(bingoCardModel.Name) || bingoCardModel.Amount <= 0 || bingoCardModel.Size <= 0)
             {
-                throw new ArgumentException("Invalid number of cards or grid size");
+                throw new ArgumentException("No name for the card provided or invalid number of cards or grid size");
             }
 
             return Enumerable.Range(1, bingoCardModel.Amount).Select(item => new BingoCardModel()
@@ -22,6 +22,20 @@ namespace BingoMaster_Logic
                 Grid = BuildBingoCardGrid(bingoCardModel)
             });
         }
+
+        public BingoCardModel GenerateBingoCard(BingoCardCreationModel bingoCardModel)
+		{
+            if (bingoCardModel == null || string.IsNullOrWhiteSpace(bingoCardModel.Name) || bingoCardModel.Size <= 0)
+            {
+                throw new ArgumentException("No name for the card provided or invalid grid size");
+            }
+
+            return new BingoCardModel()
+            {
+                Name = bingoCardModel.Name,
+                Grid = BuildBingoCardGrid(bingoCardModel)
+            };
+		}
 
         private int?[][] BuildBingoCardGrid(BingoCardCreationModel bingoCardModel)
         {

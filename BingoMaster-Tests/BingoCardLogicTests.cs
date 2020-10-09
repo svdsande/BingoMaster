@@ -43,6 +43,24 @@ namespace BingoMaster_Tests
         }
 
         [Fact]
+        public void GenerateBingoCard_FreeCenter_Succeeds()
+		{
+            var input = new BingoCardCreationModel()
+            {
+                Name = "Pearl Jam",
+                IsCenterSquareFree = true,
+                Size = 3,
+            };
+
+            var actual = _bingoCardLogic.GenerateBingoCard(input);
+
+            Assert.Equal(input.Name, actual.Name);
+            Assert.Equal(input.Size, actual.Grid.Length);
+            Assert.Equal(9, GetNumberOfCells(actual.Grid));
+            Assert.Equal(4, GetCenterFreeIndex(actual.Grid));
+        }
+
+        [Fact]
         public void GenerateBingoCards_NullInput_ExceptionExpected()
         {
             Assert.Throws<ArgumentException>(() => _bingoCardLogic.GenerateBingoCards(null));
@@ -55,6 +73,20 @@ namespace BingoMaster_Tests
             {
                 Name = "Pearl Jam",
                 Amount = 0,
+                IsCenterSquareFree = false,
+                Size = 3
+            };
+
+            Assert.Throws<ArgumentException>(() => _bingoCardLogic.GenerateBingoCards(input));
+        }
+
+        [Fact]
+        public void GenerateBingoCards_NoName_ExceptionExpected()
+        {
+            var input = new BingoCardCreationModel()
+            {
+                Name = "",
+                Amount = 3,
                 IsCenterSquareFree = false,
                 Size = 3
             };

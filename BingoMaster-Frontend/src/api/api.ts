@@ -100,24 +100,18 @@ export class BingoGameClient {
         this.baseUrl = baseUrl ? baseUrl : "";
     }
 
-    createBingoGame(name: string | null | undefined, amountOfPlayers: number | undefined, size: number | undefined): Observable<BingoCardModel[]> {
-        let url_ = this.baseUrl + "/api/BingoGame?";
-        if (name !== undefined && name !== null)
-            url_ += "name=" + encodeURIComponent("" + name) + "&";
-        if (amountOfPlayers === null)
-            throw new Error("The parameter 'amountOfPlayers' cannot be null.");
-        else if (amountOfPlayers !== undefined)
-            url_ += "amountOfPlayers=" + encodeURIComponent("" + amountOfPlayers) + "&";
-        if (size === null)
-            throw new Error("The parameter 'size' cannot be null.");
-        else if (size !== undefined)
-            url_ += "size=" + encodeURIComponent("" + size) + "&";
+    createBingoGame(gameCreationModel: BingoGameCreationModel): Observable<BingoGameModel> {
+        let url_ = this.baseUrl + "/api/BingoGame";
         url_ = url_.replace(/[?&]$/, "");
 
+        const content_ = JSON.stringify(gameCreationModel);
+
         let options_ : any = {
+            body: content_,
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "Content-Type": "application/json",
                 "Accept": "application/json"
             })
         };
@@ -129,14 +123,14 @@ export class BingoGameClient {
                 try {
                     return this.processCreateBingoGame(<any>response_);
                 } catch (e) {
-                    return <Observable<BingoCardModel[]>><any>_observableThrow(e);
+                    return <Observable<BingoGameModel>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<BingoCardModel[]>><any>_observableThrow(response_);
+                return <Observable<BingoGameModel>><any>_observableThrow(response_);
         }));
     }
 
-    protected processCreateBingoGame(response: HttpResponseBase): Observable<BingoCardModel[]> {
+    protected processCreateBingoGame(response: HttpResponseBase): Observable<BingoGameModel> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -147,11 +141,7 @@ export class BingoGameClient {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            if (Array.isArray(resultData200)) {
-                result200 = [] as any;
-                for (let item of resultData200)
-                    result200!.push(BingoCardModel.fromJS(item));
-            }
+            result200 = BingoGameModel.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 400) {
@@ -166,7 +156,7 @@ export class BingoGameClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<BingoCardModel[]>(<any>null);
+        return _observableOf<BingoGameModel>(<any>null);
     }
 }
 
@@ -264,6 +254,158 @@ export interface IBingoCardCreationModel {
     size: number;
     isCenterSquareFree: boolean;
     amount: number;
+}
+
+export class BingoGameModel implements IBingoGameModel {
+    drawnNumber!: number;
+    players?: PlayerModel[] | undefined;
+
+    constructor(data?: IBingoGameModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.drawnNumber = _data["drawnNumber"];
+            if (Array.isArray(_data["players"])) {
+                this.players = [] as any;
+                for (let item of _data["players"])
+                    this.players!.push(PlayerModel.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): BingoGameModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new BingoGameModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["drawnNumber"] = this.drawnNumber;
+        if (Array.isArray(this.players)) {
+            data["players"] = [];
+            for (let item of this.players)
+                data["players"].push(item.toJSON());
+        }
+        return data; 
+    }
+}
+
+export interface IBingoGameModel {
+    drawnNumber: number;
+    players?: PlayerModel[] | undefined;
+}
+
+export class PlayerModel implements IPlayerModel {
+    name?: string | undefined;
+    bingoCard?: BingoCardModel | undefined;
+    isHorizontalLineDone!: boolean;
+    isVerticalLineDone!: boolean;
+    isFullCardDone!: boolean;
+
+    constructor(data?: IPlayerModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.name = _data["name"];
+            this.bingoCard = _data["bingoCard"] ? BingoCardModel.fromJS(_data["bingoCard"]) : <any>undefined;
+            this.isHorizontalLineDone = _data["isHorizontalLineDone"];
+            this.isVerticalLineDone = _data["isVerticalLineDone"];
+            this.isFullCardDone = _data["isFullCardDone"];
+        }
+    }
+
+    static fromJS(data: any): PlayerModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new PlayerModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        data["bingoCard"] = this.bingoCard ? this.bingoCard.toJSON() : <any>undefined;
+        data["isHorizontalLineDone"] = this.isHorizontalLineDone;
+        data["isVerticalLineDone"] = this.isVerticalLineDone;
+        data["isFullCardDone"] = this.isFullCardDone;
+        return data; 
+    }
+}
+
+export interface IPlayerModel {
+    name?: string | undefined;
+    bingoCard?: BingoCardModel | undefined;
+    isHorizontalLineDone: boolean;
+    isVerticalLineDone: boolean;
+    isFullCardDone: boolean;
+}
+
+export class BingoGameCreationModel implements IBingoGameCreationModel {
+    name?: string | undefined;
+    players?: PlayerModel[] | undefined;
+    size!: number;
+
+    constructor(data?: IBingoGameCreationModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.name = _data["name"];
+            if (Array.isArray(_data["players"])) {
+                this.players = [] as any;
+                for (let item of _data["players"])
+                    this.players!.push(PlayerModel.fromJS(item));
+            }
+            this.size = _data["size"];
+        }
+    }
+
+    static fromJS(data: any): BingoGameCreationModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new BingoGameCreationModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        if (Array.isArray(this.players)) {
+            data["players"] = [];
+            for (let item of this.players)
+                data["players"].push(item.toJSON());
+        }
+        data["size"] = this.size;
+        return data; 
+    }
+}
+
+export interface IBingoGameCreationModel {
+    name?: string | undefined;
+    players?: PlayerModel[] | undefined;
+    size: number;
 }
 
 export class ApiException extends Error {

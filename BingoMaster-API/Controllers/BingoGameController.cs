@@ -22,13 +22,13 @@ namespace BingoMaster_API.Controllers
 		}
 
 		[HttpPost]
-		[SwaggerResponse(System.Net.HttpStatusCode.OK, typeof(IEnumerable<BingoCardModel>))]
+		[SwaggerResponse(System.Net.HttpStatusCode.OK, typeof(BingoGameModel))]
 		[SwaggerResponse(System.Net.HttpStatusCode.BadRequest, typeof(string))]
-		public ActionResult CreateBingoGame(string name, int amountOfPlayers, int size)
+		public ActionResult CreateBingoGame([FromBody] BingoGameCreationModel gameCreationModel)
 		{
-			var bingoCards = _bingoGameLogic.CreateNewGame(name, amountOfPlayers, size);
+			var bingoGameModel = _bingoGameLogic.CreateNewGame(gameCreationModel);
 
-			return Ok(bingoCards);
+			return Ok(bingoGameModel);
 		}
 	}
 }
