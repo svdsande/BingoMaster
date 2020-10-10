@@ -1,7 +1,7 @@
 <page-header></page-header>
 
 <div id="container">
-  <game-setup (onBingoGameCreated)="this.bingoCards = $event" *ngIf="this.bingoCards.length === 0; else playGame">
+  <game-setup (onBingoGameCreated)="this.bingoGame = $event" *ngIf="!this.bingoGame; else playGame">
   </game-setup>
 
   <ng-template #playGame>
@@ -10,15 +10,18 @@
     <ng-template #game>
       <div id="game-container">
         <div id="controls-container">
-          <button mat-raised-button (click)="this.requestNextNumber()">Request next number</button>
+          <button mat-raised-button (click)="this.playNextRound()">Request next number</button>
 
-          <span *ngFor="let number of this.numbers">
+          <span *ngFor="let number of this.drawnNumbers">
             {{ number }}
           </span>
         </div>
 
         <div id="bingocard-container">
-          <bingo-card *ngFor="let bingoCard of this.bingoCards" [bingoCard]="this.bingoCard"></bingo-card>
+          <div *ngFor="let player of this.bingoGame.players">
+            <h2>{{ player.name }}</h2>
+            <bingo-card [bingoCard]="player.bingoCard"></bingo-card>
+          </div>
         </div>
       </div>
     </ng-template>

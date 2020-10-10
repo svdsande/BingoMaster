@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { BingoCardModel } from 'src/api/api';
+import { BingoGameModel } from 'src/api/api';
 import { BingoGameService } from '../services/bingo-game.service';
 
 @Component({
@@ -9,20 +9,20 @@ import { BingoGameService } from '../services/bingo-game.service';
 })
 export class BingoGameComponent implements OnInit {
 
-  public numbers: number[] = [];
-  public bingoCards: BingoCardModel[] = [];
+  public drawnNumbers: number[] = [];
+  public bingoGame: BingoGameModel;
   public countDownDone: boolean = false;
 
   constructor(private bingoGameService: BingoGameService) { }
 
   ngOnInit(): void {
-    this.bingoGameService.nextNumberReceived.subscribe((value) => {
-      this.numbers.push(value);
+    this.bingoGameService.nextRoundReceived.subscribe((model: BingoGameModel) => {
+      this.drawnNumbers.push(model.drawnNumber);
     });
   }
 
-  public requestNextNumber(): void {
-    this.bingoGameService.requestNextNumber();
+  public playNextRound(): void {
+    this.bingoGameService.playNextRound(this.bingoGame.players, this.drawnNumbers);
   }
 
   public onCountDownDone(): void {

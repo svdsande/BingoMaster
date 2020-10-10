@@ -2,14 +2,14 @@ import { Injectable } from '@angular/core';
 import { HubConnectionBuilder } from '@aspnet/signalr';
 import { HubConnection } from '@aspnet/signalr/dist/esm/HubConnection';
 import { Observable, Subject } from 'rxjs';
-import { BingoCardModel, BingoGameClient } from 'src/api/api';
+import { BingoGameClient, BingoGameCreationModel, BingoGameModel, PlayerModel } from 'src/api/api';
 
 @Injectable({
   providedIn: 'root'
 })
 export class BingoGameService {
 
-  public nextNumberReceived: Subject<number> = new Subject<number>();
+  public nextRoundReceived: Subject<BingoGameModel> = new Subject<BingoGameModel>();
 
   private hubConnection: HubConnection;
 
@@ -19,12 +19,12 @@ export class BingoGameService {
     this.startConnection();
   }
 
-  public createBingoGame(name: string, amountOfPlayers: number, size: number): Observable<BingoCardModel[]> {
-    return this.bingoGameClient.createBingoGame(name, amountOfPlayers, size);
+  public createBingoGame(bingoGameCreationModel: BingoGameCreationModel): Observable<BingoGameModel> {
+    return this.bingoGameClient.createBingoGame(bingoGameCreationModel);
   }
 
-  public requestNextNumber(): void {
-    this.hubConnection.invoke('GetNextNumber');
+  public playNextRound(players: PlayerModel[], drawnNumber: number[]): void {
+    this.hubConnection.invoke('PlayNextRound', players, drawnNumber);
   }
 
   private createConnection(): void {
@@ -45,8 +45,8 @@ export class BingoGameService {
   }
 
   private registerOnServerEvents(): void {
-    this.hubConnection.on('NextNumber', (data: number) => {
-      this.nextNumberReceived.next(data);
+    this.hubConnection.on('PlayNextRound', (data: BingoGameModel) => {
+      this.nextRoundReceived.next(data);
     });
   }
 }

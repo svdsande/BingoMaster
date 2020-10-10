@@ -27,6 +27,16 @@
       </mat-form-field>
     </div>
 
+    <ng-container formArrayName="players">
+      <div class="form-field-row" *ngFor="let player of players.controls; index as i">
+        <mat-form-field class="form-field">
+          <mat-label>Player name:</mat-label>
+          <input matInput type="text" [formControl]="players.controls[i]">
+          <mat-error *ngIf="players.controls[i].invalid">Player name is required</mat-error>
+        </mat-form-field>
+      </div>
+    </ng-container>
+
     <div class="form-field-row">
         <spinner-button [loading]="this.loading">
           <button mat-raised-button color="primary" type="submit" [disabled]="!this.gameSetupFormGroup.valid || this.loading" id="generate-button">Create Game</button>
