@@ -12,15 +12,14 @@ namespace BingoMaster_Logic
 		#region Fields
 
 		private readonly IBingoCardLogic _bingoCardLogic;
-		private readonly int[] numbers;
-		private int totalDrawnNumbers = 0;
+		private readonly IBingoNumberLogic _bingoNumberLogic;
 
 		#endregion
 
-		public BingoGameLogic(IBingoCardLogic bingoCardLogic)
+		public BingoGameLogic(IBingoCardLogic bingoCardLogic, IBingoNumberLogic bingoNumberLogic)
 		{
 			_bingoCardLogic = bingoCardLogic;
-			numbers = GetRandomNumbers();
+			_bingoNumberLogic = bingoNumberLogic;
 		}
 
 		public BingoGameModel CreateNewGame(BingoGameCreationModel gameCreationModel)
@@ -42,7 +41,7 @@ namespace BingoMaster_Logic
 
 			return new BingoGameModel()
 			{
-				DrawnNumber = GetNextNumber(),
+				DrawnNumber = _bingoNumberLogic.GetNextNumber(),
 				Players = gameCreationModel.Players
 			};
 		}
@@ -54,8 +53,9 @@ namespace BingoMaster_Logic
 				throw new ArgumentException("Invalid number of players or drawn numbers");
 			}
 
-			var nextNumber = GetNextNumber();
-			var numbers = drawnNumbers.Select(number => (int?)number).ToArray();
+			var nextNumber = _bingoNumberLogic.GetNextNumber();
+			var numbers = drawnNumbers.Select(number => (int?)number).ToList();
+			numbers.Add(nextNumber);
 
 			foreach (var player in players)
 			{
@@ -70,37 +70,14 @@ namespace BingoMaster_Logic
 			};
 		}
 
-		public int GetNextNumber()
-		{
-			var nextNumber = numbers[totalDrawnNumbers];
-			totalDrawnNumbers++;
-
-			return nextNumber;
-		}
-
-		private int[] GetRandomNumbers()
-		{
-			var numbers = Enumerable.Range(1, 90).ToArray();
-			var random = new Random();
-
-			for (int i = 0; i < numbers.Length; i++)
-			{
-				int randomIndex = random.Next(numbers.Length);
-				int temp = numbers[randomIndex];
-				numbers[randomIndex] = numbers[i];
-				numbers[i] = temp;
-			}
-
-			return numbers;
-		}
-
-		private bool HorizontalLineDone(int?[][] grid, int?[] drawnNumbers)
+		private bool HorizontalLineDone(int?[][] grid, List<int?> drawnNumbers)
 		{
 			foreach (var row in grid)
 			{
-				var intersection = row.Intersect(drawnNumbers);
+				var cleanNumbers = row.Where(number => number != null);
+				var intersection = cleanNumbers.Intersect(drawnNumbers);
 
-				if (intersection.Count() == row.Length)
+				if (intersection.Count() == cleanNumbers.Count())
 				{
 					return true;
 				}
@@ -109,12 +86,12 @@ namespace BingoMaster_Logic
 			return false;
 		}
 
-		private bool FullCardDone(int?[][] grid, int?[] drawnNumbers)
+		private bool FullCardDone(int?[][] grid, List<int?> drawnNumbers)
 		{
 			var gridNumbers = grid.SelectMany(row => row).ToArray();
 			var intersection = gridNumbers.Intersect(drawnNumbers);
 
-			if (intersection.Count() == drawnNumbers.Length)
+			if (intersection.Count() == drawnNumbers.Count())
 			{
 				return true;
 			}
