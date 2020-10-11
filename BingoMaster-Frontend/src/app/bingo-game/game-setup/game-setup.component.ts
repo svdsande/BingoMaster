@@ -23,30 +23,12 @@ export class GameSetupComponent implements OnInit {
 
   ngOnInit(): void {
     this.buildForm();
-
-    this.gameSetupFormGroup.get('amountOfPlayers').valueChanges.subscribe((value: number) => {
-      if (value > this.players.length) {
-        const difference = value - this.players.length;
-
-        for (let i = 0; i < difference; i++) {
-          this.players.push(new FormControl('', Validators.required));
-        }
-      } else if (!value) {
-        this.players.clear();
-      } else {
-        const difference = this.players.length - value;
-        for (let i = 0; i < difference; i++) {
-          this.players.removeAt(this.players.length - 1);
-        }
-      }
-    });
   }
 
   public createBingoGame(): void {
     this.loading = true;
 
     const bingoGameCreationModel = this.getBingoGameCreationModel();
-    // const amountOfPlayers = this.gameSetupFormGroup.get('amountOfPlayers').value;
 
     this.bingoGameService.createBingoGame(bingoGameCreationModel)
       .pipe(take(1))
@@ -54,6 +36,14 @@ export class GameSetupComponent implements OnInit {
         this.loading = false;
         this.onBingoGameCreated.emit(model);
       });
+  }
+
+  public addPlayer(): void {
+    this.players.push(new FormControl('', Validators.required));
+  }
+
+  public removePlayer(index: number): void {
+    this.players.removeAt(index);
   }
 
   private getBingoGameCreationModel(): BingoGameCreationModel {
@@ -82,7 +72,6 @@ export class GameSetupComponent implements OnInit {
     this.gameSetupFormGroup = new FormGroup({
       name: new FormControl('', Validators.required),
       size: new FormControl(3, Validators.required),
-      amountOfPlayers: new FormControl('', Validators.required),
       players: new FormArray([])
     });
   }

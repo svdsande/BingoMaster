@@ -19,28 +19,36 @@
       </mat-form-field>
     </div>
 
-    <div class="form-field-row">
-      <mat-form-field class="form-field">
-        <mat-label>Amount of players:</mat-label>
-        <input matInput type="number" min="1" max="50" formControlName="amountOfPlayers">
-        <mat-error *ngIf="this.gameSetupFormGroup.get('amountOfPlayers').invalid">Amount of players is required</mat-error>
-      </mat-form-field>
-    </div>
+    <button mat-stroked-button type="button" (click)="this.addPlayer()">Add Player</button>
 
     <ng-container formArrayName="players">
-      <div class="form-field-row" *ngFor="let player of players.controls; index as i">
-        <mat-form-field class="form-field">
-          <mat-label>Player name:</mat-label>
-          <input matInput type="text" [formControl]="players.controls[i]">
-          <mat-error *ngIf="players.controls[i].invalid">Player name is required</mat-error>
-        </mat-form-field>
-      </div>
+      <mat-accordion class="players-accordion">
+        <mat-expansion-panel *ngFor="let player of players.controls; index as i" hideToggle>
+          <mat-expansion-panel-header>
+            <mat-panel-title>Player {{ i + 1 }}</mat-panel-title>
+            <mat-panel-description>
+              <mat-icon>account_circle</mat-icon>
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+
+          <mat-form-field class="form-field">
+            <mat-label>Player name:</mat-label>
+            <input matInput type="text" [formControl]="players.controls[i]">
+            <mat-error *ngIf="players.controls[i].invalid">Player name is required</mat-error>
+          </mat-form-field>
+
+          <mat-action-row>
+            <button mat-button color="warn" type="button" (click)="this.removePlayer(i)">Remove</button>
+          </mat-action-row>
+        </mat-expansion-panel>
+      </mat-accordion>
     </ng-container>
 
     <div class="form-field-row">
-        <spinner-button [loading]="this.loading">
-          <button mat-raised-button color="primary" type="submit" [disabled]="!this.gameSetupFormGroup.valid || this.loading" id="generate-button">Create Game</button>
-        </spinner-button>
+      <spinner-button [loading]="this.loading">
+        <button mat-raised-button color="primary" type="submit"
+          [disabled]="!this.gameSetupFormGroup.valid || this.loading" id="generate-button">Create Game</button>
+      </spinner-button>
     </div>
   </form>
 </div>

@@ -26,4 +26,18 @@
       }
     }
   }
+
+.players-accordion {
+  display: block;
+  margin-top: 15px;
+
+  .mat-expansion-panel-header-description {
+    justify-content: flex-end;
+    align-items: center;
+  }
+
+  .form-field {
+    width: 100%;
+  }
+}
 }
