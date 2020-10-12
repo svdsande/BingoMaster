@@ -227,6 +227,129 @@ namespace BingoMaster_Tests
 			Assert.False(actual.Players.First().IsHorizontalLineDone);
 		}
 
+		[Theory]
+		[InlineData(new int[] { 1, 2, 3, 4, 6 }, 7)]
+		[InlineData(new int[] { 3, 6, 1, 2, 7 }, 4)]
+		[InlineData(new int[] { 2, 4, 3, 6, 7 }, 1)]
+		public void PlayRound_FullCardDone_NextDrawnNumber_Succeeds(int[] drawnNumbers, int nextNumberToBeDrawn)
+		{
+			var input = new List<PlayerModel>()
+			{
+				new PlayerModel()
+				{
+					Name = "Eddie Vedder",
+					BingoCard = new BingoCardModel()
+					{
+						Grid = new int?[][]
+						{
+							new int?[] { 1, 2, 3 },
+							new int?[] { 4, null, 6 },
+							new int?[] { 7, null, null }
+						}
+					}
+				}
+			};
+
+			_bingoNumberLogicMock.Setup(logic => logic.GetNextNumber()).Returns(nextNumberToBeDrawn);
+
+			var actual = _bingoGameLogic.PlayRound(input, drawnNumbers);
+
+			Assert.True(actual.Players.First().IsHorizontalLineDone);
+			Assert.True(actual.Players.First().IsFullCardDone);
+		}
+
+		[Theory]
+		[InlineData(new int[] { 1, 2, 3, 4, 6, 7 })]
+		[InlineData(new int[] { 7, 6, 4, 3, 2, 1 })]
+		[InlineData(new int[] { 3, 6, 1, 7, 2, 4 })]
+		public void PlayRound_FullCardDone_Succeeds(int[] drawnNumbers)
+		{
+			var input = new List<PlayerModel>()
+			{
+				new PlayerModel()
+				{
+					Name = "Eddie Vedder",
+					BingoCard = new BingoCardModel()
+					{
+						Grid = new int?[][]
+						{
+							new int?[] { 1, 2, 3 },
+							new int?[] { 4, null, 6 },
+							new int?[] { 7, null, null }
+						}
+					}
+				}
+			};
+
+			_bingoNumberLogicMock.Setup(logic => logic.GetNextNumber()).Returns(15);
+
+			var actual = _bingoGameLogic.PlayRound(input, drawnNumbers);
+
+			Assert.True(actual.Players.First().IsHorizontalLineDone);
+			Assert.True(actual.Players.First().IsFullCardDone);
+		}
+
+		[Theory]
+		[InlineData(new int[] { 1, 2, 3 })]
+		[InlineData(new int[] { 7, 3, 2, 1 })]
+		[InlineData(new int[] { 3, 1, 7, 2, 4 })]
+		public void PlayRound_FullCardDone_Failes(int[] drawnNumbers)
+		{
+			var input = new List<PlayerModel>()
+			{
+				new PlayerModel()
+				{
+					Name = "Eddie Vedder",
+					BingoCard = new BingoCardModel()
+					{
+						Grid = new int?[][]
+						{
+							new int?[] { 1, 2, 3 },
+							new int?[] { 4, null, 6 },
+							new int?[] { 7, null, null }
+						}
+					}
+				}
+			};
+
+			_bingoNumberLogicMock.Setup(logic => logic.GetNextNumber()).Returns(15);
+
+			var actual = _bingoGameLogic.PlayRound(input, drawnNumbers);
+
+			Assert.True(actual.Players.First().IsHorizontalLineDone);
+			Assert.False(actual.Players.First().IsFullCardDone);
+		}
+
+		[Theory]
+		[InlineData(new int[] { 1, 2, 3, 4}, 6)]
+		[InlineData(new int[] { 4, 6, 7, 2 }, 1)]
+		public void PlayRound_FullCardDone_NextDrawnNumber_Failes(int[] drawnNumbers, int nextNumberToBeDrawn)
+		{
+			var input = new List<PlayerModel>()
+			{
+				new PlayerModel()
+				{
+					Name = "Eddie Vedder",
+					BingoCard = new BingoCardModel()
+					{
+						Grid = new int?[][]
+						{
+							new int?[] { 1, 2, 3 },
+							new int?[] { 4, null, 6 },
+							new int?[] { 7, null, null }
+						}
+					}
+				}
+			};
+
+			_bingoNumberLogicMock.Setup(logic => logic.GetNextNumber()).Returns(nextNumberToBeDrawn);
+
+			var actual = _bingoGameLogic.PlayRound(input, drawnNumbers);
+
+			Assert.True(actual.Players.First().IsHorizontalLineDone);
+			Assert.False(actual.Players.First().IsFullCardDone);
+		}
+
 		[Fact]
 		public void PlayRound_NoPlayers_ExceptionExpected()
 		{

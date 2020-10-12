@@ -88,10 +88,10 @@ namespace BingoMaster_Logic
 
 		private bool FullCardDone(int?[][] grid, List<int?> drawnNumbers)
 		{
-			var gridNumbers = grid.SelectMany(row => row).ToArray();
+			var gridNumbers = grid.SelectMany(row => row).Where(number => number != null).ToArray();
 			var intersection = gridNumbers.Intersect(drawnNumbers);
 
-			if (intersection.Count() == drawnNumbers.Count())
+			if (intersection.Count() == gridNumbers.Count())
 			{
 				return true;
 			}
