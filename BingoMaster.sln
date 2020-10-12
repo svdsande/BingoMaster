@@ -30,7 +30,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BingoMaster-Logic", "BingoM
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BingoMaster-Tests", "BingoMaster-Tests\BingoMaster-Tests.csproj", "{F0A1C9DE-9105-4905-9F35-E744DB632E2B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BingoMaster-Models", "BingoMaster-Models\BingoMaster-Models.csproj", "{77CD99FC-ACE9-4516-BCEA-7BFDEA6D29E3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BingoMaster-Models", "BingoMaster-Models\BingoMaster-Models.csproj", "{77CD99FC-ACE9-4516-BCEA-7BFDEA6D29E3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,7 +43,6 @@ Global
 		{F45DBED9-D013-41B2-B234-0A5EDDEFE39A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F45DBED9-D013-41B2-B234-0A5EDDEFE39A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5BFAAAA5-3F32-4CC9-A22B-3CC2164FD83B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5BFAAAA5-3F32-4CC9-A22B-3CC2164FD83B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5BFAAAA5-3F32-4CC9-A22B-3CC2164FD83B}.Release|Any CPU.ActiveCfg = Debug|Any CPU
 		{5BFAAAA5-3F32-4CC9-A22B-3CC2164FD83B}.Release|Any CPU.Build.0 = Debug|Any CPU
 		{3BC7AD79-25D8-4F3D-9951-2DC70628121E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
