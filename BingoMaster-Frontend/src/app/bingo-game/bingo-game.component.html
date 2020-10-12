@@ -12,15 +12,27 @@
         <div id="controls-container">
           <button mat-raised-button (click)="this.playNextRound()">Request next number</button>
 
-          <span *ngFor="let number of this.drawnNumbers">
-            {{ number }}
-          </span>
+          <mat-chip-list>
+            <mat-chip *ngFor="let number of this.drawnNumbers" selected color="primary">
+              {{ number }}
+            </mat-chip>
+          </mat-chip-list>
         </div>
 
         <div id="bingocard-container">
           <mat-card *ngFor="let player of this.bingoGame.players">
             <mat-card-header>
               <mat-card-title>{{ player.name }}</mat-card-title>
+              <mat-card-subtitle>
+                <div class="progress-indicator">
+                  <span>Horizontal line done</span>
+                  <mat-icon *ngIf="player.isFullCardDone">done</mat-icon>
+                </div>
+                <div class="progress-indicator">
+                  <span>Full card done</span>
+                  <mat-icon *ngIf="player.isHorizontalLineDone">done</mat-icon>
+                </div>
+              </mat-card-subtitle>
             </mat-card-header>
             <mat-card-content>
               <bingo-card [bingoCard]="player.bingoCard" [drawnNumbers]="this.drawnNumbers"></bingo-card>
