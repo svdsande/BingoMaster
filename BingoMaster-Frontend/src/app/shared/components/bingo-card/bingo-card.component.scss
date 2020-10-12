@@ -15,6 +15,13 @@
 
       td {
           padding: 50px;
+
+          transition: background-color;
+          transition-duration: 0.2s;
+
+          &.marked {
+            background-color: #f44336;
+          }
       }
   }
 }

@@ -9,6 +9,7 @@ import { BingoCardModel } from 'src/api/api';
 export class BingoCardComponent implements OnInit {
 
   @Input() bingoCard: BingoCardModel;
+  @Input() drawnNumbers: number[] = [];
   @Input() backgroundColor: string = '#add8e6';
   @Input() borderColor: string = '#ffffff';
 

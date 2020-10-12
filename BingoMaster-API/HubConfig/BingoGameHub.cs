@@ -23,7 +23,7 @@ namespace BingoMaster_API.HubConfig
 
 		public async Task PlayNextRound(IEnumerable<PlayerModel> players, int[] drawnNumbers)
 		{
-			await Clients.All.SendAsync("NextNumber", _bingoGameLogic.PlayRound(players, drawnNumbers));
+			await Clients.All.SendAsync("PlayNextRound", _bingoGameLogic.PlayRound(players, drawnNumbers));
 		}
 	}
 }

@@ -27,5 +27,6 @@ export class BingoGameComponent implements OnInit {
 
   public onCountDownDone(): void {
     this.countDownDone = true;
+    this.drawnNumbers.push(this.bingoGame.drawnNumber);
   }
 }

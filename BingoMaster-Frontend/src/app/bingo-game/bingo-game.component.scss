@@ -22,6 +22,8 @@
       padding: 20px;
       margin-bottom: 25px;
       box-sizing: border-box;
+      border-bottom-left-radius: 10px;
+      border-bottom-right-radius: 10px;
     }
 
     #bingocard-container {
@@ -30,7 +32,7 @@
       flex-wrap: wrap;
       justify-content: space-around;
 
-      div {
+      mat-card {
         display: flex;
         flex-direction: column;
         flex-basis: 45%;
