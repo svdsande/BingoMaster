@@ -1,4 +1,7 @@
+import { HttpClient, HttpHandler } from '@angular/common/http';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { BingoCardClient } from 'src/api/api';
 
 import { GenerateBingoCardComponent } from './generate-bingo-card.component';
 
@@ -8,7 +11,9 @@ describe('BingoCardComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ GenerateBingoCardComponent ]
+      declarations: [ GenerateBingoCardComponent ],
+      imports: [ BrowserAnimationsModule ],
+      providers: [ BingoCardClient, HttpClient, HttpHandler ]
     })
     .compileComponents();
   }));

@@ -50,8 +50,8 @@ import { CountDownComponent } from './bingo-game/count-down/count-down.component
   imports: [
     BrowserModule,
     AppRoutingModule,
-    BrowserAnimationsModule,
     HttpClientModule,
+    BrowserAnimationsModule,
     ReactiveFormsModule,
     MatButtonModule,
     MatCardModule,

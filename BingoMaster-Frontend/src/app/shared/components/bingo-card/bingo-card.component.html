@@ -1,6 +1,6 @@
 <div class="bingocard">
   <table class="grid" [ngStyle]="{'background-color': this.backgroundColor}">
-    <tr *ngFor="let row of bingoCard.grid">
+    <tr *ngFor="let row of bingoCard?.grid">
       <td *ngFor="let cell of row" [ngStyle]="{'border': '1px solid ' + this.borderColor}"
         [ngClass]="{'marked': this.drawnNumbers.includes(cell)}">
         {{ cell }}

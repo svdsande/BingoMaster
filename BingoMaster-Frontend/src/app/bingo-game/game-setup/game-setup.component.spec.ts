@@ -1,4 +1,6 @@
+import { HttpClient, HttpHandler } from '@angular/common/http';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { BingoGameClient } from 'src/api/api';
 
 import { GameSetupComponent } from './game-setup.component';
 
@@ -8,7 +10,8 @@ describe('SetupComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ GameSetupComponent ]
+      declarations: [ GameSetupComponent ],
+      providers: [ BingoGameClient, HttpClient, HttpHandler ]
     })
     .compileComponents();
   }));
