@@ -30,7 +30,9 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-        working-directory: BingoMaster-Frontend
     - run: npm ci
+      working-directory: BingoMaster-Frontend
     - run: npm run build --if-present
+      working-directory: BingoMaster-Frontend
     - run: npm test
+      working-directory: BingoMaster-Frontend
