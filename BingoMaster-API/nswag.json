@@ -1,6 +1,6 @@
 ﻿{
   "runtime": "NetCore31",
-  "defaultVariables": null,
+  "defaultVariables": "Configuration=Debug",
   "documentGenerator": {
     "aspNetCoreToOpenApi": {
       "project": null,
@@ -49,7 +49,7 @@
       "output": null,
       "outputType": "Swagger2",
       "assemblyPaths": [
-        "bin/Debug/netcoreapp3.1/BingoMaster-API.dll"
+        "bin/$(Configuration)/netcoreapp3.1/BingoMaster-API.dll"
       ],
       "assemblyConfig": null,
       "referencePaths": [],
