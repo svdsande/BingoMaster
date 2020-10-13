@@ -36,3 +36,5 @@ jobs:
       working-directory: BingoMaster-Frontend
     - run: npm test
       working-directory: BingoMaster-Frontend
+      env:
+        CI: true
