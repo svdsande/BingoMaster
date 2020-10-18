@@ -1,17 +1,6 @@
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatChipsModule } from '@angular/material/chips';
-import { MatExpansionModule } from '@angular/material/expansion';
-import { MatGridListModule } from '@angular/material/grid-list';
-import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
-import { MatRippleModule } from '@angular/material/core';
-import { MatSelectModule } from '@angular/material/select';
-import { MatToolbarModule } from '@angular/material/toolbar';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MccColorPickerModule } from 'material-community-components';
@@ -28,6 +17,7 @@ import { BingoCardDetailComponent } from './bingo-card-detail/bingo-card-detail.
 import { PageHeaderComponent } from './page-header/page-header.component';
 import { SharedModule } from './shared/shared.module';
 import { CounterDirective } from './directives/counter.directive';
+import { MaterialModule } from './material.module';
 
 @NgModule({
   declarations: [
@@ -47,19 +37,9 @@ import { CounterDirective } from './directives/counter.directive';
     HttpClientModule,
     BrowserAnimationsModule,
     ReactiveFormsModule,
-    MatButtonModule,
-    MatCardModule,
-    MatCheckboxModule,
-    MatChipsModule,
-    MatExpansionModule,
-    MatGridListModule,
-    MatIconModule,
-    MatInputModule,
-    MatRippleModule,
-    MatSelectModule,
-    MatToolbarModule,
     MccColorPickerModule,
-    SharedModule
+    SharedModule,
+    MaterialModule
   ],
   providers: [
     BingoCardClient,
