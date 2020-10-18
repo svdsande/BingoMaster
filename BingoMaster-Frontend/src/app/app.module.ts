@@ -16,7 +16,6 @@ import { HomeComponent } from './home/home.component';
 import { BingoCardDetailComponent } from './bingo-card-detail/bingo-card-detail.component';
 import { PageHeaderComponent } from './page-header/page-header.component';
 import { SharedModule } from './shared/shared.module';
-import { CounterDirective } from './directives/counter.directive';
 import { MaterialModule } from './material.module';
 
 @NgModule({
@@ -28,8 +27,7 @@ import { MaterialModule } from './material.module';
     DownloadComponent,
     HomeComponent,
     BingoCardDetailComponent,
-    PageHeaderComponent,
-    CounterDirective
+    PageHeaderComponent
   ],
   imports: [
     BrowserModule,
