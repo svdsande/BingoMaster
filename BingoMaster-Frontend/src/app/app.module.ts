@@ -10,7 +10,6 @@ import { FooterComponent } from './footer/footer.component';
 import { HeaderComponent } from './header/header.component';
 import { HomeComponent } from './home/home.component';
 import { MaterialModule } from './material.module';
-import { PageHeaderComponent } from './page-header/page-header.component';
 import { SharedModule } from './shared/shared.module';
 
 @NgModule({
@@ -19,7 +18,6 @@ import { SharedModule } from './shared/shared.module';
     FooterComponent,
     HeaderComponent,
     HomeComponent,
-    PageHeaderComponent
   ],
   imports: [
     BrowserModule,
