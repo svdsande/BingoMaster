@@ -1,8 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { HomeComponent } from '../home/home.component';
-import { BingoCardDetailComponent } from '../bingo-card-detail/bingo-card-detail.component';
-import { BingoGameComponent } from '../bingo-game/bingo-game.component';
+import { HomeComponent } from './home/home.component';
+import { BingoCardDetailComponent } from './bingo-card-detail/bingo-card-detail.component';
 
 const routes: Routes = [
   {
@@ -17,8 +16,7 @@ const routes: Routes = [
   },
   {
     path: 'bingo-game',
-    component: BingoGameComponent,
-    data: { title: 'Bingo game' }
+    loadChildren: () => import('./bingo-game/bingo-game.module')
   },
   {
     path: '',
