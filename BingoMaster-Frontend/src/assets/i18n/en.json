@@ -1,4 +1,15 @@
 {
+  "FOOTER": {
+    "title": "Bingo Master"
+  },
+  "HEADER": {
+    "MENU": {
+      "ITEMS" : {
+        "cards": "Cards",
+        "games": "Games"
+      }
+    }
+  },
   "HOME": {
     "CARDS": {
       "BINGO_CARD": {
