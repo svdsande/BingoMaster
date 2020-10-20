@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer, Title } from '@angular/platform-browser';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 import { filter, map, mergeMap } from 'rxjs/operators';
 
 @Component({
@@ -16,8 +17,12 @@ export class AppComponent implements OnInit {
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private matIconRegistry: MatIconRegistry,
-    private domSanitizer: DomSanitizer
+    private domSanitizer: DomSanitizer,
+    private translateService: TranslateService
   ) {
+    this.translateService.setDefaultLang('en');
+    this.translateService.use('en');
+
     this.matIconRegistry.addSvgIcon(
       'bingo_card',
       this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/bingo_card.svg')
