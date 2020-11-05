@@ -23,7 +23,8 @@ import { TranslateModule } from '@ngx-translate/core';
     BingoCardComponent,
     CounterDirective,
     PageHeaderComponent,
-    SpinnerButtonComponent
+    SpinnerButtonComponent,
+    TranslateModule
   ]
 })
 export class SharedModule { }
