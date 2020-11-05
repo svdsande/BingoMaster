@@ -10,7 +10,25 @@
     <ng-template #game>
       <div id="game-container">
         <div id="controls-container">
-          <button mat-raised-button (click)="this.playNextRound()">Request next number</button>
+          <div id="controls">
+            <button mat-mini-fab color="primary" [disabled]="this.timerDelay === 3000" (click)="this.rewind()">
+              <mat-icon>fast_rewind</mat-icon>
+            </button>
+            <button mat-mini-fab color="primary" *ngIf="!this.playing" (click)="this.play()">
+              <mat-icon>play_arrow</mat-icon>
+            </button>
+            <button mat-mini-fab color="primary" *ngIf="this.playing" (click)="this.pause()">
+              <mat-icon>pause</mat-icon>
+            </button>
+            <button mat-mini-fab color="primary" [disabled]="this.timerDelay === 1000" (click)="this.forward()">
+              <mat-icon>fast_forward</mat-icon>
+            </button>
+            <button mat-mini-fab color="warn" (click)="this.stop()">
+              <mat-icon>stop</mat-icon>
+            </button>
+          </div>
+
+          <div id="divider"></div>
 
           <mat-chip-list>
             <mat-chip *ngFor="let number of this.drawnNumbers" selected color="primary">
@@ -26,11 +44,11 @@
               <mat-card-subtitle>
                 <div class="progress-indicator">
                   <span>Horizontal line done</span>
-                  <mat-icon *ngIf="player.isFullCardDone">done</mat-icon>
+                  <mat-icon *ngIf="player.isHorizontalLineDone">done</mat-icon>
                 </div>
                 <div class="progress-indicator">
                   <span>Full card done</span>
-                  <mat-icon *ngIf="player.isHorizontalLineDone">done</mat-icon>
+                  <mat-icon *ngIf="player.isFullCardDone">done</mat-icon>
                 </div>
               </mat-card-subtitle>
             </mat-card-header>
