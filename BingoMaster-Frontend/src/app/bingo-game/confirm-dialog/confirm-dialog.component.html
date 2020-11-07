@@ -1,0 +1,8 @@
+<h1 mat-dialog-title>{{ 'BINGO_GAME.CONFIRM.title' | translate }}</h1>
+<div mat-dialog-content>
+  <p>{{ 'BINGO_GAME.CONFIRM.description' | translate }}</p>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="this.cancel()">{{ 'BINGO_GAME.CONFIRM.ACTIONS.cancel' | translate }}</button>
+  <button mat-raised-button color="warn" [mat-dialog-close]="true" cdkFocusInitial>{{ 'BINGO_GAME.CONFIRM.ACTIONS.ok' | translate }}</button>
+</div>

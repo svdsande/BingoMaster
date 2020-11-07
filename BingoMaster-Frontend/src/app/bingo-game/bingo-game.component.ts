@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Subject, Subscription, timer } from 'rxjs';
 import { repeatWhen, switchMap, take, takeUntil } from 'rxjs/operators';
 import { BingoGameModel } from 'src/api/api';
 import { BingoGameService } from '../services/bingo-game.service';
+import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-bingo-game',
@@ -20,15 +22,18 @@ export class BingoGameComponent implements OnInit {
   private suspend: Subject<void> = new Subject<void>();
   private subscription: Subscription = new Subscription();
 
-  constructor(private bingoGameService: BingoGameService) { }
+  constructor(
+    private bingoGameService: BingoGameService,
+    private dialog: MatDialog
+  ) { }
 
   ngOnInit(): void {
     this.bingoGameService.nextRoundReceived
-    .pipe(take(1))
-    .subscribe((model: BingoGameModel) => {
-      this.drawnNumbers.push(model.drawnNumber);
-      this.bingoGame.players = model.players;
-    });
+      .pipe(take(1))
+      .subscribe((model: BingoGameModel) => {
+        this.drawnNumbers.push(model.drawnNumber);
+        this.bingoGame.players = model.players;
+      });
 
     this.initiateTimer();
     this.suspend.next();
@@ -45,7 +50,13 @@ export class BingoGameComponent implements OnInit {
   }
 
   public stop(): void {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '500px',
+    });
 
+    dialogRef.afterClosed().subscribe(stopGame => {
+      console.log('The dialog was closed', stopGame);
+    });
   }
 
   //TODO: Maybe switchMap so that timer could be restarted or updated

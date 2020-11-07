@@ -7,12 +7,14 @@ import { GameSetupComponent } from './game-setup/game-setup.component';
 import { SharedModule } from '../shared/shared.module';
 import { CountDownComponent } from './count-down/count-down.component';
 import { MaterialModule } from '../material.module';
+import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
 
 @NgModule({
   declarations: [
     BingoGameComponent,
     CountDownComponent,
-    GameSetupComponent
+    GameSetupComponent,
+    ConfirmDialogComponent
   ],
   imports: [
     CommonModule,
