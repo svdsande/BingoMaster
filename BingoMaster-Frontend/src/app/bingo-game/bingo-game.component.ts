@@ -33,4 +33,9 @@ export class BingoGameComponent implements OnInit {
   public playNextRound(): void {
     this.bingoGameService.playNextRound(this.bingoGame.players, this.drawnNumbers);
   }
+
+  public stopGame(): void {
+    this.bingoGame = undefined;
+    this.drawnNumbers = [];
+  }
 }

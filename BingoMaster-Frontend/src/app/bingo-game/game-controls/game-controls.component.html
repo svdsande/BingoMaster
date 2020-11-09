@@ -20,8 +20,9 @@
   <div id="divider"></div>
 
   <mat-chip-list>
-    <mat-chip *ngFor="let number of this.drawnNumbers" selected color="primary">
-      {{ number }}
+    <mat-chip *ngFor="let number of this.drawnNumbers; last as lastDrawnNumber" selected color="primary">
+      <span *ngIf="lastDrawnNumber; else olderNumber" @lastNumber>{{ number }}</span>
+      <ng-template #olderNumber>{{ number }}</ng-template>
     </mat-chip>
   </mat-chip-list>
 </div>

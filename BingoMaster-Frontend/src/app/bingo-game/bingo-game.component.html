@@ -9,7 +9,7 @@
 
     <ng-template #game>
       <div id="game-container">
-        <game-controls [drawnNumbers]="this.drawnNumbers" (timerElapsed)="this.playNextRound()"></game-controls>
+        <game-controls [drawnNumbers]="this.drawnNumbers" (timerElapsed)="this.playNextRound()" (stopGame)="this.stopGame()"></game-controls>
         <div id="bingocard-container">
           <mat-card *ngFor="let player of this.bingoGame.players">
             <mat-card-header>
