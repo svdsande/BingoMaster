@@ -9,34 +9,7 @@
 
     <ng-template #game>
       <div id="game-container">
-        <div id="controls-container">
-          <div id="controls">
-            <button mat-mini-fab color="primary" [disabled]="this.timerDelay === 3000" (click)="this.rewind()">
-              <mat-icon>fast_rewind</mat-icon>
-            </button>
-            <button mat-mini-fab color="primary" *ngIf="!this.playing" (click)="this.play()">
-              <mat-icon>play_arrow</mat-icon>
-            </button>
-            <button mat-mini-fab color="primary" *ngIf="this.playing" (click)="this.pause()">
-              <mat-icon>pause</mat-icon>
-            </button>
-            <button mat-mini-fab color="primary" [disabled]="this.timerDelay === 1000" (click)="this.forward()">
-              <mat-icon>fast_forward</mat-icon>
-            </button>
-            <button mat-mini-fab color="warn" (click)="this.stop()">
-              <mat-icon>stop</mat-icon>
-            </button>
-          </div>
-
-          <div id="divider"></div>
-
-          <mat-chip-list>
-            <mat-chip *ngFor="let number of this.drawnNumbers" selected color="primary">
-              {{ number }}
-            </mat-chip>
-          </mat-chip-list>
-        </div>
-
+        <game-controls [drawnNumbers]="this.drawnNumbers" (timerElapsed)="this.playNextRound()"></game-controls>
         <div id="bingocard-container">
           <mat-card *ngFor="let player of this.bingoGame.players">
             <mat-card-header>
