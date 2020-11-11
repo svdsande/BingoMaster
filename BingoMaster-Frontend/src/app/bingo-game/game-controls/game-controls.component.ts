@@ -1,4 +1,3 @@
-import { animate, style, transition, trigger } from '@angular/animations';
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Subject, Subscription, timer } from 'rxjs';
@@ -8,15 +7,7 @@ import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.compone
 @Component({
   selector: 'game-controls',
   templateUrl: './game-controls.component.html',
-  styleUrls: ['./game-controls.component.scss'],
-  animations: [
-    trigger('lastNumber', [
-      transition(':enter', [
-        style({ opacity: 0 }),
-        animate('1s', style({ opacity: 1 }))
-      ]),
-    ])
-  ]
+  styleUrls: ['./game-controls.component.scss']
 })
 export class GameControlsComponent implements OnInit, OnDestroy {
 
