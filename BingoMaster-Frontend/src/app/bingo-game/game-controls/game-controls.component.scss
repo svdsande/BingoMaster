@@ -4,15 +4,13 @@
   justify-content: space-between;
   align-items: center;
   height: 100px;
-  padding: 20px;
+  padding: 10px 20px;
   margin-bottom: 25px;
   box-sizing: border-box;
-  border-bottom-left-radius: 10px;
-  border-bottom-right-radius: 10px;
 
   #controls {
     display: flex;
-    flex-basis: 20%;
+    flex-basis: 15%;
     justify-content: space-between;
   }
 
@@ -24,7 +22,7 @@
 
   mat-chip-list {
     display: flex;
-    flex-basis: 75%;
+    flex-basis: 80%;
     justify-content: flex-end;
 
     .drawn {
