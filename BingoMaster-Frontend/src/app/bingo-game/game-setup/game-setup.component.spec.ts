@@ -1,5 +1,5 @@
 import { HttpClient, HttpHandler } from '@angular/common/http';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { BingoGameClient } from 'src/api/api';
 
 import { GameSetupComponent } from './game-setup.component';
@@ -8,7 +8,7 @@ describe('SetupComponent', () => {
   let component: GameSetupComponent;
   let fixture: ComponentFixture<GameSetupComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ GameSetupComponent ],
       providers: [ BingoGameClient, HttpClient, HttpHandler ]
