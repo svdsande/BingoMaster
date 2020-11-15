@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { MaterialModule } from 'src/app/material.module';
 
 import { GameControlsComponent } from './game-controls.component';
 
@@ -8,7 +9,8 @@ describe('GameControlsComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ GameControlsComponent ]
+      declarations: [ GameControlsComponent ],
+      imports: [ MaterialModule ]
     })
     .compileComponents();
   }));

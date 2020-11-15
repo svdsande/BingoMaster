@@ -41,7 +41,7 @@ export class DownloadComponent implements OnInit {
     for (let i = 0; i < bingoCards.length; i++) {
       html2canvas(bingoCards[i] as HTMLElement).then(function (canvas) {
         let image = canvas.toDataURL('image/png');
-        doc.addImage(image, 'PNG', 3, 10, 200, 200, '', 'MEDIUM');
+        doc.addImage(image, 'PNG', 3, 10, 200, 200, '', <any>'MEDIUM');
 
         if (i + 1 === bingoCards.length) {
           doc.save('bingo-cards.pdf');
