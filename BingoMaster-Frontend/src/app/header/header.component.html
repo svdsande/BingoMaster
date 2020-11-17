@@ -9,5 +9,16 @@
     <button mat-button class="menu-item" [routerLink]="'/bingo-game'">
       {{ 'HEADER.MENU.ITEMS.games' | translate }}
     </button>
+
+    <div id="spacer"></div>
+
+    <a mat-button class="menu-item" href="https://github.com/svdsande/BingoMaster">
+      <mat-icon [svgIcon]="'github'"></mat-icon>
+      {{ 'HEADER.MENU.ITEMS.repo' | translate }}
+    </a>
+    <button mat-button class="menu-item">
+      <mat-icon>account_circle</mat-icon>
+      {{ 'HEADER.MENU.ITEMS.login' | translate }}
+    </button>
   </mat-toolbar-row>
 </mat-toolbar>

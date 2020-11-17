@@ -25,7 +25,11 @@ export class AppComponent implements OnInit {
 
     this.matIconRegistry.addSvgIcon(
       'bingo_card',
-      this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/bingo_card.svg')
+      this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/images/bingo_card.svg')
+    );
+    this.matIconRegistry.addSvgIcon(
+      'github',
+      this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/images/github.svg')
     );
   }
 

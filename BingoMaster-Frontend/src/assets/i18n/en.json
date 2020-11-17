@@ -6,7 +6,9 @@
     "MENU": {
       "ITEMS" : {
         "cards": "Cards",
-        "games": "Games"
+        "games": "Games",
+        "repo": "Repository",
+        "login": "Login"
       }
     }
   },
