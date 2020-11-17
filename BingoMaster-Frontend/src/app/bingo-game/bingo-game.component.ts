@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { take } from 'rxjs/operators';
-import { BingoGameModel } from 'src/api/api';
+import { BingoGameModel, PlayerModel } from 'src/api/api';
 import { BingoGameService } from '../services/bingo-game.service';
+import { WinnerDialogComponent } from './winner-dialog/winner-dialog.component';
 
 @Component({
   selector: 'app-bingo-game',
@@ -14,14 +16,22 @@ export class BingoGameComponent implements OnInit {
   public bingoGame: BingoGameModel;
   public countDownDone: boolean = false;
 
-  constructor(private bingoGameService: BingoGameService) { }
+  constructor(
+    private bingoGameService: BingoGameService,
+    private dialog: MatDialog
+  ) { }
 
   ngOnInit(): void {
     this.bingoGameService.nextRoundReceived
       .pipe(take(1))
       .subscribe((model: BingoGameModel) => {
-        this.drawnNumbers.push(model.drawnNumber);
-        this.bingoGame.players = model.players;
+        if (this.gameIsWon(model.players)) {
+          const gameWinner = model.players.find(player => player.isFullCardDone);
+          this.gameWon(gameWinner);
+        } else {
+          this.drawnNumbers.push(model.drawnNumber);
+          this.bingoGame.players = model.players;
+        }
       });
   }
 
@@ -37,5 +47,21 @@ export class BingoGameComponent implements OnInit {
   public stopGame(): void {
     this.bingoGame = undefined;
     this.drawnNumbers = [];
+  }
+
+  private gameWon(player: PlayerModel): void {
+
+    const dialogRef = this.dialog.open(WinnerDialogComponent, {
+      width: '500px',
+      data: { playerName: player.name }
+    });
+
+    dialogRef.afterClosed().subscribe(() => {
+      this.stopGame();
+    });
+  }
+
+  private gameIsWon(players: PlayerModel[]): boolean {
+    return players.filter(player => player.isFullCardDone).length > 0;
   }
 }

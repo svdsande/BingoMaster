@@ -21,12 +21,18 @@
     }
   },
   "BINGO_GAME": {
-    "CONFIRM": {
+    "CONFIRM_STOP": {
       "title": "Are you sure you want to stop this game?",
       "description": "If you stop this game there will be no winner and you are forced to start a new game",
       "ACTIONS": {
         "cancel": "Cancel",
         "ok": "Ok"
+      }
+    },
+    "WINNER": {
+      "title": "And the winner is...",
+      "ACTIONS": {
+        "done": "Done"
       }
     }
   }

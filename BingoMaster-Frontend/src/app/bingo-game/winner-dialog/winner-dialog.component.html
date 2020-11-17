@@ -1,0 +1,21 @@
+<h1 mat-dialog-title>{{ 'BINGO_GAME.WINNER.title' | translate }}</h1>
+<div mat-dialog-content>
+  <div id="content-container">
+    <div class="confetti"></div>
+    <div class="confetti"></div>
+    <div class="confetti"></div>
+    <div class="confetti"></div>
+    <div class="confetti"></div>
+    <div class="confetti"></div>
+    <div class="confetti"></div>
+    <div class="confetti"></div>
+    <div class="confetti"></div>
+    <div class="confetti"></div>
+    <img id="medal" src="../../../assets/medal.svg" alt="Medal" />
+    <h2 id="winner">{{ this.data.playerName }}</h2>
+  </div>
+</div>
+<div mat-dialog-actions>
+  <button mat-raised-button color="primary" [mat-dialog-close]="true">{{ 'BINGO_GAME.WINNER.ACTIONS.done' | translate }}</button>
+</div>
+

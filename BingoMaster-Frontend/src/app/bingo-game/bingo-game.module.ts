@@ -9,6 +9,7 @@ import { CountDownComponent } from './count-down/count-down.component';
 import { MaterialModule } from '../material.module';
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
 import { GameControlsComponent } from './game-controls/game-controls.component';
+import { WinnerDialogComponent } from './winner-dialog/winner-dialog.component';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import { GameControlsComponent } from './game-controls/game-controls.component';
     CountDownComponent,
     GameSetupComponent,
     ConfirmDialogComponent,
-    GameControlsComponent
+    GameControlsComponent,
+    WinnerDialogComponent
   ],
   imports: [
     CommonModule,
