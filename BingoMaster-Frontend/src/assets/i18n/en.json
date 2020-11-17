@@ -13,6 +13,10 @@
     }
   },
   "HOME": {
+    "HEADER": {
+      "title": "BingoMaster",
+      "subtitle": "Host & play bingo games"
+    },
     "CARDS": {
       "BINGO_CARD": {
         "title": "Build your own bingo cards"
