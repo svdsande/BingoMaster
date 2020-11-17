@@ -16,11 +16,11 @@
               <mat-card-title>{{ player.name }}</mat-card-title>
               <mat-card-subtitle>
                 <div class="progress-indicator">
-                  <span>Horizontal line done</span>
+                  <span>{{ 'BINGO_GAME.CARD.PROGRESS_INDICATORS.horizontal_line' | translate }}</span>
                   <mat-icon [ngClass]="{'done': player.isHorizontalLineDone}" *ngIf="player.isHorizontalLineDone">done</mat-icon>
                 </div>
                 <div class="progress-indicator">
-                  <span>Full card done</span>
+                  <span>{{ 'BINGO_GAME.CARD.PROGRESS_INDICATORS.full_card' | translate }}</span>
                   <mat-icon [ngClass]="{'done': player.isFullCardDone}" *ngIf="player.isFullCardDone">done</mat-icon>
                 </div>
               </mat-card-subtitle>

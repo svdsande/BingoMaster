@@ -34,6 +34,12 @@
       "ACTIONS": {
         "done": "Done"
       }
+    },
+    "CARD": {
+      "PROGRESS_INDICATORS": {
+        "horizontal_line": "Horizontal line",
+        "full_card": "Full card"
+      }
     }
   }
 }
