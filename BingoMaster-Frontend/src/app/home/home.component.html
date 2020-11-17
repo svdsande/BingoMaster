@@ -1,11 +1,24 @@
 <div id="container">
+  <div id="header">
+    <div id="background"></div>
+    <div id="content">
+      <div id="logo">
+        <img src="../../assets/images/lottery_balls.svg" alt="Lottery balls" />
+      </div>
+      <div id="title">
+        <h1>BingoMaster</h1>
+        <h1>Host & play bingo games</h1>
+      </div>
+    </div>
+  </div>
+
   <div id="inner">
     <a routerLink="/bingo-cards">
       <mat-card matRipple>
         <div>
           <mat-card-title>{{ 'HOME.CARDS.BINGO_CARD.title' | translate }}</mat-card-title>
           <mat-card-content>
-            <img src="../../assets/bingo_card.svg" alt="Bingo card" />
+            <img src="../../assets/images/bingo_card.svg" alt="Bingo card" />
             <p>
               Sed blandit diam ante, nec luctus ipsum venenatis a. Vivamus fermentum ultrices placerat. Quisque eget
               tincidunt
@@ -24,7 +37,7 @@
         <div>
           <mat-card-title>{{ 'HOME.CARDS.BINGO_GAME.title' | translate }}</mat-card-title>
           <mat-card-content>
-            <img src="../../assets/lottery.svg" alt="Lottery wheel" />
+            <img src="../../assets/images/lottery.svg" alt="Lottery wheel" />
             <p>
               Sed blandit diam ante, nec luctus ipsum venenatis a. Vivamus fermentum ultrices placerat. Quisque eget
               tincidunt
