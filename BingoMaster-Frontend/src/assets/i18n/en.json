@@ -49,5 +49,20 @@
         "full_card": "Full card"
       }
     }
+  },
+  "AUTHENTICATION": {
+    "LOGIN": {
+      "FORM": {
+        "USERNAME": {
+          "label": "Username",
+          "error_message": "Username is required"
+        },
+        "PASSWORD": {
+          "label": "Password",
+          "error_message": "Password is required"
+        },
+        "submit": "Login"
+      }
+    }
   }
 }

@@ -1,1 +1,13 @@
-<p>login works!</p>
+<form [formGroup]="this.loginFormGroup" (ngSubmit)="this.authenticate()">
+  <mat-form-field>
+    <mat-label>{{ 'AUTHENTICATION.LOGIN.FORM.USERNAME.label' | translate }}</mat-label>
+    <input matInput formControlName="username" type="text">
+    <mat-error *ngIf="this.loginFormGroup.get('username').invalid">{{ 'AUTHENTICATION.LOGIN.FORM.USERNAME.error_message' | translate }}</mat-error>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>{{ 'AUTHENTICATION.LOGIN.FORM.PASSWORD.label' | translate }}</mat-label>
+    <input matInput formControlName="password" type="password">
+    <mat-error *ngIf="this.loginFormGroup.get('password').invalid">{{ 'AUTHENTICATION.LOGIN.FORM.PASSWORD.error_message' | translate }}</mat-error>
+  </mat-form-field>
+  <button mat-raised-button color="primary" type="submit">{{ 'AUTHENTICATION.LOGIN.FORM.submit' | translate}}</button>
+</form>
