@@ -53,9 +53,9 @@
   "AUTHENTICATION": {
     "LOGIN": {
       "FORM": {
-        "USERNAME": {
-          "label": "Username",
-          "error_message": "Username is required"
+        "EMAIL": {
+          "label": "Email address",
+          "error_message": "Email address is required"
         },
         "PASSWORD": {
           "label": "Password",
