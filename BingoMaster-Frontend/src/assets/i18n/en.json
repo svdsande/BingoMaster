@@ -19,10 +19,12 @@
     },
     "CARDS": {
       "BINGO_CARD": {
-        "title": "Build your own bingo cards"
+        "title": "Build your own bingo cards",
+        "description": "Design your own personal bingo cards. You can specify the grid size along with many other aspects such as border and background color, and if the center square should be free or not. Give it a go and see it for yourself."
       },
       "BINGO_GAME": {
-        "title": "Play a game"
+        "title": "Play a game",
+        "description": "Organize a fun bingo game with your friends. You can set the desired date and time for the game and send your friends an invite link. There a two games settings you can play manual or fully automatic. Give it a shot."
       }
     }
   },
