@@ -24,6 +24,7 @@ namespace BingoMaster_API
             services.AddControllers();
             services.AddTransient<IBingoCardLogic, BingoCardLogic>();
             services.AddTransient<IBingoGameLogic, BingoGameLogic>();
+            services.AddTransient<IUserLogic, UserLogic>();
             services.AddScoped<IBingoNumberLogic, BingoNumberLogic>();
 
             services.AddCors();
