@@ -1,6 +1,7 @@
 using BingoMaster_API.HubConfig;
 using BingoMaster_Logic;
 using BingoMaster_Logic.Interfaces;
+using BingoMaster_Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -24,8 +25,10 @@ namespace BingoMaster_API
             services.AddControllers();
             services.AddTransient<IBingoCardLogic, BingoCardLogic>();
             services.AddTransient<IBingoGameLogic, BingoGameLogic>();
-            services.AddTransient<IUserLogic, UserLogic>();
+            services.AddScoped<IUserLogic, UserLogic>();
             services.AddScoped<IBingoNumberLogic, BingoNumberLogic>();
+
+            services.Configure<JwtSettingsModel>(Configuration.GetSection("Jwt"));
 
             services.AddCors();
             services.AddSignalR();

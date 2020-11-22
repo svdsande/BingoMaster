@@ -8,19 +8,19 @@ namespace BingoMaster_Logic
 	{
 		#region Fields
 
-		private readonly int[] numbers;
+		private readonly int[] _numbers;
 		private int totalDrawnNumbers = 0;
 
 		#endregion
 
 		public BingoNumberLogic()
 		{
-			numbers = GetRandomNumbers();
+			_numbers = GetRandomNumbers();
 		}
 
 		public int GetNextNumber()
 		{
-			var nextNumber = numbers[totalDrawnNumbers];
+			var nextNumber = _numbers[totalDrawnNumbers];
 			totalDrawnNumbers++;
 
 			return nextNumber;
