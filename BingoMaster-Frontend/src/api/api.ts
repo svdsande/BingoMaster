@@ -160,6 +160,77 @@ export class BingoGameClient {
     }
 }
 
+@Injectable()
+export class UserClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ? baseUrl : "";
+    }
+
+    authenticate(authenticateUserModel: AuthenticateUserModel): Observable<AuthenticatedUserModel> {
+        let url_ = this.baseUrl + "/api/User/authenticate";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(authenticateUserModel);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processAuthenticate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processAuthenticate(<any>response_);
+                } catch (e) {
+                    return <Observable<AuthenticatedUserModel>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuthenticatedUserModel>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processAuthenticate(response: HttpResponseBase): Observable<AuthenticatedUserModel> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuthenticatedUserModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = resultData400 !== undefined ? resultData400 : <any>null;
+            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuthenticatedUserModel>(<any>null);
+    }
+}
+
 export class BingoCardModel implements IBingoCardModel {
     name?: string | undefined;
     grid?: number[][] | undefined;
@@ -406,6 +477,102 @@ export interface IBingoGameCreationModel {
     name?: string | undefined;
     players?: PlayerModel[] | undefined;
     size: number;
+}
+
+export class AuthenticatedUserModel implements IAuthenticatedUserModel {
+    id!: string;
+    firstName?: string | undefined;
+    middleName?: string | undefined;
+    lastName?: string | undefined;
+    emailAddress?: string | undefined;
+    token?: string | undefined;
+
+    constructor(data?: IAuthenticatedUserModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.firstName = _data["firstName"];
+            this.middleName = _data["middleName"];
+            this.lastName = _data["lastName"];
+            this.emailAddress = _data["emailAddress"];
+            this.token = _data["token"];
+        }
+    }
+
+    static fromJS(data: any): AuthenticatedUserModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuthenticatedUserModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["firstName"] = this.firstName;
+        data["middleName"] = this.middleName;
+        data["lastName"] = this.lastName;
+        data["emailAddress"] = this.emailAddress;
+        data["token"] = this.token;
+        return data; 
+    }
+}
+
+export interface IAuthenticatedUserModel {
+    id: string;
+    firstName?: string | undefined;
+    middleName?: string | undefined;
+    lastName?: string | undefined;
+    emailAddress?: string | undefined;
+    token?: string | undefined;
+}
+
+export class AuthenticateUserModel implements IAuthenticateUserModel {
+    emailAddress?: string | undefined;
+    password?: string | undefined;
+
+    constructor(data?: IAuthenticateUserModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.emailAddress = _data["emailAddress"];
+            this.password = _data["password"];
+        }
+    }
+
+    static fromJS(data: any): AuthenticateUserModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuthenticateUserModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["emailAddress"] = this.emailAddress;
+        data["password"] = this.password;
+        return data; 
+    }
+}
+
+export interface IAuthenticateUserModel {
+    emailAddress?: string | undefined;
+    password?: string | undefined;
 }
 
 export class ApiException extends Error {

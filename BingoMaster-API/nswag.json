@@ -1,14 +1,14 @@
 ﻿{
   "runtime": "NetCore31",
-  "defaultVariables": "Configuration=Debug",
+  "defaultVariables": "",
   "documentGenerator": {
     "aspNetCoreToOpenApi": {
-      "project": null,
+      "project": "BingoMaster-API.csproj",
       "msBuildProjectExtensionsPath": null,
-      "configuration": null,
+      "configuration": "$(Configuration)",
       "runtime": null,
       "targetFramework": null,
-      "noBuild": false,
+      "noBuild": true,
       "verbose": true,
       "workingDirectory": null,
       "requireParametersWithoutDefault": false,
@@ -48,9 +48,7 @@
       "allowNullableBodyParameters": true,
       "output": null,
       "outputType": "Swagger2",
-      "assemblyPaths": [
-        "bin/$(Configuration)/netcoreapp3.1/BingoMaster-API.dll"
-      ],
+      "assemblyPaths": [],
       "assemblyConfig": null,
       "referencePaths": [],
       "useNuGetCache": false

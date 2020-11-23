@@ -28,9 +28,9 @@ namespace BingoMaster_API
             services.AddScoped<IUserLogic, UserLogic>();
             services.AddScoped<IBingoNumberLogic, BingoNumberLogic>();
 
-            services.Configure<JwtSettingsModel>(Configuration.GetSection("Jwt"));
+			services.Configure<JwtSettingsModel>(Configuration.GetSection("Jwt"));
 
-            services.AddCors();
+			services.AddCors();
             services.AddSignalR();
 
             services.AddSwaggerDocument(config =>
