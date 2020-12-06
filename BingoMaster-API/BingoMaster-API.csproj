@@ -14,6 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.2" />
     <PackageReference Include="NSwag.AspNetCore" Version="13.5.0" />
     <PackageReference Include="NSwag.MSBuild" Version="13.5.0">
@@ -23,6 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\BingoMaster-Entities\BingoMaster-Entities.csproj" />
     <ProjectReference Include="..\BingoMaster-Logic\BingoMaster-Logic.csproj" />
     <ProjectReference Include="..\BingoMaster-Models\BingoMaster-Models.csproj" />
   </ItemGroup>

@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BingoMaster-Tests", "BingoM
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BingoMaster-Models", "BingoMaster-Models\BingoMaster-Models.csproj", "{77CD99FC-ACE9-4516-BCEA-7BFDEA6D29E3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BingoMaster-Entities", "BingoMaster-Entities\BingoMaster-Entities.csproj", "{AA5B67EE-F0D6-43D1-B343-170B55D17B27}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{77CD99FC-ACE9-4516-BCEA-7BFDEA6D29E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{77CD99FC-ACE9-4516-BCEA-7BFDEA6D29E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{77CD99FC-ACE9-4516-BCEA-7BFDEA6D29E3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AA5B67EE-F0D6-43D1-B343-170B55D17B27}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AA5B67EE-F0D6-43D1-B343-170B55D17B27}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AA5B67EE-F0D6-43D1-B343-170B55D17B27}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AA5B67EE-F0D6-43D1-B343-170B55D17B27}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

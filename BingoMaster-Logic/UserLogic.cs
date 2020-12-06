@@ -1,4 +1,5 @@
-﻿using BingoMaster_Logic.Interfaces;
+﻿using BingoMaster_Entities;
+using BingoMaster_Logic.Interfaces;
 using BingoMaster_Models;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -15,12 +16,14 @@ namespace BingoMaster_Logic
 		#region Fields
 
 		private readonly JwtSettingsModel _jwtSettings;
+		private readonly BingoMasterDbContext _context;
 
 		#endregion
 
-		public UserLogic(IOptions<JwtSettingsModel> jwtSettings)
+		public UserLogic(IOptions<JwtSettingsModel> jwtSettings, BingoMasterDbContext context)
 		{
 			_jwtSettings = jwtSettings.Value;
+			_context = context;
 		}
 
 		public AuthenticatedUserModel Authenticate(AuthenticateUserModel authenticateUserModel)
@@ -30,7 +33,12 @@ namespace BingoMaster_Logic
 				throw new ArgumentException("No email address or password provided");
 			}
 
-			// TODO: Check if user exists in database
+			var user = _context.Users.Find(authenticateUserModel.EmailAddress, authenticateUserModel.Password);
+
+			if (user == null)
+			{
+				return null;
+			}
 
 			var token = GenerateToken();
 
