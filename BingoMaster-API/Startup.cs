@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
+using BingoMaster_API.Helpers;
 
 namespace BingoMaster_API
 {
@@ -74,6 +75,8 @@ namespace BingoMaster_API
 			app.UseRouting();
 
 			app.UseAuthorization();
+
+			app.UseMiddleware<JwtMiddleware>();
 
 			app.UseEndpoints(endpoints =>
 			{

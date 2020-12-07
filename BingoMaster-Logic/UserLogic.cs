@@ -1,6 +1,7 @@
 ﻿using BingoMaster_Entities;
 using BingoMaster_Logic.Interfaces;
 using BingoMaster_Models;
+using BingoMaster_Models.User;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -42,8 +43,24 @@ namespace BingoMaster_Logic
 
 			return new AuthenticatedUserModel
 			{
+				Id = user.Id,
 				EmailAddress = authenticateUserModel.EmailAddress,
+				FirstName = user.Firstname,
+				LastName = user.Lastname,
 				Token = GenerateToken(user)
+			};
+		}
+
+		public UserModel GetUserById(Guid id)
+		{
+			var user = _context.Users.Find(id);
+
+			return new UserModel
+			{
+				Id = user.Id,
+				EmailAddress = user.Emailaddress,
+				FirstName = user.Firstname,
+				LastName = user.Lastname
 			};
 		}
 

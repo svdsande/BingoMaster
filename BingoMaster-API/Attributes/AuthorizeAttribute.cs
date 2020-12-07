@@ -1,4 +1,5 @@
 ﻿using BingoMaster_Models;
+using BingoMaster_Models.User;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -11,8 +12,8 @@ namespace BingoMaster_API.Attributes
 	{
 		public void OnAuthorization(AuthorizationFilterContext context)
 		{
-			var authenticatedUserModel = (AuthenticatedUserModel)context.HttpContext.Items["User"];
-			if (authenticatedUserModel == null)
+			var userModel = (UserModel)context.HttpContext.Items["User"];
+			if (userModel == null)
 			{
 				context.Result = new JsonResult(new { message = "Unauthorized" }) { StatusCode = StatusCodes.Status401Unauthorized };
 			}
