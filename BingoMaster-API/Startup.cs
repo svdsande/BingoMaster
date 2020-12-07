@@ -25,13 +25,14 @@ namespace BingoMaster_API
 		public void ConfigureServices(IServiceCollection services)
 		{
 			services.AddControllers();
+			services.AddDbContext<BingoMasterDbContext>(
+				options => options.UseSqlServer(Configuration.GetConnectionString("Database")));
+
 			services.AddTransient<IBingoCardLogic, BingoCardLogic>();
 			services.AddTransient<IBingoGameLogic, BingoGameLogic>();
 			services.AddScoped<IUserLogic, UserLogic>();
 			services.AddScoped<IBingoNumberLogic, BingoNumberLogic>();
 
-			services.AddDbContext<BingoMasterDbContext>(
-				options => options.UseSqlServer("name=ConnectionStrings:Database"));
 
 			services.Configure<JwtSettingsModel>(Configuration.GetSection("Jwt"));
 

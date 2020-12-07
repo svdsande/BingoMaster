@@ -1,7 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace BingoMaster_Entities
 {
@@ -11,7 +8,7 @@ namespace BingoMaster_Entities
 		public DbSet<Player> Players { get; set; }
 		public DbSet<Game> Games { get; set; }
 
-		public BingoMasterDbContext(DbContextOptions<BingoMasterDbContext> options) :base(options)
+		public BingoMasterDbContext(DbContextOptions<BingoMasterDbContext> options) : base(options)
 		{
 		}
 
@@ -21,6 +18,19 @@ namespace BingoMaster_Entities
 				.HasOne(user => user.Player)
 				.WithOne(player => player.User)
 				.HasForeignKey<Player>(player => player.UserId);
+
+			modelBuilder.Entity<GamePlayer>()
+				.HasIndex(gamePlayer => new { gamePlayer.GameId, gamePlayer.PlayerId });
+
+			modelBuilder.Entity<GamePlayer>()
+				.HasOne(gamePlayer => gamePlayer.Game)
+				.WithMany(game => game.GamePlayers)
+				.HasForeignKey(gamePlayer => gamePlayer.GameId);
+
+			modelBuilder.Entity<GamePlayer>()
+				.HasOne(gamePlayer => gamePlayer.Player)
+				.WithMany(game => game.GamePlayers)
+				.HasForeignKey(gamePlayer => gamePlayer.PlayerId);
 		}
 	}
 }

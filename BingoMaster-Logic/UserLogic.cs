@@ -40,7 +40,7 @@ namespace BingoMaster_Logic
 				return null;
 			}
 
-			var token = GenerateToken();
+			var token = GenerateToken(user);
 
 			return new AuthenticatedUserModel
 			{
@@ -49,13 +49,13 @@ namespace BingoMaster_Logic
 			};
 		}
 
-		private string GenerateToken()
+		private string GenerateToken(User user)
 		{
 			var tokenHandler = new JwtSecurityTokenHandler();
 			var key = Encoding.ASCII.GetBytes(_jwtSettings.Secret);
 			var tokenDescriptor = new SecurityTokenDescriptor
 			{
-				Subject = new ClaimsIdentity(new[] { new Claim("id", "Foo") }),
+				Subject = new ClaimsIdentity(new[] { new Claim("id", user.Id.ToString()) }),
 				Expires = DateTime.UtcNow.AddDays(7),
 				SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
 			};

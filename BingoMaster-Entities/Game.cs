@@ -9,6 +9,6 @@ namespace BingoMaster_Entities
 		public Guid Id { get; set; }
 		public string Name { get; set; }
 		public int Grid { get; set; }
-		public ICollection<Player> Players { get; set; } 
+		public ICollection<GamePlayer> GamePlayers { get; set; } 
 	}
 }
