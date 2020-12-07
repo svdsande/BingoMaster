@@ -40,12 +40,10 @@ namespace BingoMaster_Logic
 				return null;
 			}
 
-			var token = GenerateToken(user);
-
 			return new AuthenticatedUserModel
 			{
 				EmailAddress = authenticateUserModel.EmailAddress,
-				Token = token
+				Token = GenerateToken(user)
 			};
 		}
 
