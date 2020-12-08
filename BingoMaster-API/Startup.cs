@@ -29,6 +29,7 @@ namespace BingoMaster_API
 			var builder = new SqlConnectionStringBuilder(
 				Configuration.GetConnectionString("Database"));
 			builder.Password = Configuration["DbPassword"];
+			builder.UserID = Configuration["UserId"];
 
 			services.AddControllers();
 			services.AddDbContext<BingoMasterDbContext>(
