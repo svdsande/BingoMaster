@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using BingoMaster_API.Helpers;
+using Microsoft.Data.SqlClient;
 
 namespace BingoMaster_API
 {
@@ -25,9 +26,13 @@ namespace BingoMaster_API
 		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services)
 		{
+			var builder = new SqlConnectionStringBuilder(
+				Configuration.GetConnectionString("Database"));
+			builder.Password = Configuration["DbPassword"];
+
 			services.AddControllers();
 			services.AddDbContext<BingoMasterDbContext>(
-				options => options.UseSqlServer(Configuration.GetConnectionString("Database")));
+				options => options.UseSqlServer(builder.ConnectionString));
 
 			services.AddTransient<IBingoCardLogic, BingoCardLogic>();
 			services.AddTransient<IBingoGameLogic, BingoGameLogic>();

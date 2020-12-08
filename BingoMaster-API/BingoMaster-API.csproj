@@ -1,18 +1,16 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
-
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <RootNamespace>BingoMaster_API</RootNamespace>
+    <UserSecretsId>94db3988-1c26-412b-9ca4-5656ed8daff2</UserSecretsId>
   </PropertyGroup>
-
   <ItemGroup>
     <Content Remove="nswag.json" />
   </ItemGroup>
-
   <ItemGroup>
     <None Include="nswag.json" />
   </ItemGroup>
-
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.10">
       <PrivateAssets>all</PrivateAssets>
@@ -26,18 +24,14 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\BingoMaster-Entities\BingoMaster-Entities.csproj" />
     <ProjectReference Include="..\BingoMaster-Logic\BingoMaster-Logic.csproj" />
     <ProjectReference Include="..\BingoMaster-Models\BingoMaster-Models.csproj" />
   </ItemGroup>
-
   <Target Name="NSwag" AfterTargets="Build">
-	<Copy SourceFiles="@(ReferencePath)" DestinationFolder="$(OutDir)References" />
-	<Exec Command="$(NSwagExe_Core31) run nswag.json /variables:Configuration=$(Configuration)" />
-	<RemoveDir Directories="$(OutDir)References" />
+    <Copy SourceFiles="@(ReferencePath)" DestinationFolder="$(OutDir)References" />
+    <Exec Command="$(NSwagExe_Core31) run nswag.json /variables:Configuration=$(Configuration)" />
+    <RemoveDir Directories="$(OutDir)References" />
   </Target>
-
-	
 </Project>
