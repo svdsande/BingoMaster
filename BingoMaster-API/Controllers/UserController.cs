@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BingoMaster_Logic.Interfaces;
 using BingoMaster_Models;
+using BingoMaster_Models.User;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NSwag.Annotations;
@@ -43,6 +44,19 @@ namespace BingoMaster_API.Controllers
 			}
 
 			return Ok(authenticatedUser);
+		}
+
+		[HttpPost("register")]
+		public IActionResult Register([FromBody] RegisterUserModel registerUserModel)
+		{
+			if (registerUserModel == null)
+			{
+				return BadRequest("Invalid register model provided");
+			}
+
+			_userLogic.Register(registerUserModel);
+
+			return Ok();
 		}
 	}
 }

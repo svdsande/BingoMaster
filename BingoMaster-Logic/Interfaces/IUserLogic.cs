@@ -9,6 +9,7 @@ namespace BingoMaster_Logic.Interfaces
 	public interface IUserLogic
 	{
 		AuthenticatedUserModel Authenticate(AuthenticateUserModel authenticateUserModel);
+		void Register(RegisterUserModel registerUserModel);
 		UserModel GetUserById(Guid id);
 	}
 }

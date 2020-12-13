@@ -2,12 +2,14 @@
 using BingoMaster_Logic.Interfaces;
 using BingoMaster_Models;
 using BingoMaster_Models.User;
+using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace BingoMaster_Logic
@@ -45,8 +47,8 @@ namespace BingoMaster_Logic
 			{
 				Id = user.Id,
 				EmailAddress = authenticateUserModel.EmailAddress,
-				FirstName = user.Firstname,
-				LastName = user.Lastname,
+				FirstName = user.FirstName,
+				LastName = user.LastName,
 				Token = GenerateToken(user)
 			};
 		}
@@ -58,10 +60,40 @@ namespace BingoMaster_Logic
 			return new UserModel
 			{
 				Id = user.Id,
-				EmailAddress = user.Emailaddress,
-				FirstName = user.Firstname,
-				LastName = user.Lastname
+				EmailAddress = user.EmailAddress,
+				FirstName = user.FirstName,
+				LastName = user.LastName
 			};
+		}
+
+		public void Register(RegisterUserModel registerUserModel)
+		{
+			if (registerUserModel == null || string.IsNullOrWhiteSpace(registerUserModel.EmailAddress) || string.IsNullOrWhiteSpace(registerUserModel.Password))
+			{
+				throw new ArgumentException("No email address or password provided");
+			}
+
+			var user = _context.Users.Find(registerUserModel.EmailAddress);
+
+			if (user != null)
+			{
+				throw new ArgumentException("Email address is already taken");
+			}
+
+			var salt = GetRandomSalt();
+			var hashedPassword = GetHashedPassword(registerUserModel.Password, salt);
+
+			var newUser = new User
+			{
+				EmailAddress = registerUserModel.EmailAddress,
+				FirstName = registerUserModel.FirstName,
+				LastName = registerUserModel.LastName,
+				Salt = Convert.ToBase64String(salt),
+				Hash = hashedPassword
+			};
+
+			_context.Add(newUser);
+			_context.SaveChanges();
 		}
 
 		private string GenerateToken(User user)
@@ -76,6 +108,26 @@ namespace BingoMaster_Logic
 			};
 			var token = tokenHandler.CreateToken(tokenDescriptor);
 			return tokenHandler.WriteToken(token);
+		}
+
+		private string GetHashedPassword(string password, byte[] salt)
+		{
+			return Convert.ToBase64String(KeyDerivation.Pbkdf2(
+			password: password,
+			salt: salt,
+			prf: KeyDerivationPrf.HMACSHA1,
+			iterationCount: 10000,
+			numBytesRequested: 256 / 8));
+	}
+
+		private byte[] GetRandomSalt()
+		{
+			byte[] salt = new byte[128 / 8];
+
+			using var rng = RandomNumberGenerator.Create();
+			rng.GetBytes(salt);
+
+			return salt;
 		}
 	}
 }
