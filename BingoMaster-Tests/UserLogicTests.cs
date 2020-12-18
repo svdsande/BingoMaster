@@ -2,6 +2,7 @@
 using BingoMaster_Logic;
 using BingoMaster_Logic.Interfaces;
 using BingoMaster_Models;
+using BingoMaster_Models.User;
 using Microsoft.Extensions.Options;
 using Moq;
 using System;
@@ -32,6 +33,7 @@ namespace BingoMaster_Tests
 			};
 
 			context.Users.Add(user);
+			context.SaveChanges();
 
 			jwtSettings = new JwtSettingsModel { Secret = "YellowLedbetter" };
 			_jwtSettingsModelMock = new Mock<IOptions<JwtSettingsModel>>(MockBehavior.Strict);
@@ -52,6 +54,35 @@ namespace BingoMaster_Tests
 			};
 
 			var exception = Assert.Throws<ArgumentException>(() => _userLogic.Authenticate(model));
+		}
+
+		[Theory]
+		[InlineData("", "password")]
+		[InlineData("email", "")]
+		[InlineData("", "")]
+		public void Register_NoPasswordOrEmail_ExceptionExpected(string emailAddress, string password)
+		{
+			var model = new RegisterUserModel
+			{
+				EmailAddress = emailAddress,
+				Password = password
+			};
+
+			var exception = Assert.Throws<ArgumentException>(() => _userLogic.Register(model));
+			Assert.Equal("No email address or password provided", exception.Message);
+		}
+
+		[Fact]
+		public void Register_EmailTaken_ExceptionExpected()
+		{
+			var model = new RegisterUserModel
+			{
+				EmailAddress = "eddie-vedder@pearljam.com",
+				Password = "BlackAndAlive"
+			};
+
+			var exception = Assert.Throws<ArgumentException>(() => _userLogic.Register(model));
+			Assert.Equal("Email address is already taken", exception.Message);
 		}
 	}
 }

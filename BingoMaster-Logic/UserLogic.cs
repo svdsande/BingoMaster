@@ -8,6 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -36,7 +37,7 @@ namespace BingoMaster_Logic
 				throw new ArgumentException("No email address or password provided");
 			}
 
-			var user = _context.Users.Find(authenticateUserModel.EmailAddress);
+			var user = _context.Users.FirstOrDefault(user => user.EmailAddress == authenticateUserModel.EmailAddress);
 
 			if (user == null)
 			{
@@ -78,7 +79,7 @@ namespace BingoMaster_Logic
 				throw new ArgumentException("No email address or password provided");
 			}
 
-			var user = _context.Users.Find(registerUserModel.EmailAddress);
+			var user = _context.Users.FirstOrDefault(user => user.EmailAddress == registerUserModel.EmailAddress);
 
 			if (user != null)
 			{
