@@ -26,6 +26,7 @@ namespace BingoMaster_API
 		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services)
 		{
+			
 			var builder = new SqlConnectionStringBuilder(
 				Configuration.GetConnectionString("Database"));
 			builder.Password = Configuration["DbPassword"];
@@ -67,6 +68,7 @@ namespace BingoMaster_API
 			if (env.IsDevelopment())
 			{
 				app.UseDeveloperExceptionPage();
+
 
 				app.UseCors(builder => builder
 					.WithOrigins("http://localhost:4200")
