@@ -36,11 +36,16 @@ namespace BingoMaster_Logic
 				throw new ArgumentException("No email address or password provided");
 			}
 
-			var user = _context.Users.Find(authenticateUserModel.EmailAddress, authenticateUserModel.Password);
+			var user = _context.Users.Find(authenticateUserModel.EmailAddress);
 
 			if (user == null)
 			{
 				return null;
+			}
+
+			if (!VerifyPassword(authenticateUserModel.Password, user.Hash, user.Salt))
+			{
+				throw new Exception("Login failed");
 			}
 
 			return new AuthenticatedUserModel
@@ -118,7 +123,7 @@ namespace BingoMaster_Logic
 			prf: KeyDerivationPrf.HMACSHA1,
 			iterationCount: 10000,
 			numBytesRequested: 256 / 8));
-	}
+		}
 
 		private byte[] GetRandomSalt()
 		{
@@ -128,6 +133,14 @@ namespace BingoMaster_Logic
 			rng.GetBytes(salt);
 
 			return salt;
+		}
+
+		private bool VerifyPassword(string password, string hash, string salt)
+		{
+			var saltBytes = Convert.FromBase64String(salt);
+			var hashedPassword = GetHashedPassword(password, saltBytes);
+
+			return hashedPassword == hash;
 		}
 	}
 }
