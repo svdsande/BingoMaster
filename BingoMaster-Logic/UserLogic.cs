@@ -21,13 +21,15 @@ namespace BingoMaster_Logic
 
 		private readonly JwtSettingsModel _jwtSettings;
 		private readonly BingoMasterDbContext _context;
+		private readonly IPasswordLogic _passwordLogic;
 
 		#endregion
 
-		public UserLogic(IOptions<JwtSettingsModel> jwtSettings, BingoMasterDbContext context)
+		public UserLogic(IOptions<JwtSettingsModel> jwtSettings, BingoMasterDbContext context, IPasswordLogic passwordLogic)
 		{
 			_jwtSettings = jwtSettings.Value;
 			_context = context;
+			_passwordLogic = passwordLogic;
 		}
 
 		public AuthenticatedUserModel Authenticate(AuthenticateUserModel authenticateUserModel)
@@ -44,7 +46,7 @@ namespace BingoMaster_Logic
 				return null;
 			}
 
-			if (!VerifyPassword(authenticateUserModel.Password, user.Hash, user.Salt))
+			if (!_passwordLogic.VerifyPassword(authenticateUserModel.Password, user.Hash, user.Salt))
 			{
 				throw new Exception("Login failed");
 			}
@@ -79,6 +81,8 @@ namespace BingoMaster_Logic
 				throw new ArgumentException("No email address or password provided");
 			}
 
+			//TODO: Check password length and strength
+
 			var user = _context.Users.FirstOrDefault(user => user.EmailAddress == registerUserModel.EmailAddress);
 
 			if (user != null)
@@ -86,8 +90,8 @@ namespace BingoMaster_Logic
 				throw new ArgumentException("Email address is already taken");
 			}
 
-			var salt = GetRandomSalt();
-			var hashedPassword = GetHashedPassword(registerUserModel.Password, salt);
+			var salt = _passwordLogic.GetRandomSalt();
+			var hashedPassword = _passwordLogic.GetHashedPassword(registerUserModel.Password, salt);
 
 			var newUser = new User
 			{
@@ -114,34 +118,6 @@ namespace BingoMaster_Logic
 			};
 			var token = tokenHandler.CreateToken(tokenDescriptor);
 			return tokenHandler.WriteToken(token);
-		}
-
-		private string GetHashedPassword(string password, byte[] salt)
-		{
-			return Convert.ToBase64String(KeyDerivation.Pbkdf2(
-			password: password,
-			salt: salt,
-			prf: KeyDerivationPrf.HMACSHA1,
-			iterationCount: 10000,
-			numBytesRequested: 256 / 8));
-		}
-
-		private byte[] GetRandomSalt()
-		{
-			byte[] salt = new byte[128 / 8];
-
-			using var rng = RandomNumberGenerator.Create();
-			rng.GetBytes(salt);
-
-			return salt;
-		}
-
-		private bool VerifyPassword(string password, string hash, string salt)
-		{
-			var saltBytes = Convert.FromBase64String(salt);
-			var hashedPassword = GetHashedPassword(password, saltBytes);
-
-			return hashedPassword == hash;
 		}
 	}
 }

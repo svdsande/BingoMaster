@@ -84,5 +84,18 @@ namespace BingoMaster_Tests
 			var exception = Assert.Throws<ArgumentException>(() => _userLogic.Register(model));
 			Assert.Equal("Email address is already taken", exception.Message);
 		}
+
+		[Fact]
+		public void Register_EmailNotTaken_Success()
+		{
+			var model = new RegisterUserModel
+			{
+				EmailAddress = "eddie-vedder@pearljam.com",
+				Password = "BlackAndAlive"
+			};
+
+			var exception = Assert.Throws<ArgumentException>(() => _userLogic.Register(model));
+			Assert.Equal("Email address is already taken", exception.Message);
+		}
 	}
 }
