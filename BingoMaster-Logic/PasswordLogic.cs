@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using System;
 using System.Security.Cryptography;
+using System.Text.RegularExpressions;
 
 namespace BingoMaster_Logic
 {
@@ -38,6 +39,36 @@ namespace BingoMaster_Logic
 			{
 				return PasswordStrength.VeryWeak;
 			}
+
+			var score = 1;
+
+			if (password.Length >= 8)
+			{
+				score++;
+			}
+			if (password.Length >= 12)
+			{
+				score++;
+			}
+			// Only numbers
+			if (Regex.Match(password, @"^\d+$", RegexOptions.ECMAScript).Success)
+			{
+				score++;
+			}
+
+			// Both lowercase and uppercase
+			if (Regex.Match(password, @"^(?=.*[a-z])(?=.*[A-Z]).+$", RegexOptions.ECMAScript).Success)
+			{
+				score++;
+			}
+
+			// Contains special character
+			if (Regex.Match(password, @"[!,@,#,$,%,^,&,*,?,_,~,-,£,(,)]", RegexOptions.ECMAScript).Success)
+			{
+				score++;
+			}
+
+			return (PasswordStrength)score;
 		}
 
 		public byte[] GetRandomSalt()

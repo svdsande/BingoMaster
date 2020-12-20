@@ -6,14 +6,13 @@ using BingoMaster_Models.User;
 using Microsoft.Extensions.Options;
 using Moq;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using Xunit;
 
 namespace BingoMaster_Tests
 {
 	public class UserLogicTests
 	{
+		private readonly Mock<IPasswordLogic> _passwordLogicMock;
 		private readonly Mock<IOptions<JwtSettingsModel>> _jwtSettingsModelMock;
 		private readonly JwtSettingsModel jwtSettings;
 		private readonly IUserLogic _userLogic;
@@ -38,7 +37,8 @@ namespace BingoMaster_Tests
 			jwtSettings = new JwtSettingsModel { Secret = "YellowLedbetter" };
 			_jwtSettingsModelMock = new Mock<IOptions<JwtSettingsModel>>(MockBehavior.Strict);
 			_jwtSettingsModelMock.Setup(setting => setting.Value).Returns(jwtSettings);
-			_userLogic = new UserLogic(_jwtSettingsModelMock.Object, context);
+			_passwordLogicMock = new Mock<IPasswordLogic>(MockBehavior.Strict);
+			_userLogic = new UserLogic(_jwtSettingsModelMock.Object, context, _passwordLogicMock.Object);
 		}
 
 		[Theory]
