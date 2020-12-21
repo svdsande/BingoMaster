@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using BingoMaster_Logic;
 using BingoMaster_Models;
@@ -26,8 +27,8 @@ namespace BingoMaster_API.Controllers
         }
 
         [HttpPost]
-        [SwaggerResponse(System.Net.HttpStatusCode.OK, typeof(IEnumerable<BingoCardModel>))]
-        [SwaggerResponse(System.Net.HttpStatusCode.BadRequest, typeof(string))]
+        [SwaggerResponse(HttpStatusCode.OK, typeof(IEnumerable<BingoCardModel>))]
+        [SwaggerResponse(HttpStatusCode.BadRequest, typeof(ErrorModel))]
         public ActionResult GenerateBingoCards([FromBody] BingoCardCreationModel bingoCardModel)
         {
             if (bingoCardModel == null)

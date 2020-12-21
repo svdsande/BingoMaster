@@ -77,7 +77,7 @@ export class BingoCardClient {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result400: any = null;
             let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = resultData400 !== undefined ? resultData400 : <any>null;
+            result400 = ErrorModel.fromJS(resultData400);
             return throwException("A server side error occurred.", status, _responseText, _headers, result400);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -148,7 +148,7 @@ export class BingoGameClient {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result400: any = null;
             let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = resultData400 !== undefined ? resultData400 : <any>null;
+            result400 = ErrorModel.fromJS(resultData400);
             return throwException("A server side error occurred.", status, _responseText, _headers, result400);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -219,7 +219,7 @@ export class UserClient {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result400: any = null;
             let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = resultData400 !== undefined ? resultData400 : <any>null;
+            result400 = ErrorModel.fromJS(resultData400);
             return throwException("A server side error occurred.", status, _responseText, _headers, result400);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -230,7 +230,7 @@ export class UserClient {
         return _observableOf<AuthenticatedUserModel>(<any>null);
     }
 
-    register(registerUserModel: RegisterUserModel): Observable<FileResponse | null> {
+    register(registerUserModel: RegisterUserModel): Observable<UserModel> {
         let url_ = this.baseUrl + "/api/User/register";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -242,7 +242,7 @@ export class UserClient {
             responseType: "blob",
             headers: new HttpHeaders({
                 "Content-Type": "application/json",
-                "Accept": "application/octet-stream"
+                "Accept": "application/json"
             })
         };
 
@@ -253,31 +253,40 @@ export class UserClient {
                 try {
                     return this.processRegister(<any>response_);
                 } catch (e) {
-                    return <Observable<FileResponse | null>><any>_observableThrow(e);
+                    return <Observable<UserModel>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<FileResponse | null>><any>_observableThrow(response_);
+                return <Observable<UserModel>><any>_observableThrow(response_);
         }));
     }
 
-    protected processRegister(response: HttpResponseBase): Observable<FileResponse | null> {
+    protected processRegister(response: HttpResponseBase): Observable<UserModel> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
             (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200 || status === 206) {
-            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
-            const fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
-            const fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
-            return _observableOf({ fileName: fileName, data: <any>responseBlob, status: status, headers: _headers });
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = UserModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ErrorModel.fromJS(resultData400);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
+            }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<FileResponse | null>(<any>null);
+        return _observableOf<UserModel>(<any>null);
     }
 }
 
@@ -327,6 +336,46 @@ export class BingoCardModel implements IBingoCardModel {
 export interface IBingoCardModel {
     name?: string | undefined;
     grid?: number[][] | undefined;
+}
+
+export class ErrorModel implements IErrorModel {
+    statusCode!: number;
+    message?: string | undefined;
+
+    constructor(data?: IErrorModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.statusCode = _data["statusCode"];
+            this.message = _data["message"];
+        }
+    }
+
+    static fromJS(data: any): ErrorModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new ErrorModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["statusCode"] = this.statusCode;
+        data["message"] = this.message;
+        return data; 
+    }
+}
+
+export interface IErrorModel {
+    statusCode: number;
+    message?: string | undefined;
 }
 
 export class BingoCardCreationModel implements IBingoCardCreationModel {
@@ -625,6 +674,58 @@ export interface IAuthenticateUserModel {
     password?: string | undefined;
 }
 
+export class UserModel implements IUserModel {
+    id!: string;
+    firstName?: string | undefined;
+    middleName?: string | undefined;
+    lastName?: string | undefined;
+    emailAddress?: string | undefined;
+
+    constructor(data?: IUserModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.firstName = _data["firstName"];
+            this.middleName = _data["middleName"];
+            this.lastName = _data["lastName"];
+            this.emailAddress = _data["emailAddress"];
+        }
+    }
+
+    static fromJS(data: any): UserModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new UserModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["firstName"] = this.firstName;
+        data["middleName"] = this.middleName;
+        data["lastName"] = this.lastName;
+        data["emailAddress"] = this.emailAddress;
+        return data; 
+    }
+}
+
+export interface IUserModel {
+    id: string;
+    firstName?: string | undefined;
+    middleName?: string | undefined;
+    lastName?: string | undefined;
+    emailAddress?: string | undefined;
+}
+
 export class RegisterUserModel implements IRegisterUserModel {
     firstName?: string | undefined;
     middleName?: string | undefined;
@@ -675,13 +776,6 @@ export interface IRegisterUserModel {
     lastName?: string | undefined;
     emailAddress?: string | undefined;
     password?: string | undefined;
-}
-
-export interface FileResponse {
-    data: Blob;
-    status: number;
-    fileName?: string;
-    headers?: { [name: string]: any };
 }
 
 export class ApiException extends Error {

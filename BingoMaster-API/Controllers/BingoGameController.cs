@@ -3,6 +3,7 @@ using BingoMaster_Models;
 using Microsoft.AspNetCore.Mvc;
 using NSwag.Annotations;
 using System.Collections.Generic;
+using System.Net;
 
 namespace BingoMaster_API.Controllers
 {
@@ -22,8 +23,8 @@ namespace BingoMaster_API.Controllers
 		}
 
 		[HttpPost]
-		[SwaggerResponse(System.Net.HttpStatusCode.OK, typeof(BingoGameModel))]
-		[SwaggerResponse(System.Net.HttpStatusCode.BadRequest, typeof(string))]
+		[SwaggerResponse(HttpStatusCode.OK, typeof(BingoGameModel))]
+		[SwaggerResponse(HttpStatusCode.BadRequest, typeof(ErrorModel))]
 		public ActionResult CreateBingoGame([FromBody] BingoGameCreationModel gameCreationModel)
 		{
 			var bingoGameModel = _bingoGameLogic.CreateNewGame(gameCreationModel);

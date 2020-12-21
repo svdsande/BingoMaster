@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using BingoMaster_Logic.Interfaces;
 using BingoMaster_Models;
@@ -27,8 +28,8 @@ namespace BingoMaster_API.Controllers
 		}
 
 		[HttpPost("authenticate")]
-		[SwaggerResponse(System.Net.HttpStatusCode.OK, typeof(AuthenticatedUserModel))]
-		[SwaggerResponse(System.Net.HttpStatusCode.BadRequest, typeof(string))]
+		[SwaggerResponse(HttpStatusCode.OK, typeof(AuthenticatedUserModel))]
+		[SwaggerResponse(HttpStatusCode.BadRequest, typeof(ErrorModel))]
 		public IActionResult Authenticate([FromBody] AuthenticateUserModel authenticateUserModel)
 		{
 			if (authenticateUserModel == null)
@@ -47,6 +48,8 @@ namespace BingoMaster_API.Controllers
 		}
 
 		[HttpPost("register")]
+		[SwaggerResponse(HttpStatusCode.OK, typeof(UserModel))]
+		[SwaggerResponse(HttpStatusCode.BadRequest, typeof(ErrorModel))]
 		public IActionResult Register([FromBody] RegisterUserModel registerUserModel)
 		{
 			if (registerUserModel == null)
@@ -54,9 +57,9 @@ namespace BingoMaster_API.Controllers
 				return BadRequest("Invalid register model provided");
 			}
 
-			_userLogic.Register(registerUserModel);
+			var userModel = _userLogic.Register(registerUserModel);
 
-			return Ok();
+			return Ok(userModel);
 		}
 	}
 }

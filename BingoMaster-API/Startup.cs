@@ -11,6 +11,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using BingoMaster_API.Helpers;
 using Microsoft.Data.SqlClient;
+using Microsoft.AspNetCore.Diagnostics;
+using Newtonsoft.Json;
+using Microsoft.AspNetCore.Http;
+using BingoMaster_Logic.Exceptions;
+using System.Net;
 
 namespace BingoMaster_API
 {
@@ -26,7 +31,6 @@ namespace BingoMaster_API
 		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services)
 		{
-			
 			var builder = new SqlConnectionStringBuilder(
 				Configuration.GetConnectionString("Database"));
 			builder.Password = Configuration["DbPassword"];
@@ -86,6 +90,27 @@ namespace BingoMaster_API
 			app.UseAuthorization();
 
 			app.UseMiddleware<JwtMiddleware>();
+
+			app.UseExceptionHandler(builder => builder.Run(async context => 
+			{
+				var exceptionHandlerPathFeature = context.Features.Get<IExceptionHandlerPathFeature>();
+				var exception = exceptionHandlerPathFeature.Error;
+
+				if (exception is UserAlreadyExistsException)
+				{
+					await context.Response.WriteAsync(JsonConvert.SerializeObject(new ErrorModel()
+					{
+						StatusCode = (int)HttpStatusCode.BadRequest,
+						Message = exception.Message
+					}));
+				}
+
+				await context.Response.WriteAsync(JsonConvert.SerializeObject(new ErrorModel()
+				{
+					StatusCode = context.Response.StatusCode,
+					Message = exception.Message
+				}));
+			}));
 
 			app.UseEndpoints(endpoints =>
 			{
