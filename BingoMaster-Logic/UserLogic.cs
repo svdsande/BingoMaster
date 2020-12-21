@@ -1,4 +1,5 @@
 ﻿using BingoMaster_Entities;
+using BingoMaster_Logic.Exceptions;
 using BingoMaster_Logic.Interfaces;
 using BingoMaster_Models;
 using BingoMaster_Models.User;
@@ -74,20 +75,25 @@ namespace BingoMaster_Logic
 			};
 		}
 
-		public void Register(RegisterUserModel registerUserModel)
+		public UserModel Register(RegisterUserModel registerUserModel)
 		{
 			if (registerUserModel == null || string.IsNullOrWhiteSpace(registerUserModel.EmailAddress) || string.IsNullOrWhiteSpace(registerUserModel.Password))
 			{
 				throw new ArgumentException("No email address or password provided");
 			}
 
-			//TODO: Check password length and strength
-
 			var user = _context.Users.FirstOrDefault(user => user.EmailAddress == registerUserModel.EmailAddress);
 
 			if (user != null)
 			{
-				throw new ArgumentException("Email address is already taken");
+				throw new UserAlreadyExistsException("User already exists");
+			}
+
+			var passwordStrength = _passwordLogic.GetPasswordStrength(registerUserModel.Password);
+
+			if (passwordStrength == PasswordStrength.Blank || passwordStrength == PasswordStrength.VeryWeak || passwordStrength == PasswordStrength.Weak)
+			{
+				throw new ArgumentException("Provided password too weak");
 			}
 
 			var salt = _passwordLogic.GetRandomSalt();
@@ -104,6 +110,14 @@ namespace BingoMaster_Logic
 
 			_context.Add(newUser);
 			_context.SaveChanges();
+
+			return new UserModel
+			{
+				Id = newUser.Id,
+				EmailAddress = newUser.EmailAddress,
+				FirstName = newUser.FirstName,
+				LastName = newUser.LastName
+			};
 		}
 
 		private string GenerateToken(User user)
