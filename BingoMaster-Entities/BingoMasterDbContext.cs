@@ -19,6 +19,12 @@ namespace BingoMaster_Entities
 				.WithOne(player => player.User)
 				.HasForeignKey<Player>(player => player.UserId);
 
+			modelBuilder.Entity<User>(user =>
+			{
+				user.HasIndex(e => e.EmailAddress).IsUnique();
+				user.HasIndex(e => e.UserName).IsUnique();
+			});
+
 			modelBuilder.Entity<GamePlayer>()
 				.HasIndex(gamePlayer => new { gamePlayer.GameId, gamePlayer.PlayerId });
 
@@ -29,7 +35,7 @@ namespace BingoMaster_Entities
 
 			modelBuilder.Entity<GamePlayer>()
 				.HasOne(gamePlayer => gamePlayer.Player)
-				.WithMany(game => game.GamePlayers)
+				.WithMany(player => player.GamePlayers)
 				.HasForeignKey(gamePlayer => gamePlayer.PlayerId);
 		}
 	}

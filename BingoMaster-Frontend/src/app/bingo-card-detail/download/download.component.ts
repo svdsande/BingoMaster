@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { BingoCardModel } from 'src/api/api';

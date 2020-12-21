@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { take } from 'rxjs/operators';
+import { AuthenticateUserModel } from 'src/api/api';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 
 @Component({
@@ -11,6 +13,7 @@ import { AuthenticationService } from 'src/app/services/authentication/authentic
 export class LoginComponent implements OnInit {
 
   public loginFormGroup: FormGroup;
+  public loading: boolean = false;
 
   constructor(
     private router: Router,
@@ -22,8 +25,21 @@ export class LoginComponent implements OnInit {
   }
 
   public authenticate(): void {
-    const email = this.loginFormGroup.get('email').value;
-    const password = this.loginFormGroup.get('password').value;
+    this.loading = true;
+
+    const authenticateUserModel: AuthenticateUserModel = new AuthenticateUserModel();
+    authenticateUserModel.emailAddress = this.loginFormGroup.get('email').value;
+    authenticateUserModel.password = this.loginFormGroup.get('password').value;
+
+    this.authenticationSerivce.login(authenticateUserModel)
+      .pipe(take(1))
+      .subscribe(user => {
+        console.log(user);
+        this.loading = false;
+      },
+      error => {
+        console.error(error);
+      });
   }
 
   private buildForm(): void {

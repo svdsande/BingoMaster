@@ -14,6 +14,8 @@
         <mat-error *ngIf="this.loginFormGroup.get('password').invalid">{{ 'AUTHENTICATION.LOGIN.FORM.PASSWORD.error_message' | translate }}</mat-error>
       </mat-form-field>
     </div>
-    <button mat-raised-button color="primary" type="submit" id="login-button" class="full-width" [disabled]="!this.loginFormGroup.valid">{{ 'AUTHENTICATION.LOGIN.FORM.submit' | translate}}</button>
+    <spinner-button [loading]="this.loading">
+      <button mat-raised-button color="primary" type="submit" id="login-button" class="full-width" [disabled]="!this.loginFormGroup.valid">{{ 'AUTHENTICATION.LOGIN.FORM.submit' | translate}}</button>
+    </spinner-button>
   </form>
 </div>
