@@ -5,15 +5,20 @@ import { RegisterComponent } from './register/register.component';
 
 const routes: Routes = [
   {
-    path: '',
+    path: 'login',
     component: LoginComponent,
     data: { title: 'Login' }
   },
   {
-    path: '/register',
+    path: 'register',
     component: RegisterComponent,
     data: { title: 'Register' }
-  }
+  },
+  {
+    path: '',
+    redirectTo: 'login',
+    pathMatch: 'full'
+  },
 ];
 
 @NgModule({

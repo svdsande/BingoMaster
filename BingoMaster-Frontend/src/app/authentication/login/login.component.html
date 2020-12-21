@@ -1,5 +1,6 @@
 <div id="container">
   <form [formGroup]="this.loginFormGroup" (ngSubmit)="this.authenticate()">
+    <h1 class="title">{{ 'AUTHENTICATION.LOGIN.title' | translate | uppercase }}</h1>
     <div class="row">
       <mat-form-field class="full-width">
         <mat-label>{{ 'AUTHENTICATION.LOGIN.FORM.EMAIL.label' | translate }}</mat-label>
@@ -15,7 +16,9 @@
       </mat-form-field>
     </div>
     <spinner-button [loading]="this.loading">
-      <button mat-raised-button color="primary" type="submit" id="login-button" class="full-width" [disabled]="!this.loginFormGroup.valid">{{ 'AUTHENTICATION.LOGIN.FORM.submit' | translate}}</button>
+      <button mat-raised-button color="primary" type="submit" id="submit-button" class="full-width" [disabled]="!this.loginFormGroup.valid">{{ 'AUTHENTICATION.LOGIN.FORM.submit' | translate}}</button>
     </spinner-button>
+
+    <p>If you don't have an account you can register yourself <a routerLink="../register">here</a></p>
   </form>
 </div>

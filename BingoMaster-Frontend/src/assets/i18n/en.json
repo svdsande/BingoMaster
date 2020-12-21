@@ -52,6 +52,7 @@
   },
   "AUTHENTICATION": {
     "LOGIN": {
+      "title": "Login",
       "FORM": {
         "EMAIL": {
           "label": "Email address",
@@ -62,6 +63,20 @@
           "error_message": "Password is required"
         },
         "submit": "Login"
+      }
+    },
+    "REGISTER": {
+      "title": "Register",
+      "FORM": {
+        "EMAIL": {
+          "label": "Email address",
+          "error_message": "Email address is required"
+        },
+        "PASSWORD": {
+          "label": "Password",
+          "error_message": "Password is required"
+        },
+        "submit": "Register"
       }
     }
   }

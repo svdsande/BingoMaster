@@ -8,7 +8,7 @@ import { AuthenticationService } from 'src/app/services/authentication/authentic
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  styleUrls: ['./login.component.scss', '../form-styling.scss'],
 })
 export class LoginComponent implements OnInit {
 
@@ -17,7 +17,7 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private authenticationSerivce: AuthenticationService
+    private authenticationService: AuthenticationService
   ) { }
 
   ngOnInit(): void {
@@ -31,7 +31,7 @@ export class LoginComponent implements OnInit {
     authenticateUserModel.emailAddress = this.loginFormGroup.get('email').value;
     authenticateUserModel.password = this.loginFormGroup.get('password').value;
 
-    this.authenticationSerivce.login(authenticateUserModel)
+    this.authenticationService.login(authenticateUserModel)
       .pipe(take(1))
       .subscribe(user => {
         console.log(user);
