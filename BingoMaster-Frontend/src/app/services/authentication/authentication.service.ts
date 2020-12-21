@@ -29,4 +29,12 @@ export class AuthenticationService {
     localStorage.removeItem('currentUser');
     this.currentUserSubject.next(null);
   }
+
+  public userNameUnique(userName: string): Observable<boolean> {
+    return this.userClient.userNameUnique(userName);
+  }
+
+  public userEmailAddressUnique(emailAddress: string): Observable<boolean> {
+    return this.userClient.emailAddressUnique(emailAddress);
+  }
 }

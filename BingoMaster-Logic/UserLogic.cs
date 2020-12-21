@@ -120,6 +120,40 @@ namespace BingoMaster_Logic
 			};
 		}
 
+		public bool UserNameUnique(string userName)
+		{
+			if (string.IsNullOrWhiteSpace(userName))
+			{
+				throw new ArgumentException("No username provided");
+			}
+
+			var user = _context.Users.FirstOrDefault(user => user.UserName == userName);
+
+			if (user != null)
+			{
+				return false;
+			}
+
+			return true;
+		}
+
+		public bool EmailAddressUnique(string emailAddress)
+		{
+			if (string.IsNullOrWhiteSpace(emailAddress))
+			{
+				throw new ArgumentException("No email address provided");
+			}
+
+			var user = _context.Users.FirstOrDefault(user => user.EmailAddress == emailAddress);
+
+			if (user != null)
+			{
+				return false;
+			}
+
+			return true;
+		}
+
 		private string GenerateToken(User user)
 		{
 			var tokenHandler = new JwtSecurityTokenHandler();

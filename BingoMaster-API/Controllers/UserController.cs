@@ -61,5 +61,31 @@ namespace BingoMaster_API.Controllers
 
 			return Ok(userModel);
 		}
+
+		[HttpGet("username-unique")]
+		[SwaggerResponse(HttpStatusCode.OK, typeof(bool))]
+		[SwaggerResponse(HttpStatusCode.BadRequest, typeof(ErrorModel))]
+		public IActionResult UserNameUnique(string userName)
+		{
+			if (string.IsNullOrWhiteSpace(userName))
+			{
+				return BadRequest("No username provided");
+			}
+
+			return Ok(_userLogic.UserNameUnique(userName));
+		}
+
+		[HttpGet("email-unique")]
+		[SwaggerResponse(HttpStatusCode.OK, typeof(bool))]
+		[SwaggerResponse(HttpStatusCode.BadRequest, typeof(ErrorModel))]
+		public IActionResult EmailAddressUnique(string emailAddress)
+		{
+			if (string.IsNullOrWhiteSpace(emailAddress))
+			{
+				return BadRequest("No email address provided");
+			}
+
+			return Ok(_userLogic.EmailAddressUnique(emailAddress));
+		}
 	}
 }

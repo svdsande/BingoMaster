@@ -68,6 +68,14 @@
     "REGISTER": {
       "title": "Register",
       "FORM": {
+        "USERNAME": {
+          "label": "Username",
+          "ERROR_MESSAGES": {
+            "required": "Username is required",
+            "taken": "Username is already taken",
+            "length": "Username must be at least 3 characters long"
+          }
+        },
         "EMAIL": {
           "label": "Email address",
           "error_message": "Email address is required"
