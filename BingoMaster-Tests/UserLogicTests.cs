@@ -35,7 +35,7 @@ namespace BingoMaster_Tests
 			context.Users.Add(user);
 			context.SaveChanges();
 
-			jwtSettings = new JwtSettingsModel { Secret = "YellowLedbetter" };
+			jwtSettings = new JwtSettingsModel { Secret = "CzsQwFZ#DjM3NPa&rEN4F2E&2ZJ1Ysd3k2^TTz4Zo06w65B*07" };
 			_jwtSettingsModelMock = new Mock<IOptions<JwtSettingsModel>>(MockBehavior.Strict);
 			_jwtSettingsModelMock.Setup(setting => setting.Value).Returns(jwtSettings);
 			_passwordLogicMock = new Mock<IPasswordLogic>(MockBehavior.Loose);
@@ -54,7 +54,53 @@ namespace BingoMaster_Tests
 				Password = password
 			};
 
-			var exception = Assert.Throws<ArgumentException>(() => _userLogic.Authenticate(model));
+			Assert.Throws<ArgumentException>(() => _userLogic.Authenticate(model));
+		}
+
+		[Fact]
+		public void Authenticate_UserNotFound_Succeeds()
+		{
+			var model = new AuthenticateUserModel
+			{
+				EmailAddress = "jeff-ament@pearljam.com",
+				Password = "password"
+			};
+
+			Assert.Null(_userLogic.Authenticate(model));
+		}
+
+		[Fact]
+		public void Authenticate_PasswordVerifyFailes_ExceptionExpected()
+		{
+			var model = new AuthenticateUserModel
+			{
+				EmailAddress = "eddie-vedder@pearljam.com",
+				Password = "password"
+			};
+
+			_passwordLogicMock.Setup(logic => logic.VerifyPassword(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(false);
+
+			var exception = Assert.Throws<Exception>(() => _userLogic.Authenticate(model));
+			Assert.Equal("Login failed", exception.Message);
+		}
+
+		[Fact]
+		public void Authenticate_UserExists_Succeeds()
+		{
+			var model = new AuthenticateUserModel
+			{
+				EmailAddress = "eddie-vedder@pearljam.com",
+				Password = "password"
+			};
+
+			_passwordLogicMock.Setup(logic => logic.VerifyPassword(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(true);
+
+			var actual = _userLogic.Authenticate(model);
+
+			Assert.Equal("eddie-vedder@pearljam.com", actual.EmailAddress);
+			Assert.Equal("Eddie", actual.FirstName);
+			Assert.Equal("Vedder", actual.LastName);
+			Assert.False(string.IsNullOrWhiteSpace(actual.Token));
 		}
 
 		[Theory]
