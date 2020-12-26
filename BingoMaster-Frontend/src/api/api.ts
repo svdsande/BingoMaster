@@ -841,6 +841,7 @@ export interface IUserModel {
 }
 
 export class RegisterUserModel implements IRegisterUserModel {
+    userName?: string | undefined;
     firstName?: string | undefined;
     middleName?: string | undefined;
     lastName?: string | undefined;
@@ -858,6 +859,7 @@ export class RegisterUserModel implements IRegisterUserModel {
 
     init(_data?: any) {
         if (_data) {
+            this.userName = _data["userName"];
             this.firstName = _data["firstName"];
             this.middleName = _data["middleName"];
             this.lastName = _data["lastName"];
@@ -875,6 +877,7 @@ export class RegisterUserModel implements IRegisterUserModel {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        data["userName"] = this.userName;
         data["firstName"] = this.firstName;
         data["middleName"] = this.middleName;
         data["lastName"] = this.lastName;
@@ -885,6 +888,7 @@ export class RegisterUserModel implements IRegisterUserModel {
 }
 
 export interface IRegisterUserModel {
+    userName?: string | undefined;
     firstName?: string | undefined;
     middleName?: string | undefined;
     lastName?: string | undefined;

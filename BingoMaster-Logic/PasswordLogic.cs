@@ -46,12 +46,9 @@ namespace BingoMaster_Logic
 			{
 				score++;
 			}
-			if (password.Length >= 12)
-			{
-				score++;
-			}
-			// Only numbers
-			if (Regex.Match(password, @"^\d+$", RegexOptions.ECMAScript).Success)
+
+			// Contains numbers
+			if (Regex.Match(password, @"[0-9]", RegexOptions.ECMAScript).Success)
 			{
 				score++;
 			}

@@ -77,21 +77,19 @@ namespace BingoMaster_Logic
 
 		public UserModel Register(RegisterUserModel registerUserModel)
 		{
-			if (registerUserModel == null || string.IsNullOrWhiteSpace(registerUserModel.EmailAddress) || string.IsNullOrWhiteSpace(registerUserModel.Password))
+			if (registerUserModel == null || string.IsNullOrWhiteSpace(registerUserModel.EmailAddress) || string.IsNullOrWhiteSpace(registerUserModel.Password) || string.IsNullOrWhiteSpace(registerUserModel.UserName))
 			{
-				throw new ArgumentException("No email address or password provided");
+				throw new ArgumentException("No email address, username or password provided");
 			}
 
-			var user = _context.Users.FirstOrDefault(user => user.EmailAddress == registerUserModel.EmailAddress);
-
-			if (user != null)
+			if (!UserNameUnique(registerUserModel.UserName) || !EmailAddressUnique(registerUserModel.EmailAddress))
 			{
 				throw new UserAlreadyExistsException("User already exists");
 			}
 
 			var passwordStrength = _passwordLogic.GetPasswordStrength(registerUserModel.Password);
 
-			if (passwordStrength == PasswordStrength.Blank || passwordStrength == PasswordStrength.VeryWeak || passwordStrength == PasswordStrength.Weak)
+			if (passwordStrength != PasswordStrength.Strong && passwordStrength != PasswordStrength.VeryStrong)
 			{
 				throw new ArgumentException("Provided password too weak");
 			}

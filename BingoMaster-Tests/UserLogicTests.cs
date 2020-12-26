@@ -104,19 +104,21 @@ namespace BingoMaster_Tests
 		}
 
 		[Theory]
-		[InlineData("", "password")]
-		[InlineData("email", "")]
-		[InlineData("", "")]
-		public void Register_NoPasswordOrEmail_ExceptionExpected(string emailAddress, string password)
+		[InlineData("", "password", "username")]
+		[InlineData("email", "", "username")]
+		[InlineData("email", "password", "")]
+		[InlineData("", "", "")]
+		public void Register_NoPasswordOrUserNameOrEmail_ExceptionExpected(string emailAddress, string password, string userName)
 		{
 			var model = new RegisterUserModel
 			{
 				EmailAddress = emailAddress,
-				Password = password
+				Password = password,
+				UserName = userName
 			};
 
 			var exception = Assert.Throws<ArgumentException>(() => _userLogic.Register(model));
-			Assert.Equal("No email address or password provided", exception.Message);
+			Assert.Equal("No email address, username or password provided", exception.Message);
 		}
 
 		[Fact]
@@ -125,7 +127,21 @@ namespace BingoMaster_Tests
 			var model = new RegisterUserModel
 			{
 				EmailAddress = "eddie-vedder@pearljam.com",
-				Password = "BlackAndAlive"
+				Password = "BlackAndAlive",
+				UserName = "username"
+			};
+
+			Assert.Throws<UserAlreadyExistsException>(() => _userLogic.Register(model));
+		}
+
+		[Fact]
+		public void Register_UserNameTaken_ExceptionExpected()
+		{
+			var model = new RegisterUserModel
+			{
+				EmailAddress = "eddie-vedder-black@pearljam.com",
+				Password = "BlackAndAlive",
+				UserName = "evedder"
 			};
 
 			Assert.Throws<UserAlreadyExistsException>(() => _userLogic.Register(model));
@@ -135,12 +151,14 @@ namespace BingoMaster_Tests
 		[InlineData(PasswordStrength.Blank)]
 		[InlineData(PasswordStrength.VeryWeak)]
 		[InlineData(PasswordStrength.Weak)]
+		[InlineData(PasswordStrength.Medium)]
 		public void Register_PasswordTooWeak_ExceptionExpected(PasswordStrength passwordStrength)
 		{
 			var model = new RegisterUserModel
 			{
 				EmailAddress = "mike-mccready@pearljam.com",
-				Password = "password"
+				Password = "password",
+				UserName = "evedderBlack"
 			};
 
 			_passwordLogicMock.Setup(logic => logic.GetPasswordStrength(It.IsAny<string>())).Returns(passwordStrength);
@@ -156,6 +174,7 @@ namespace BingoMaster_Tests
 			{
 				EmailAddress = "mike-mccready@pearljam.com",
 				Password = "$earl&am!2020",
+				UserName = "McCready",
 				FirstName = "Mike",
 				LastName = "McCready"
 			};
@@ -167,6 +186,48 @@ namespace BingoMaster_Tests
 			Assert.Equal("mike-mccready@pearljam.com", actual.EmailAddress);
 			Assert.Equal("Mike", actual.FirstName);
 			Assert.Equal("McCready", actual.LastName);
+		}
+
+		[Theory]
+		[InlineData("")]
+		[InlineData("  ")]
+		[InlineData(null)]
+		public void UserNameUnique_NoUserName_ExceptionExpected(string userName)
+		{
+			Assert.Throws<ArgumentException>(() => _userLogic.UserNameUnique(userName));
+		}
+
+		[Fact]
+		public void UserNameUnique_UserNameTaken_NotUnique()
+		{
+			Assert.False(_userLogic.UserNameUnique("evedder"));
+		}
+
+		[Fact]
+		public void UserNameUnique_UserNameNotTaken_IsUnique()
+		{
+			Assert.True(_userLogic.UserNameUnique("evedderBlack"));
+		}
+
+		[Theory]
+		[InlineData("")]
+		[InlineData("  ")]
+		[InlineData(null)]
+		public void EmailAddressUnique_NoEmailAddress_ExceptionExpected(string emailAddress)
+		{
+			Assert.Throws<ArgumentException>(() => _userLogic.EmailAddressUnique(emailAddress));
+		}
+
+		[Fact]
+		public void EmailAddressUnique_EmailAddressTaken_NotUnique()
+		{
+			Assert.False(_userLogic.EmailAddressUnique("eddie-vedder@pearljam.com"));
+		}
+
+		[Fact]
+		public void EmailAddressUnique_EmailAddressNotTaken_IsUnique()
+		{
+			Assert.True(_userLogic.EmailAddressUnique("eddie-vedder-black@pearljam.com"));
 		}
 	}
 }
