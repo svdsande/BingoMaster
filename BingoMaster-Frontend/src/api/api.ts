@@ -698,6 +698,7 @@ export class AuthenticatedUserModel implements IAuthenticatedUserModel {
     middleName?: string | undefined;
     lastName?: string | undefined;
     emailAddress?: string | undefined;
+    userName?: string | undefined;
     token?: string | undefined;
 
     constructor(data?: IAuthenticatedUserModel) {
@@ -716,6 +717,7 @@ export class AuthenticatedUserModel implements IAuthenticatedUserModel {
             this.middleName = _data["middleName"];
             this.lastName = _data["lastName"];
             this.emailAddress = _data["emailAddress"];
+            this.userName = _data["userName"];
             this.token = _data["token"];
         }
     }
@@ -734,6 +736,7 @@ export class AuthenticatedUserModel implements IAuthenticatedUserModel {
         data["middleName"] = this.middleName;
         data["lastName"] = this.lastName;
         data["emailAddress"] = this.emailAddress;
+        data["userName"] = this.userName;
         data["token"] = this.token;
         return data; 
     }
@@ -745,6 +748,7 @@ export interface IAuthenticatedUserModel {
     middleName?: string | undefined;
     lastName?: string | undefined;
     emailAddress?: string | undefined;
+    userName?: string | undefined;
     token?: string | undefined;
 }
 
@@ -794,6 +798,7 @@ export class UserModel implements IUserModel {
     middleName?: string | undefined;
     lastName?: string | undefined;
     emailAddress?: string | undefined;
+    userName?: string | undefined;
 
     constructor(data?: IUserModel) {
         if (data) {
@@ -811,6 +816,7 @@ export class UserModel implements IUserModel {
             this.middleName = _data["middleName"];
             this.lastName = _data["lastName"];
             this.emailAddress = _data["emailAddress"];
+            this.userName = _data["userName"];
         }
     }
 
@@ -828,6 +834,7 @@ export class UserModel implements IUserModel {
         data["middleName"] = this.middleName;
         data["lastName"] = this.lastName;
         data["emailAddress"] = this.emailAddress;
+        data["userName"] = this.userName;
         return data; 
     }
 }
@@ -838,6 +845,7 @@ export interface IUserModel {
     middleName?: string | undefined;
     lastName?: string | undefined;
     emailAddress?: string | undefined;
+    userName?: string | undefined;
 }
 
 export class RegisterUserModel implements IRegisterUserModel {

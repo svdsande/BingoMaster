@@ -98,6 +98,7 @@ namespace BingoMaster_Tests
 			var actual = _userLogic.Authenticate(model);
 
 			Assert.Equal("eddie-vedder@pearljam.com", actual.EmailAddress);
+			Assert.Equal("evedder", actual.UserName);
 			Assert.Equal("Eddie", actual.FirstName);
 			Assert.Equal("Vedder", actual.LastName);
 			Assert.False(string.IsNullOrWhiteSpace(actual.Token));
@@ -184,6 +185,7 @@ namespace BingoMaster_Tests
 			var actual = _userLogic.Register(model);
 
 			Assert.Equal("mike-mccready@pearljam.com", actual.EmailAddress);
+			Assert.Equal("McCready", actual.UserName);
 			Assert.Equal("Mike", actual.FirstName);
 			Assert.Equal("McCready", actual.LastName);
 		}

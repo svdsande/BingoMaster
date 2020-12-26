@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, AsyncValidatorFn, FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
-import { stat } from 'fs';
-import { Observable, of, timer } from 'rxjs';
-import { delay, map, switchMap, tap } from 'rxjs/operators';
+import { AbstractControl, AsyncValidatorFn, FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { of } from 'rxjs';
+import { delay, map, switchMap, take } from 'rxjs/operators';
+import { RegisterUserModel } from 'src/api/api';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 
 @Component({
@@ -15,14 +16,36 @@ export class RegisterComponent implements OnInit {
   public registerFormGroup: FormGroup;
   public loading: boolean = false;
 
-  constructor(private authenticateService: AuthenticationService) { }
+  constructor(
+    private authenticationService: AuthenticationService,
+    private snackBar: MatSnackBar
+  ) { }
 
   ngOnInit(): void {
     this.buildForm();
   }
 
   public register(): void {
+    this.loading = true;
 
+    const registerUserModel: RegisterUserModel = new RegisterUserModel();
+    registerUserModel.userName = this.registerFormGroup.get('userName').value;
+    registerUserModel.emailAddress = this.registerFormGroup.get('email').value;
+    registerUserModel.password = this.registerFormGroup.get('password').value;
+
+    this.authenticationService.register(registerUserModel)
+      .pipe(take(1))
+      .subscribe(user => {
+        this.loading = false;
+        this.snackBar.open('Account successfully created for ' + user.userName, '', {
+          duration: 2000
+        });
+      },
+      error => {
+        this.snackBar.open('Account registration failed ' + error, '', {
+          duration: 2000
+        });
+      });
   }
 
   private buildForm(): void {
@@ -37,7 +60,7 @@ export class RegisterComponent implements OnInit {
     return (control: AbstractControl) => {
       return of(control.value).pipe(
         delay(500),
-        switchMap((userName: string) => this.authenticateService.userNameUnique(userName).pipe(
+        switchMap((userName: string) => this.authenticationService.userNameUnique(userName).pipe(
           map(isUnique => isUnique ? null : { duplicateUserName: true }),
         )));
     };
@@ -47,7 +70,7 @@ export class RegisterComponent implements OnInit {
     return (control: AbstractControl) => {
       return of(control.value).pipe(
         delay(500),
-        switchMap((emailAddress: string) => this.authenticateService.userEmailAddressUnique(emailAddress).pipe(
+        switchMap((emailAddress: string) => this.authenticationService.userEmailAddressUnique(emailAddress).pipe(
           map(isUnique => isUnique ? null : { duplicateEmail: true }),
         )));
     };

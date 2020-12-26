@@ -58,6 +58,7 @@ namespace BingoMaster_Logic
 				EmailAddress = authenticateUserModel.EmailAddress,
 				FirstName = user.FirstName,
 				LastName = user.LastName,
+				UserName = user.UserName,
 				Token = GenerateToken(user)
 			};
 		}
@@ -70,6 +71,7 @@ namespace BingoMaster_Logic
 			{
 				Id = user.Id,
 				EmailAddress = user.EmailAddress,
+				UserName = user.UserName,
 				FirstName = user.FirstName,
 				LastName = user.LastName
 			};
@@ -100,6 +102,7 @@ namespace BingoMaster_Logic
 			var newUser = new User
 			{
 				EmailAddress = registerUserModel.EmailAddress,
+				UserName = registerUserModel.UserName,
 				FirstName = registerUserModel.FirstName,
 				LastName = registerUserModel.LastName,
 				Salt = Convert.ToBase64String(salt),
@@ -113,6 +116,7 @@ namespace BingoMaster_Logic
 			{
 				Id = newUser.Id,
 				EmailAddress = newUser.EmailAddress,
+				UserName = newUser.UserName,
 				FirstName = newUser.FirstName,
 				LastName = newUser.LastName
 			};

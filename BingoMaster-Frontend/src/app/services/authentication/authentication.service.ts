@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { AuthenticatedUserModel, AuthenticateUserModel, UserClient } from 'src/api/api';
+import { AuthenticatedUserModel, AuthenticateUserModel, RegisterUserModel, UserClient, UserModel } from 'src/api/api';
 
 @Injectable({
   providedIn: 'root'
@@ -28,6 +28,10 @@ export class AuthenticationService {
   public logout(): void {
     localStorage.removeItem('currentUser');
     this.currentUserSubject.next(null);
+  }
+
+  public register(model: RegisterUserModel): Observable<UserModel> {
+    return this.userClient.register(model);
   }
 
   public userNameUnique(userName: string): Observable<boolean> {
