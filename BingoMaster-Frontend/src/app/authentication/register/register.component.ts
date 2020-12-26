@@ -42,7 +42,8 @@ export class RegisterComponent implements OnInit {
         });
       },
       error => {
-        this.snackBar.open('Account registration failed ' + error, '', {
+        this.loading = false;
+        this.snackBar.open('Account registration failed', '', {
           duration: 2000
         });
       });

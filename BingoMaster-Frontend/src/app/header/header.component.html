@@ -16,9 +16,23 @@
       <mat-icon [svgIcon]="'github'"></mat-icon>
       {{ 'HEADER.MENU.ITEMS.repo' | translate }}
     </a>
-    <button mat-button class="menu-item">
-      <mat-icon>account_circle</mat-icon>
-      {{ 'HEADER.MENU.ITEMS.login' | translate }}
-    </button>
+    <div *ngIf="this.currentUser | async as user; else login">
+      <button mat-button class="menu-item">
+        <mat-icon>account_circle</mat-icon>
+        {{ user.userName }}
+      </button>
+
+      <button mat-button class="menu-item" (click)="this.logout()">
+        <mat-icon>exit_to_app</mat-icon>
+        {{ 'HEADER.MENU.ITEMS.logout' | translate }}
+      </button>
+    </div>
+
+    <ng-template #login>
+      <button mat-button class="menu-item" [routerLink]="'/authentication/login'">
+        <mat-icon>account_circle</mat-icon>
+        {{ 'HEADER.MENU.ITEMS.login' | translate }}
+      </button>
+    </ng-template>
   </mat-toolbar-row>
 </mat-toolbar>

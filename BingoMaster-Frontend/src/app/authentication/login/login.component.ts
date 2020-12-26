@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { take } from 'rxjs/operators';
 import { AuthenticateUserModel } from 'src/api/api';
@@ -17,7 +18,8 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private authenticationService: AuthenticationService
+    private authenticationService: AuthenticationService,
+    private snackBar: MatSnackBar
   ) { }
 
   ngOnInit(): void {
@@ -34,11 +36,14 @@ export class LoginComponent implements OnInit {
     this.authenticationService.login(authenticateUserModel)
       .pipe(take(1))
       .subscribe(user => {
-        console.log(user);
         this.loading = false;
+        this.router.navigate(['/']);
       },
       error => {
-        console.error(error);
+        this.loading = false;
+        this.snackBar.open('Login failed, check email and password and try again', '', {
+          duration: 2000
+        });
       });
   }
 

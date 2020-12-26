@@ -8,7 +8,8 @@
         "cards": "Cards",
         "games": "Games",
         "repo": "Repository",
-        "login": "Login"
+        "login": "Login",
+        "logout": "Logout"
       }
     }
   },
