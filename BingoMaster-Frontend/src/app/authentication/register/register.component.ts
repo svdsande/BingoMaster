@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, AsyncValidatorFn, FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
+import { stat } from 'fs';
 import { Observable, of, timer } from 'rxjs';
 import { delay, map, switchMap, tap } from 'rxjs/operators';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
@@ -27,8 +28,8 @@ export class RegisterComponent implements OnInit {
   private buildForm(): void {
     this.registerFormGroup = new FormGroup({
       userName: new FormControl('', [Validators.required, Validators.minLength(3)], this.uniqueUsernameValidator()),
-      email: new FormControl('', Validators.required),
-      password: new FormControl('', Validators.required)
+      email: new FormControl('', [Validators.required, Validators.pattern('\\w+([\\.-]?\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w{2,3})+')], this.uniqueEmailAddressValidator()),
+      password: new FormControl('', [Validators.required, Validators.pattern('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&].{8,}')])
     });
   }
 

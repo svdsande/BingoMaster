@@ -78,11 +78,18 @@
         },
         "EMAIL": {
           "label": "Email address",
-          "error_message": "Email address is required"
+          "ERROR_MESSAGES": {
+            "required": "Email address is required",
+            "taken": "Email address is already taken",
+            "invalid": "Email address isn't valid"
+          }
         },
         "PASSWORD": {
           "label": "Password",
-          "error_message": "Password is required"
+          "ERROR_MESSAGES": {
+            "required": "Password is required",
+            "invalid": "Password should consist of at least 8 characters including one lowercase and uppercase letter, one number, and one special character"
+          }
         },
         "submit": "Register"
       }
