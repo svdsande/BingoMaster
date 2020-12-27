@@ -17,15 +17,22 @@
       {{ 'HEADER.MENU.ITEMS.repo' | translate }}
     </a>
     <div *ngIf="this.currentUser | async as user; else login">
-      <button mat-button class="menu-item">
+      <button mat-button class="menu-item" [matMenuTriggerFor]="menu">
         <mat-icon>account_circle</mat-icon>
         {{ user.userName }}
       </button>
 
-      <button mat-button class="menu-item" (click)="this.logout()">
-        <mat-icon>exit_to_app</mat-icon>
-        {{ 'HEADER.MENU.ITEMS.logout' | translate }}
-      </button>
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item class="menu-item">
+          <mat-icon>settings</mat-icon>
+          {{ 'HEADER.MENU.ITEMS.settings' | translate }}
+        </button>
+
+        <button mat-menu-item class="menu-item" (click)="this.logout()">
+          <mat-icon>exit_to_app</mat-icon>
+          {{ 'HEADER.MENU.ITEMS.logout' | translate }}
+        </button>
+      </mat-menu>
     </div>
 
     <ng-template #login>

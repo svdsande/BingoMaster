@@ -16,7 +16,7 @@
       </mat-form-field>
     </div>
     <spinner-button [loading]="this.loading">
-      <button mat-raised-button color="primary" type="submit" id="submit-button" class="full-width" [disabled]="!this.loginFormGroup.valid">{{ 'AUTHENTICATION.LOGIN.FORM.submit' | translate}}</button>
+      <button mat-raised-button color="primary" type="submit" id="submit-button" class="full-width" [disabled]="!this.loginFormGroup.valid || this.loading">{{ 'AUTHENTICATION.LOGIN.FORM.submit' | translate}}</button>
     </spinner-button>
 
     <p class="message">If you don't have an account you can register yourself <a routerLink="../register">here</a></p>

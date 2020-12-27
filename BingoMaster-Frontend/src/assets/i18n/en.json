@@ -9,7 +9,8 @@
         "games": "Games",
         "repo": "Repository",
         "login": "Login",
-        "logout": "Logout"
+        "logout": "Logout",
+        "settings": "Settings"
       }
     }
   },

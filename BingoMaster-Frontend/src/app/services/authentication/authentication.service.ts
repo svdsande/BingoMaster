@@ -30,6 +30,10 @@ export class AuthenticationService {
     this.currentUserSubject.next(null);
   }
 
+  public get currentUserValue(): AuthenticatedUserModel {
+    return this.currentUserSubject.value;
+  }
+
   public register(model: RegisterUserModel): Observable<UserModel> {
     return this.userClient.register(model);
   }

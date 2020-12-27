@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { take } from 'rxjs/operators';
 import { AuthenticateUserModel } from 'src/api/api';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
@@ -15,8 +15,10 @@ export class LoginComponent implements OnInit {
 
   public loginFormGroup: FormGroup;
   public loading: boolean = false;
+  public returnUrl: string;
 
   constructor(
+    private route: ActivatedRoute,
     private router: Router,
     private authenticationService: AuthenticationService,
     private snackBar: MatSnackBar
@@ -24,6 +26,8 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     this.buildForm();
+
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
   }
 
   public authenticate(): void {
@@ -37,7 +41,7 @@ export class LoginComponent implements OnInit {
       .pipe(take(1))
       .subscribe(user => {
         this.loading = false;
-        this.router.navigate(['/']);
+        this.router.navigateByUrl(this.returnUrl);
       },
       error => {
         this.loading = false;
