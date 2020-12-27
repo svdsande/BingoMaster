@@ -24,6 +24,8 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 3.1.301
+        DbPassword: ${{ secrets.DB_PASSWORD }}
+        UserId: ${{ secrets.DB_USER_ID }}
     - name: Install dependencies
       run: dotnet restore
     - name: Build
