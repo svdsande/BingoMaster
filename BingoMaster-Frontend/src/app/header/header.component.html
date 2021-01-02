@@ -23,7 +23,7 @@
       </button>
 
       <mat-menu #menu="matMenu">
-        <button mat-menu-item class="menu-item">
+        <button mat-menu-item class="menu-item" [routerLink]="['authentication', 'settings', user.id]">
           <mat-icon>settings</mat-icon>
           {{ 'HEADER.MENU.ITEMS.settings' | translate }}
         </button>

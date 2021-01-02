@@ -17,7 +17,7 @@ const routes: Routes = [
     data: { title: 'Register' }
   },
   {
-    path: 'settings',
+    path: 'settings/:id',
     component: SettingsComponent,
     canActivate: [AuthGuard],
     data: { title: 'Settings' }
