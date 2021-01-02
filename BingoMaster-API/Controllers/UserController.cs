@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using BingoMaster_API.Attributes;
 using BingoMaster_Logic.Interfaces;
 using BingoMaster_Models;
 using BingoMaster_Models.User;
@@ -58,6 +59,22 @@ namespace BingoMaster_API.Controllers
 			}
 
 			var userModel = _userLogic.Register(registerUserModel);
+
+			return Ok(userModel);
+		}
+
+		[HttpGet]
+		[Authorize]
+		[SwaggerResponse(HttpStatusCode.OK, typeof(UserModel))]
+		[SwaggerResponse(HttpStatusCode.BadRequest, typeof(ErrorModel))]
+		public IActionResult GetUser(Guid id)
+		{
+			if (id == Guid.Empty)
+			{
+				return BadRequest("No user id provided");
+			}
+
+			var userModel = _userLogic.GetUserById(id);
 
 			return Ok(userModel);
 		}
