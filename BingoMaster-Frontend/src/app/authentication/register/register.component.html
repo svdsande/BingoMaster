@@ -1,42 +1,44 @@
 <div id="container">
-  <form [formGroup]="this.registerFormGroup" (ngSubmit)="this.register()">
-    <h1 class="title">{{ 'AUTHENTICATION.REGISTER.title' | translate | uppercase }}</h1>
-    <div class="row">
-      <mat-form-field class="full-width">
-        <mat-label>{{ 'AUTHENTICATION.REGISTER.FORM.USERNAME.label' | translate }}</mat-label>
-        <input matInput formControlName="userName" type="text" id="username-search">
-        <mat-spinner matSuffix [diameter]="18" *ngIf="this.registerFormGroup.get('userName').status === 'PENDING'"></mat-spinner>
-        <mat-icon matSuffix *ngIf="this.registerFormGroup.get('userName').status === 'VALID'" class="check">check</mat-icon>
-        <mat-icon matSuffix *ngIf="this.registerFormGroup.get('userName').hasError('duplicateUserName')" color="warn">warning</mat-icon>
-        <mat-error *ngIf="this.registerFormGroup.get('userName').hasError('required')">{{ 'AUTHENTICATION.REGISTER.FORM.USERNAME.ERROR_MESSAGES.required' | translate }}</mat-error>
-        <mat-error *ngIf="this.registerFormGroup.get('userName').hasError('minlength')">{{ 'AUTHENTICATION.REGISTER.FORM.USERNAME.ERROR_MESSAGES.length' | translate }}</mat-error>
-        <mat-error *ngIf="this.registerFormGroup.get('userName').hasError('duplicateUserName')">{{ 'AUTHENTICATION.REGISTER.FORM.USERNAME.ERROR_MESSAGES.taken' | translate }}</mat-error>
-      </mat-form-field>
-    </div>
-    <div class="row">
-      <mat-form-field class="full-width">
-        <mat-label>{{ 'AUTHENTICATION.LOGIN.FORM.EMAIL.label' | translate }}</mat-label>
-        <input matInput formControlName="email" type="email"id="email-search">
-        <mat-spinner matSuffix [diameter]="18" *ngIf="this.registerFormGroup.get('email').status === 'PENDING'"></mat-spinner>
-        <mat-icon matSuffix *ngIf="this.registerFormGroup.get('email').status === 'VALID'" class="check">check</mat-icon>
-        <mat-icon matSuffix *ngIf="this.registerFormGroup.get('email').hasError('duplicateEmailAddress')" color="warn">warning</mat-icon>
-        <mat-error *ngIf="this.registerFormGroup.get('email').hasError('required')">{{ 'AUTHENTICATION.REGISTER.FORM.EMAIL.ERROR_MESSAGES.required' | translate }}</mat-error>
-        <mat-error *ngIf="this.registerFormGroup.get('email').hasError('pattern')">{{ 'AUTHENTICATION.REGISTER.FORM.EMAIL.ERROR_MESSAGES.invalid' | translate }}</mat-error>
-        <mat-error *ngIf="this.registerFormGroup.get('email').hasError('duplicateEmailAddress')">{{ 'AUTHENTICATION.REGISTER.FORM.EMAIL.ERROR_MESSAGES.taken' | translate }}</mat-error>
-      </mat-form-field>
-    </div>
-    <div class="row">
-      <mat-form-field class="full-width">
-        <mat-label>{{ 'AUTHENTICATION.LOGIN.FORM.PASSWORD.label' | translate }}</mat-label>
-        <input matInput formControlName="password" type="password">
-        <mat-error *ngIf="this.registerFormGroup.get('password').hasError('required')">{{ 'AUTHENTICATION.REGISTER.FORM.PASSWORD.ERROR_MESSAGES.required' | translate }}</mat-error>
-        <mat-error *ngIf="this.registerFormGroup.get('password').hasError('pattern')">{{ 'AUTHENTICATION.REGISTER.FORM.PASSWORD.ERROR_MESSAGES.invalid' | translate }}</mat-error>
-      </mat-form-field>
-    </div>
-    <spinner-button [loading]="this.loading">
-      <button mat-raised-button color="primary" type="submit" id="submit-button" class="full-width" [disabled]="!this.registerFormGroup.valid || this.loading">{{ 'AUTHENTICATION.REGISTER.FORM.submit' | translate}}</button>
-    </spinner-button>
+  <div id="inner-container">
+    <form [formGroup]="this.registerFormGroup" (ngSubmit)="this.register()">
+      <h1 class="title">{{ 'AUTHENTICATION.REGISTER.title' | translate | uppercase }}</h1>
+      <div class="row">
+        <mat-form-field class="full-width" appearance="outline">
+          <mat-label>{{ 'AUTHENTICATION.REGISTER.FORM.USERNAME.label' | translate }}</mat-label>
+          <input matInput formControlName="userName" type="text" id="username-search">
+          <mat-spinner matSuffix [diameter]="18" *ngIf="this.registerFormGroup.get('userName').status === 'PENDING'"></mat-spinner>
+          <mat-icon matSuffix *ngIf="this.registerFormGroup.get('userName').status === 'VALID'" class="check">check</mat-icon>
+          <mat-icon matSuffix *ngIf="this.registerFormGroup.get('userName').hasError('duplicateUserName')" color="warn">warning</mat-icon>
+          <mat-error *ngIf="this.registerFormGroup.get('userName').hasError('required')">{{ 'AUTHENTICATION.REGISTER.FORM.USERNAME.ERROR_MESSAGES.required' | translate }}</mat-error>
+          <mat-error *ngIf="this.registerFormGroup.get('userName').hasError('minlength')">{{ 'AUTHENTICATION.REGISTER.FORM.USERNAME.ERROR_MESSAGES.length' | translate }}</mat-error>
+          <mat-error *ngIf="this.registerFormGroup.get('userName').hasError('duplicateUserName')">{{ 'AUTHENTICATION.REGISTER.FORM.USERNAME.ERROR_MESSAGES.taken' | translate }}</mat-error>
+        </mat-form-field>
+      </div>
+      <div class="row">
+        <mat-form-field class="full-width" appearance="outline">
+          <mat-label>{{ 'AUTHENTICATION.LOGIN.FORM.EMAIL.label' | translate }}</mat-label>
+          <input matInput formControlName="email" type="email"id="email-search">
+          <mat-spinner matSuffix [diameter]="18" *ngIf="this.registerFormGroup.get('email').status === 'PENDING'"></mat-spinner>
+          <mat-icon matSuffix *ngIf="this.registerFormGroup.get('email').status === 'VALID'" class="check">check</mat-icon>
+          <mat-icon matSuffix *ngIf="this.registerFormGroup.get('email').hasError('duplicateEmailAddress')" color="warn">warning</mat-icon>
+          <mat-error *ngIf="this.registerFormGroup.get('email').hasError('required')">{{ 'AUTHENTICATION.REGISTER.FORM.EMAIL.ERROR_MESSAGES.required' | translate }}</mat-error>
+          <mat-error *ngIf="this.registerFormGroup.get('email').hasError('pattern')">{{ 'AUTHENTICATION.REGISTER.FORM.EMAIL.ERROR_MESSAGES.invalid' | translate }}</mat-error>
+          <mat-error *ngIf="this.registerFormGroup.get('email').hasError('duplicateEmailAddress')">{{ 'AUTHENTICATION.REGISTER.FORM.EMAIL.ERROR_MESSAGES.taken' | translate }}</mat-error>
+        </mat-form-field>
+      </div>
+      <div class="row">
+        <mat-form-field class="full-width" appearance="outline">
+          <mat-label>{{ 'AUTHENTICATION.LOGIN.FORM.PASSWORD.label' | translate }}</mat-label>
+          <input matInput formControlName="password" type="password">
+          <mat-error *ngIf="this.registerFormGroup.get('password').hasError('required')">{{ 'AUTHENTICATION.REGISTER.FORM.PASSWORD.ERROR_MESSAGES.required' | translate }}</mat-error>
+          <mat-error *ngIf="this.registerFormGroup.get('password').hasError('pattern')">{{ 'AUTHENTICATION.REGISTER.FORM.PASSWORD.ERROR_MESSAGES.invalid' | translate }}</mat-error>
+        </mat-form-field>
+      </div>
+      <spinner-button [loading]="this.loading">
+        <button mat-raised-button color="primary" type="submit" id="submit-button" class="full-width" [disabled]="!this.registerFormGroup.valid || this.loading">{{ 'AUTHENTICATION.REGISTER.FORM.submit' | translate}}</button>
+      </spinner-button>
 
-    <p class="message">If you already have an account you can login <a routerLink="../login">here</a></p>
-  </form>
+      <p class="message">If you already have an account you can login <a routerLink="../login">here</a></p>
+    </form>
+  </div>
 </div>

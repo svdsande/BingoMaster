@@ -1,24 +1,43 @@
 <div id="container">
-  <form [formGroup]="this.loginFormGroup" (ngSubmit)="this.authenticate()">
+  <div id="inner-container">
     <h1 class="title">{{ 'AUTHENTICATION.LOGIN.title' | translate | uppercase }}</h1>
-    <div class="row">
-      <mat-form-field class="full-width">
-        <mat-label>{{ 'AUTHENTICATION.LOGIN.FORM.EMAIL.label' | translate }}</mat-label>
-        <input matInput formControlName="email" type="text">
-        <mat-error *ngIf="this.loginFormGroup.get('email').invalid">{{ 'AUTHENTICATION.LOGIN.FORM.EMAIL.error_message' | translate }}</mat-error>
-      </mat-form-field>
-    </div>
-    <div class="row">
-      <mat-form-field class="full-width">
-        <mat-label>{{ 'AUTHENTICATION.LOGIN.FORM.PASSWORD.label' | translate }}</mat-label>
-        <input matInput formControlName="password" type="password">
-        <mat-error *ngIf="this.loginFormGroup.get('password').invalid">{{ 'AUTHENTICATION.LOGIN.FORM.PASSWORD.error_message' | translate }}</mat-error>
-      </mat-form-field>
-    </div>
-    <spinner-button [loading]="this.loading">
-      <button mat-raised-button color="primary" type="submit" id="submit-button" class="full-width" [disabled]="!this.loginFormGroup.valid || this.loading">{{ 'AUTHENTICATION.LOGIN.FORM.submit' | translate}}</button>
-    </spinner-button>
 
-    <p class="message">If you don't have an account you can register yourself <a routerLink="../register">here</a></p>
-  </form>
+    <form [formGroup]="this.loginFormGroup" (ngSubmit)="this.authenticate()">
+      <div class="row">
+        <mat-form-field class="full-width" appearance="outline">
+          <mat-label>{{ 'AUTHENTICATION.LOGIN.FORM.EMAIL.label' | translate }}</mat-label>
+          <input matInput formControlName="email" type="text">
+          <mat-icon matPrefix class="input-icon">email</mat-icon>
+          <mat-error *ngIf="this.loginFormGroup.get('email').invalid">{{ 'AUTHENTICATION.LOGIN.FORM.EMAIL.error_message' | translate }}</mat-error>
+        </mat-form-field>
+      </div>
+      <div class="row">
+        <mat-form-field class="full-width" appearance="outline">
+          <mat-label>{{ 'AUTHENTICATION.LOGIN.FORM.PASSWORD.label' | translate }}</mat-label>
+          <input matInput formControlName="password" type="password">
+          <mat-icon matPrefix class="input-icon">lock</mat-icon>
+          <mat-error *ngIf="this.loginFormGroup.get('password').invalid">{{ 'AUTHENTICATION.LOGIN.FORM.PASSWORD.error_message' | translate }}</mat-error>
+        </mat-form-field>
+      </div>
+      <spinner-button [loading]="this.loading">
+        <button mat-raised-button color="primary" type="submit" id="submit-button" class="full-width" [disabled]="!this.loginFormGroup.valid || this.loading">{{ 'AUTHENTICATION.LOGIN.FORM.submit' | translate}}</button>
+      </spinner-button>
+
+      <p class="message">If you don't have an account you can register yourself <a routerLink="../register">here</a></p>
+    </form>
+
+    <mat-divider></mat-divider>
+
+    <div class="social-login">
+      <button mat-icon-button>
+        <mat-icon mat-icon [svgIcon]="'github'"></mat-icon>
+      </button>
+      <button mat-icon-button>
+        <mat-icon mat-icon [svgIcon]="'azure_devops'"></mat-icon>
+      </button>
+      <button mat-icon-button>
+        <mat-icon mat-icon [svgIcon]="'google'"></mat-icon>
+      </button>
+    </div>
+  </div>
 </div>

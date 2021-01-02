@@ -31,6 +31,14 @@ export class AppComponent implements OnInit {
       'github',
       this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/images/github.svg')
     );
+    this.matIconRegistry.addSvgIcon(
+      'azure_devops',
+      this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/images/azure_devops.svg')
+    );
+    this.matIconRegistry.addSvgIcon(
+      'google',
+      this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/images/google.svg')
+    );
   }
 
   ngOnInit(): void {
