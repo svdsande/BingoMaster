@@ -104,5 +104,21 @@ namespace BingoMaster_API.Controllers
 
 			return Ok(_userLogic.EmailAddressUnique(emailAddress));
 		}
+
+		[HttpPut]
+		[Authorize]
+		[SwaggerResponse(HttpStatusCode.NoContent, typeof(void))]
+		[SwaggerResponse(HttpStatusCode.BadRequest, typeof(ErrorModel))]
+		public IActionResult UpdateUser([FromBody] UserModel userModel)
+		{
+			if (userModel == null)
+			{
+				return BadRequest("Invalid form data provided");
+			}
+
+			_userLogic.Update(userModel);
+
+			return NoContent();
+		}
 	}
 }

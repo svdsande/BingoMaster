@@ -169,5 +169,18 @@ namespace BingoMaster_Logic
 			var token = tokenHandler.CreateToken(tokenDescriptor);
 			return tokenHandler.WriteToken(token);
 		}
+
+		public void Update(UserModel userModel)
+		{
+			var user = _context.Users.FirstOrDefault(user => user.Id == userModel.Id);
+
+			if (user == null)
+			{
+				throw new KeyNotFoundException("Entity does not exists");
+			}
+
+			_context.Entry(user).CurrentValues.SetValues(userModel);
+			_context.SaveChanges();
+		}
 	}
 }

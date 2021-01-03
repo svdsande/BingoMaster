@@ -96,5 +96,25 @@
         "submit": "Register"
       }
     }
+  },
+  "SETTINGS": {
+    "title": "Hi there {{ userName }}",
+    "FORM": {
+      "EMAIL": {
+        "label": "Email address",
+        "ERROR_MESSAGES": {
+          "required": "Email address is required",
+          "taken": "Email address is already taken",
+          "invalid": "Email address isn't valid"
+        }
+      },
+      "FIRSTNAME": {
+        "label": "First name"
+      },
+      "LASTNAME": {
+        "label": "Last name"
+      },
+      "submit": "Save"
+    }
   }
 }

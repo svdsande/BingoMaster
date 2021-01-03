@@ -1,5 +1,46 @@
 <page-header></page-header>
 
 <div id="container">
+  <div id="inner-container">
+    <div *ngIf="this.user | async as userModel; else loadingData">
+      <h1 class="title">{{ 'SETTINGS.title' | translate :{ userName: userModel.userName} }}</h1>
+      <form [formGroup]="this.userFormGroup" (ngSubmit)="this.save()">
+        <div class="row">
+          <mat-form-field class="full-width">
+            <mat-label>{{ 'SETTINGS.FORM.EMAIL.label' | translate }}</mat-label>
+            <input matInput formControlName="emailAddress" type="email"id="email-search">
+            <mat-spinner matSuffix [diameter]="18" *ngIf="this.userFormGroup.get('emailAddress').status === 'PENDING'"></mat-spinner>
+            <mat-icon matSuffix *ngIf="this.userFormGroup.get('emailAddress').status === 'VALID'" class="check">check</mat-icon>
+            <mat-icon matSuffix *ngIf="this.userFormGroup.get('emailAddress').hasError('duplicateEmailAddress')" color="warn">warning</mat-icon>
+            <mat-error *ngIf="this.userFormGroup.get('emailAddress').hasError('required')">{{ 'SETTINGS.FORM.EMAIL.ERROR_MESSAGES.required' | translate }}</mat-error>
+            <mat-error *ngIf="this.userFormGroup.get('emailAddress').hasError('pattern')">{{ 'SETTINGS.FORM.EMAIL.ERROR_MESSAGES.invalid' | translate }}</mat-error>
+            <mat-error *ngIf="this.userFormGroup.get('emailAddress').hasError('duplicateEmailAddress')">{{ 'SETTINGS.FORM.EMAIL.ERROR_MESSAGES.taken' | translate }}</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="row">
+          <mat-form-field class="full-width">
+            <mat-label>{{ 'SETTINGS.FORM.FIRSTNAME.label' | translate }}</mat-label>
+            <input matInput formControlName="firstName" type="text">
+          </mat-form-field>
+        </div>
+
+        <div class="row">
+          <mat-form-field class="full-width">
+            <mat-label>{{ 'SETTINGS.FORM.LASTNAME.label' | translate }}</mat-label>
+            <input matInput formControlName="lastName" type="text">
+          </mat-form-field>
+        </div>
+
+        <spinner-button [loading]="this.loading">
+          <button mat-raised-button color="primary" type="submit" id="submit-button" class="full-width" [disabled]="!this.userFormGroup.valid || this.loading">{{ 'SETTINGS.FORM.submit' | translate}}</button>
+        </spinner-button>
+      </form>
+    </div>
+
+    <ng-template #loadingData>
+      Loading...
+    </ng-template>
+  </div>
 
 </div>

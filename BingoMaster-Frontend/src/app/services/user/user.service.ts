@@ -13,6 +13,10 @@ export class UserService {
     return this.userClient.getUser(id);
   }
 
+  public updateUser(userModel: UserModel) {
+    return this.userClient.updateUser(userModel);
+  }
+
   public userNameUnique(userName: string): Observable<boolean> {
     return this.userClient.userNameUnique(userName);
   }

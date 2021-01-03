@@ -11,6 +11,7 @@ namespace BingoMaster_Logic.Interfaces
 		AuthenticatedUserModel Authenticate(AuthenticateUserModel authenticateUserModel);
 		UserModel Register(RegisterUserModel registerUserModel);
 		UserModel GetUserById(Guid id);
+		void Update(UserModel userModel);
 		bool UserNameUnique(string userName);
 		bool EmailAddressUnique(string emailAddress);
 	}
