@@ -21,5 +21,6 @@ export class HeaderComponent implements OnInit {
 
   public logout(): void {
     this.authenticationService.logout();
+    location.reload();
   }
 }
