@@ -13,6 +13,7 @@ import { MaterialModule } from './material.module';
 import { SharedModule } from './shared/shared.module';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { httpInterceptorProviders } from './interceptors';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -42,6 +43,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     })
   ],
   providers: [
+    httpInterceptorProviders,
     UserClient,
     BingoCardClient,
     BingoGameClient,
