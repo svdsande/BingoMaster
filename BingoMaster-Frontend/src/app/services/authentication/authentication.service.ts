@@ -37,12 +37,4 @@ export class AuthenticationService {
   public register(model: RegisterUserModel): Observable<UserModel> {
     return this.userClient.register(model);
   }
-
-  public userNameUnique(userName: string): Observable<boolean> {
-    return this.userClient.userNameUnique(userName);
-  }
-
-  public userEmailAddressUnique(emailAddress: string): Observable<boolean> {
-    return this.userClient.emailAddressUnique(emailAddress);
-  }
 }

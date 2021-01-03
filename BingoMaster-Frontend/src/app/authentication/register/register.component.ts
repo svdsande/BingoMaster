@@ -5,6 +5,7 @@ import { of } from 'rxjs';
 import { delay, map, switchMap, take } from 'rxjs/operators';
 import { RegisterUserModel } from 'src/api/api';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
+import { UserService } from 'src/app/services/user/user.service';
 
 @Component({
   selector: 'app-register',
@@ -18,6 +19,7 @@ export class RegisterComponent implements OnInit {
 
   constructor(
     private authenticationService: AuthenticationService,
+    private userService: UserService,
     private snackBar: MatSnackBar
   ) { }
 
@@ -61,7 +63,7 @@ export class RegisterComponent implements OnInit {
     return (control: AbstractControl) => {
       return of(control.value).pipe(
         delay(500),
-        switchMap((userName: string) => this.authenticationService.userNameUnique(userName).pipe(
+        switchMap((userName: string) => this.userService.userNameUnique(userName).pipe(
           map(isUnique => isUnique ? null : { duplicateUserName: true }),
         )));
     };
@@ -71,8 +73,8 @@ export class RegisterComponent implements OnInit {
     return (control: AbstractControl) => {
       return of(control.value).pipe(
         delay(500),
-        switchMap((emailAddress: string) => this.authenticationService.userEmailAddressUnique(emailAddress).pipe(
-          map(isUnique => isUnique ? null : { duplicateEmail: true }),
+        switchMap((emailAddress: string) => this.userService.userEmailAddressUnique(emailAddress).pipe(
+          map(isUnique => isUnique ? null : { duplicateEmailAddress: true }),
         )));
     };
   }
