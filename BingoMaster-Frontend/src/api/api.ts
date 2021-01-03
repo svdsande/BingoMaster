@@ -909,7 +909,6 @@ export interface IAuthenticateUserModel {
 export class UserModel implements IUserModel {
     id!: string;
     firstName?: string | undefined;
-    middleName?: string | undefined;
     lastName?: string | undefined;
     emailAddress?: string | undefined;
     userName?: string | undefined;
@@ -927,7 +926,6 @@ export class UserModel implements IUserModel {
         if (_data) {
             this.id = _data["id"];
             this.firstName = _data["firstName"];
-            this.middleName = _data["middleName"];
             this.lastName = _data["lastName"];
             this.emailAddress = _data["emailAddress"];
             this.userName = _data["userName"];
@@ -945,7 +943,6 @@ export class UserModel implements IUserModel {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["firstName"] = this.firstName;
-        data["middleName"] = this.middleName;
         data["lastName"] = this.lastName;
         data["emailAddress"] = this.emailAddress;
         data["userName"] = this.userName;
@@ -956,7 +953,6 @@ export class UserModel implements IUserModel {
 export interface IUserModel {
     id: string;
     firstName?: string | undefined;
-    middleName?: string | undefined;
     lastName?: string | undefined;
     emailAddress?: string | undefined;
     userName?: string | undefined;
