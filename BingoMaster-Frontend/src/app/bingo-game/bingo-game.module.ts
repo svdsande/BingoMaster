@@ -5,11 +5,12 @@ import { BingoGameRoutingModule } from './bingo-game-routing.module';
 import { BingoGameComponent } from './bingo-game.component';
 import { GameSetupComponent } from './game-setup/game-setup.component';
 import { SharedModule } from '../shared/shared.module';
-import { CountDownComponent } from './count-down/count-down.component';
+import { CountDownComponent } from './game/count-down/count-down.component';
 import { MaterialModule } from '../material.module';
-import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
-import { GameControlsComponent } from './game-controls/game-controls.component';
-import { WinnerDialogComponent } from './winner-dialog/winner-dialog.component';
+import { ConfirmDialogComponent } from './game/confirm-dialog/confirm-dialog.component';
+import { GameControlsComponent } from './game/game-controls/game-controls.component';
+import { WinnerDialogComponent } from './game/winner-dialog/winner-dialog.component';
+import { GameComponent } from './game/game.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { WinnerDialogComponent } from './winner-dialog/winner-dialog.component';
     GameSetupComponent,
     ConfirmDialogComponent,
     GameControlsComponent,
-    WinnerDialogComponent
+    WinnerDialogComponent,
+    GameComponent
   ],
   imports: [
     CommonModule,

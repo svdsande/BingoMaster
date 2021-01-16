@@ -1,37 +1,5 @@
 <page-header></page-header>
 
 <div id="container">
-  <game-setup (onBingoGameCreated)="this.bingoGame = $event" *ngIf="!this.bingoGame; else playGame">
-  </game-setup>
-
-  <ng-template #playGame>
-    <count-down *ngIf="!this.countDownDone; else game" (done)="this.onCountDownDone()"></count-down>
-
-    <ng-template #game>
-      <div id="game-container">
-        <game-controls [drawnNumbers]="this.drawnNumbers" (timerElapsed)="this.playNextRound()" (stopGame)="this.stopGame()"></game-controls>
-        <div id="bingocard-container">
-          <mat-card *ngFor="let player of this.bingoGame.players">
-            <mat-card-header>
-              <mat-card-title>{{ player.name }}</mat-card-title>
-              <mat-card-subtitle>
-                <div class="progress-indicator">
-                  <span>{{ 'BINGO_GAME.CARD.PROGRESS_INDICATORS.horizontal_line' | translate }}</span>
-                  <mat-icon [ngClass]="{'done': player.isHorizontalLineDone}" *ngIf="player.isHorizontalLineDone">done</mat-icon>
-                </div>
-                <div class="progress-indicator">
-                  <span>{{ 'BINGO_GAME.CARD.PROGRESS_INDICATORS.full_card' | translate }}</span>
-                  <mat-icon [ngClass]="{'done': player.isFullCardDone}" *ngIf="player.isFullCardDone">done</mat-icon>
-                </div>
-              </mat-card-subtitle>
-            </mat-card-header>
-            <mat-card-content>
-              <bingo-card [bingoCard]="player.bingoCard" [drawnNumbers]="this.drawnNumbers"></bingo-card>
-            </mat-card-content>
-          </mat-card>
-        </div>
-      </div>
-    </ng-template>
-  </ng-template>
-
+  <router-outlet></router-outlet>
 </div>

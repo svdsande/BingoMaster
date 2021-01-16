@@ -11,7 +11,6 @@ import { BingoGameService } from 'src/app/services/bingo-game.service';
 })
 export class GameSetupComponent implements OnInit {
 
-  @Output() onBingoGameCreated: EventEmitter<BingoGameModel> = new EventEmitter<BingoGameModel>();
   public gameSetupFormGroup: FormGroup;
   public loading: boolean = false;
 
@@ -34,7 +33,7 @@ export class GameSetupComponent implements OnInit {
       .pipe(take(1))
       .subscribe((model: BingoGameModel) => {
         this.loading = false;
-        this.onBingoGameCreated.emit(model);
+        // TODO: Save to backend (send request to API)
       });
   }
 
