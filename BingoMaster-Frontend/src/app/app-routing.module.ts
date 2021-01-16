@@ -13,7 +13,7 @@ const routes: Routes = [
     loadChildren: () => import('./bingo-card-detail/bingo-card-detail.module').then(m => m.BingoCardDetailModule)
   },
   {
-    path: 'bingo-game',
+    path: 'bingo-games',
     loadChildren: () => import('./bingo-game/bingo-game.module').then(m => m.BingoGameModule)
   },
   {
