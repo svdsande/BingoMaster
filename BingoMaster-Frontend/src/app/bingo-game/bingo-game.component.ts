@@ -23,7 +23,6 @@ export class BingoGameComponent implements OnInit {
 
   ngOnInit(): void {
     this.bingoGameService.nextRoundReceived
-      .pipe(take(1))
       .subscribe((model: BingoGameModel) => {
         if (this.gameIsWon(model.players)) {
           const gameWinner = model.players.find(player => player.isFullCardDone);

@@ -14,6 +14,7 @@ import { SharedModule } from './shared/shared.module';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { httpInterceptorProviders } from './interceptors';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -25,6 +26,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     FooterComponent,
     HeaderComponent,
     HomeComponent,
+    PageNotFoundComponent,
   ],
   imports: [
     BrowserModule,
