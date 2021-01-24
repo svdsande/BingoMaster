@@ -13,6 +13,12 @@ namespace BingoMaster_Mapping
 			// User
 			CreateMap<User, UserModel>();
 			CreateMap<User, AuthenticatedUserModel>();
+
+			// Game
+			CreateMap<Game, BingoGameDetailModel>();
+
+			// Player
+			CreateMap<Player, PlayerModel>();
 		}
 	}
 }

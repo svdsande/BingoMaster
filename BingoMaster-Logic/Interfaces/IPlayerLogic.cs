@@ -7,5 +7,6 @@ namespace BingoMaster_Logic.Interfaces
 {
 	public interface IPlayerLogic
 	{
+		IEnumerable<BingoGameDetailModel> GetGamesForPlayer(Guid id);
 	}
 }
