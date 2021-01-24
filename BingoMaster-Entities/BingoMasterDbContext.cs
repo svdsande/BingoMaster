@@ -6,6 +6,7 @@ namespace BingoMaster_Entities
 	{
 		public DbSet<User> Users { get; set; }
 		public DbSet<Player> Players { get; set; }
+		public DbSet<GamePlayer> GamePlayers { get; set;}
 		public DbSet<Game> Games { get; set; }
 
 		public BingoMasterDbContext(DbContextOptions<BingoMasterDbContext> options) : base(options)

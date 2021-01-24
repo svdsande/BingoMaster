@@ -100,7 +100,7 @@ export class BingoGameClient {
         this.baseUrl = baseUrl ? baseUrl : "";
     }
 
-    createBingoGame(gameCreationModel: BingoGameCreationModel): Observable<BingoGameModel> {
+    createBingoGame(gameCreationModel: BingoGameDetailModel): Observable<BingoGameModel> {
         let url_ = this.baseUrl + "/api/BingoGame";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -754,12 +754,13 @@ export interface IPlayerModel {
     isFullCardDone: boolean;
 }
 
-export class BingoGameCreationModel implements IBingoGameCreationModel {
+export class BingoGameDetailModel implements IBingoGameDetailModel {
     name?: string | undefined;
+    date!: Date;
     players?: PlayerModel[] | undefined;
     size!: number;
 
-    constructor(data?: IBingoGameCreationModel) {
+    constructor(data?: IBingoGameDetailModel) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -771,6 +772,7 @@ export class BingoGameCreationModel implements IBingoGameCreationModel {
     init(_data?: any) {
         if (_data) {
             this.name = _data["name"];
+            this.date = _data["date"] ? new Date(_data["date"].toString()) : <any>undefined;
             if (Array.isArray(_data["players"])) {
                 this.players = [] as any;
                 for (let item of _data["players"])
@@ -780,9 +782,9 @@ export class BingoGameCreationModel implements IBingoGameCreationModel {
         }
     }
 
-    static fromJS(data: any): BingoGameCreationModel {
+    static fromJS(data: any): BingoGameDetailModel {
         data = typeof data === 'object' ? data : {};
-        let result = new BingoGameCreationModel();
+        let result = new BingoGameDetailModel();
         result.init(data);
         return result;
     }
@@ -790,6 +792,7 @@ export class BingoGameCreationModel implements IBingoGameCreationModel {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["name"] = this.name;
+        data["date"] = this.date ? this.date.toISOString() : <any>undefined;
         if (Array.isArray(this.players)) {
             data["players"] = [];
             for (let item of this.players)
@@ -800,8 +803,9 @@ export class BingoGameCreationModel implements IBingoGameCreationModel {
     }
 }
 
-export interface IBingoGameCreationModel {
+export interface IBingoGameDetailModel {
     name?: string | undefined;
+    date: Date;
     players?: PlayerModel[] | undefined;
     size: number;
 }
