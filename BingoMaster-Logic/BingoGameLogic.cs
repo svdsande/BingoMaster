@@ -22,7 +22,7 @@ namespace BingoMaster_Logic
 			_bingoNumberLogic = bingoNumberLogic;
 		}
 
-		public BingoGameModel CreateNewGame(BingoGameCreationModel gameCreationModel)
+		public BingoGameModel CreateNewGame(BingoGameDetailModel gameCreationModel)
 		{
 			if (gameCreationModel == null || string.IsNullOrWhiteSpace(gameCreationModel.Name) || gameCreationModel.Players.Count() <= 0 || gameCreationModel.Size <= 0)
 			{

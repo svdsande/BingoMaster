@@ -26,7 +26,7 @@ namespace BingoMaster_Tests
 		[Fact]
 		public void CreateNewGame_TwoPlayers_Succeeds()
 		{
-			var input = new BingoGameCreationModel()
+			var input = new BingoGameDetailModel()
 			{
 				Name = "Pearl Jam",
 				Players = new List<PlayerModel>()
@@ -60,7 +60,7 @@ namespace BingoMaster_Tests
 		[Fact]
 		public void CreateNewGame_ZeroAmountOfPlayers_ExceptionExpected()
 		{
-			var input = new BingoGameCreationModel()
+			var input = new BingoGameDetailModel()
 			{
 				Name = "Pearl Jam",
 				Players = new List<PlayerModel>() { },
@@ -73,7 +73,7 @@ namespace BingoMaster_Tests
 		[Fact]
 		public void CreateNewGame_ZeroSize_ExceptionExpected()
 		{
-			var input = new BingoGameCreationModel()
+			var input = new BingoGameDetailModel()
 			{
 				Name = "Pearl Jam",
 				Players = new List<PlayerModel>()
@@ -90,7 +90,7 @@ namespace BingoMaster_Tests
 		[Fact]
 		public void CreateNewGame_NoName_ExceptionExpected()
 		{
-			var input = new BingoGameCreationModel()
+			var input = new BingoGameDetailModel()
 			{
 				Name = "",
 				Players = new List<PlayerModel>()

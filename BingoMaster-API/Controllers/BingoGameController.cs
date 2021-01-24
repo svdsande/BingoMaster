@@ -25,7 +25,7 @@ namespace BingoMaster_API.Controllers
 		[HttpPost]
 		[SwaggerResponse(HttpStatusCode.OK, typeof(BingoGameModel))]
 		[SwaggerResponse(HttpStatusCode.BadRequest, typeof(ErrorModel))]
-		public ActionResult CreateBingoGame([FromBody] BingoGameCreationModel gameCreationModel)
+		public ActionResult CreateBingoGame([FromBody] BingoGameDetailModel gameCreationModel)
 		{
 			var bingoGameModel = _bingoGameLogic.CreateNewGame(gameCreationModel);
 
