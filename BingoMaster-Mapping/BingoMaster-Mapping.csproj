@@ -9,4 +9,9 @@
     <PackageReference Include="AutoMapper" Version="10.1.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\BingoMaster-Entities\BingoMaster-Entities.csproj" />
+    <ProjectReference Include="..\BingoMaster-Models\BingoMaster-Models.csproj" />
+  </ItemGroup>
+
 </Project>

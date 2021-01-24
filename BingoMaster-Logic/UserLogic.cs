@@ -1,4 +1,5 @@
-﻿using BingoMaster_Entities;
+﻿using AutoMapper;
+using BingoMaster_Entities;
 using BingoMaster_Logic.Exceptions;
 using BingoMaster_Logic.Interfaces;
 using BingoMaster_Models;
@@ -23,14 +24,16 @@ namespace BingoMaster_Logic
 		private readonly JwtSettingsModel _jwtSettings;
 		private readonly BingoMasterDbContext _context;
 		private readonly IPasswordLogic _passwordLogic;
+		private readonly IMapper _mapper;
 
 		#endregion
 
-		public UserLogic(IOptions<JwtSettingsModel> jwtSettings, BingoMasterDbContext context, IPasswordLogic passwordLogic)
+		public UserLogic(IOptions<JwtSettingsModel> jwtSettings, BingoMasterDbContext context, IPasswordLogic passwordLogic, IMapper mapper)
 		{
 			_jwtSettings = jwtSettings.Value;
 			_context = context;
 			_passwordLogic = passwordLogic;
+			_mapper = mapper;
 		}
 
 		public AuthenticatedUserModel Authenticate(AuthenticateUserModel authenticateUserModel)
@@ -52,29 +55,17 @@ namespace BingoMaster_Logic
 				throw new Exception("Login failed");
 			}
 
-			return new AuthenticatedUserModel
-			{
-				Id = user.Id,
-				EmailAddress = authenticateUserModel.EmailAddress,
-				FirstName = user.FirstName,
-				LastName = user.LastName,
-				UserName = user.UserName,
-				Token = GenerateToken(user)
-			};
+			var model = _mapper.Map<AuthenticatedUserModel>(user);
+			model.Token = GenerateToken(user);
+
+			return model;
 		}
 
 		public UserModel GetUserById(Guid id)
 		{
 			var user = _context.Users.Find(id);
 
-			return new UserModel
-			{
-				Id = user.Id,
-				EmailAddress = user.EmailAddress,
-				UserName = user.UserName,
-				FirstName = user.FirstName,
-				LastName = user.LastName
-			};
+			return _mapper.Map<UserModel>(user);
 		}
 
 		public UserModel Register(RegisterUserModel registerUserModel)
@@ -112,14 +103,7 @@ namespace BingoMaster_Logic
 			_context.Add(newUser);
 			_context.SaveChanges();
 
-			return new UserModel
-			{
-				Id = newUser.Id,
-				EmailAddress = newUser.EmailAddress,
-				UserName = newUser.UserName,
-				FirstName = newUser.FirstName,
-				LastName = newUser.LastName
-			};
+			return _mapper.Map<UserModel>(newUser);
 		}
 
 		public bool UserNameUnique(string userName)
