@@ -11,7 +11,7 @@ using Xunit;
 
 namespace BingoMaster_Tests
 {
-	public class UserLogicTests
+	public class UserLogicTests : TestBase
 	{
 		private readonly Mock<IPasswordLogic> _passwordLogicMock;
 		private readonly Mock<IOptions<JwtSettingsModel>> _jwtSettingsModelMock;
@@ -39,7 +39,7 @@ namespace BingoMaster_Tests
 			_jwtSettingsModelMock = new Mock<IOptions<JwtSettingsModel>>(MockBehavior.Strict);
 			_jwtSettingsModelMock.Setup(setting => setting.Value).Returns(jwtSettings);
 			_passwordLogicMock = new Mock<IPasswordLogic>(MockBehavior.Loose);
-			_userLogic = new UserLogic(_jwtSettingsModelMock.Object, context, _passwordLogicMock.Object);
+			_userLogic = new UserLogic(_jwtSettingsModelMock.Object, context, _passwordLogicMock.Object, _mapper);
 		}
 
 		[Theory]

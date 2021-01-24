@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BingoMaster-Logic\BingoMaster-Logic.csproj" />
+    <ProjectReference Include="..\BingoMaster-Mapping\BingoMaster-Mapping.csproj" />
   </ItemGroup>
 
 </Project>
