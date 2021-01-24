@@ -12,6 +12,7 @@
     <None Include="nswag.json" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.10">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -27,6 +28,7 @@
   <ItemGroup>
     <ProjectReference Include="..\BingoMaster-Entities\BingoMaster-Entities.csproj" />
     <ProjectReference Include="..\BingoMaster-Logic\BingoMaster-Logic.csproj" />
+    <ProjectReference Include="..\BingoMaster-Mapping\BingoMaster-Mapping.csproj" />
     <ProjectReference Include="..\BingoMaster-Models\BingoMaster-Models.csproj" />
   </ItemGroup>
   <Target Name="NSwag" AfterTargets="Build">

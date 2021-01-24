@@ -16,6 +16,8 @@ using Newtonsoft.Json;
 using Microsoft.AspNetCore.Http;
 using BingoMaster_Logic.Exceptions;
 using System.Net;
+using BingoMaster_Mapping;
+using AutoMapper;
 
 namespace BingoMaster_API
 {
@@ -48,6 +50,8 @@ namespace BingoMaster_API
 
 
 			services.Configure<JwtSettingsModel>(Configuration.GetSection("Jwt"));
+
+			services.AddAutoMapper(typeof(BingoMasterMapper));
 
 			services.AddCors();
 			services.AddSignalR();
