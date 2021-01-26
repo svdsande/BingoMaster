@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using BingoMaster_API.Attributes;
 using BingoMaster_Logic.Interfaces;
 using BingoMaster_Models;
 using Microsoft.AspNetCore.Http;
@@ -27,6 +28,7 @@ namespace BingoMaster_API.Controllers
 		}
 
 		[HttpGet("{id}/games")]
+		[Authorize]
 		[SwaggerResponse(HttpStatusCode.OK, typeof(IEnumerable<BingoGameDetailModel>))]
 		[SwaggerResponse(HttpStatusCode.BadRequest, typeof(ErrorModel))]
 		public IActionResult GamesForPlayer(Guid id)
