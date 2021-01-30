@@ -1,7 +1,7 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { take } from 'rxjs/operators';
-import { BingoGameCreationModel, BingoGameModel, PlayerModel } from 'src/api/api';
+import { BingoGameDetailModel, BingoGameModel, PlayerModel } from 'src/api/api';
 import { BingoGameService } from 'src/app/services/bingo-game.service';
 
 @Component({
@@ -45,8 +45,8 @@ export class GameSetupComponent implements OnInit {
     this.players.removeAt(index);
   }
 
-  private getBingoGameCreationModel(): BingoGameCreationModel {
-    let bingoGameCreationModel = new BingoGameCreationModel();
+  private getBingoGameCreationModel(): BingoGameDetailModel {
+    let bingoGameCreationModel = new BingoGameDetailModel();
     bingoGameCreationModel.name = this.gameSetupFormGroup.get('name').value;
     bingoGameCreationModel.size = this.gameSetupFormGroup.get('size').value;
     bingoGameCreationModel.players = this.getPlayerModels();
