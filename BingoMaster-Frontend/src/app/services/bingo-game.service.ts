@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HubConnectionBuilder } from '@aspnet/signalr';
 import { HubConnection } from '@aspnet/signalr/dist/esm/HubConnection';
 import { Observable, Subject } from 'rxjs';
-import { BingoGameClient, BingoGameDetailModel, BingoGameModel, PlayerModel } from 'src/api/api';
+import { BingoGameClient, BingoGameDetailModel, BingoGameModel, PlayerGameModel } from 'src/api/api';
 
 @Injectable({
   providedIn: 'root'
@@ -23,7 +23,7 @@ export class BingoGameService {
     return this.bingoGameClient.createBingoGame(bingoGameModel);
   }
 
-  public playNextRound(players: PlayerModel[], drawnNumber: number[]): void {
+  public playNextRound(players: PlayerGameModel[], drawnNumber: number[]): void {
     this.hubConnection.invoke('PlayNextRound', players, drawnNumber);
   }
 

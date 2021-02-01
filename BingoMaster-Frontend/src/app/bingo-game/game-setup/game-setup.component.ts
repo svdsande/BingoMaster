@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { take } from 'rxjs/operators';
-import { BingoGameDetailModel, BingoGameModel, PlayerModel } from 'src/api/api';
+import { BingoGameDetailModel, BingoGameModel, PlayerGameModel } from 'src/api/api';
 import { BingoGameService } from 'src/app/services/bingo-game.service';
 
 @Component({
@@ -54,11 +54,11 @@ export class GameSetupComponent implements OnInit {
     return bingoGameCreationModel;
   }
 
-  private getPlayerModels(): PlayerModel[] {
-    let playerModels: PlayerModel[] = [];
+  private getPlayerModels(): PlayerGameModel[] {
+    let playerModels: PlayerGameModel[] = [];
 
     this.players.controls.forEach(control => {
-      const playerModel = new PlayerModel();
+      const playerModel = new PlayerGameModel();
       playerModel.name = control.value;
 
       playerModels.push(playerModel);

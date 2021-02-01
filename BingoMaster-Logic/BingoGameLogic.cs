@@ -46,7 +46,7 @@ namespace BingoMaster_Logic
 			};
 		}
 
-		public BingoGameModel PlayRound(IEnumerable<PlayerModel> players, int[] drawnNumbers)
+		public BingoGameModel PlayRound(IEnumerable<PlayerGameModel> players, int[] drawnNumbers)
 		{
 			if (players.Count() <= 0 || drawnNumbers.Length <= 0)
 			{

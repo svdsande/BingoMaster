@@ -23,5 +23,15 @@
     .full-width {
       width: 100%;
     }
+
+    .player-card {
+      width: 225px;
+
+      .avatar {
+        width: 175px;
+        height: 175px;
+        margin: 0 auto;
+      }
+    }
   }
 }

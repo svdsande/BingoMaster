@@ -29,10 +29,10 @@ namespace BingoMaster_Tests
 			var input = new BingoGameDetailModel()
 			{
 				Name = "Pearl Jam",
-				Players = new List<PlayerModel>()
+				Players = new List<PlayerGameModel>()
 				{
-					new PlayerModel() { Name = "Eddie Vedder" },
-					new PlayerModel() { Name = "Mike McCready" }
+					new PlayerGameModel() { Name = "Eddie Vedder" },
+					new PlayerGameModel() { Name = "Mike McCready" }
 				},
 				Size = 3
 			};
@@ -63,7 +63,7 @@ namespace BingoMaster_Tests
 			var input = new BingoGameDetailModel()
 			{
 				Name = "Pearl Jam",
-				Players = new List<PlayerModel>() { },
+				Players = new List<PlayerGameModel>() { },
 				Size = 3
 			};
 
@@ -76,10 +76,10 @@ namespace BingoMaster_Tests
 			var input = new BingoGameDetailModel()
 			{
 				Name = "Pearl Jam",
-				Players = new List<PlayerModel>()
+				Players = new List<PlayerGameModel>()
 				{
-					new PlayerModel() { Name = "Eddie Vedder" },
-					new PlayerModel() { Name = "Mike McCready" }
+					new PlayerGameModel() { Name = "Eddie Vedder" },
+					new PlayerGameModel() { Name = "Mike McCready" }
 				},
 				Size = 0
 			};
@@ -93,10 +93,10 @@ namespace BingoMaster_Tests
 			var input = new BingoGameDetailModel()
 			{
 				Name = "",
-				Players = new List<PlayerModel>()
+				Players = new List<PlayerGameModel>()
 				{
-					new PlayerModel() { Name = "Eddie Vedder" },
-					new PlayerModel() { Name = "Mike McCready" }
+					new PlayerGameModel() { Name = "Eddie Vedder" },
+					new PlayerGameModel() { Name = "Mike McCready" }
 				},
 				Size = 0
 			};
@@ -112,9 +112,9 @@ namespace BingoMaster_Tests
 		[InlineData(new int[] { 7 })]
 		public void PlayRound_HorizontalLineDone_Succeeds(int[] drawnNumbers)
 		{
-			var input = new List<PlayerModel>()
+			var input = new List<PlayerGameModel>()
 			{
-				new PlayerModel() 
+				new PlayerGameModel() 
 				{ 
 					Name = "Eddie Vedder",
 					BingoCard = new BingoCardModel()
@@ -142,9 +142,9 @@ namespace BingoMaster_Tests
 		[InlineData(new int[] { 4 }, 6)]
 		public void PlayRound_HorizontalLineDone_NextDrawnNumber_Succeeds(int[] drawnNumbers, int nextNumberToBeDrawn)
 		{
-			var input = new List<PlayerModel>()
+			var input = new List<PlayerGameModel>()
 			{
-				new PlayerModel()
+				new PlayerGameModel()
 				{
 					Name = "Eddie Vedder",
 					BingoCard = new BingoCardModel()
@@ -173,9 +173,9 @@ namespace BingoMaster_Tests
 		[InlineData(new int[] { 2, 3 })]
 		public void PlayRound_HorizontalLineDone_Failes(int[] drawnNumbers)
 		{
-			var input = new List<PlayerModel>()
+			var input = new List<PlayerGameModel>()
 			{
-				new PlayerModel()
+				new PlayerGameModel()
 				{
 					Name = "Eddie Vedder",
 					BingoCard = new BingoCardModel()
@@ -203,9 +203,9 @@ namespace BingoMaster_Tests
 		[InlineData(new int[] { 1, 2, 4, 7 }, 8)]
 		public void PlayRound_HorizontalLineDone_NextDrawnNumber_Failes(int[] drawnNumbers, int nextNumberToBeDrawn)
 		{
-			var input = new List<PlayerModel>()
+			var input = new List<PlayerGameModel>()
 			{
-				new PlayerModel()
+				new PlayerGameModel()
 				{
 					Name = "Eddie Vedder",
 					BingoCard = new BingoCardModel()
@@ -233,9 +233,9 @@ namespace BingoMaster_Tests
 		[InlineData(new int[] { 2, 4, 3, 6, 7 }, 1)]
 		public void PlayRound_FullCardDone_NextDrawnNumber_Succeeds(int[] drawnNumbers, int nextNumberToBeDrawn)
 		{
-			var input = new List<PlayerModel>()
+			var input = new List<PlayerGameModel>()
 			{
-				new PlayerModel()
+				new PlayerGameModel()
 				{
 					Name = "Eddie Vedder",
 					BingoCard = new BingoCardModel()
@@ -264,9 +264,9 @@ namespace BingoMaster_Tests
 		[InlineData(new int[] { 3, 6, 1, 7, 2, 4 })]
 		public void PlayRound_FullCardDone_Succeeds(int[] drawnNumbers)
 		{
-			var input = new List<PlayerModel>()
+			var input = new List<PlayerGameModel>()
 			{
-				new PlayerModel()
+				new PlayerGameModel()
 				{
 					Name = "Eddie Vedder",
 					BingoCard = new BingoCardModel()
@@ -295,9 +295,9 @@ namespace BingoMaster_Tests
 		[InlineData(new int[] { 3, 1, 7, 2, 4 })]
 		public void PlayRound_FullCardDone_Failes(int[] drawnNumbers)
 		{
-			var input = new List<PlayerModel>()
+			var input = new List<PlayerGameModel>()
 			{
-				new PlayerModel()
+				new PlayerGameModel()
 				{
 					Name = "Eddie Vedder",
 					BingoCard = new BingoCardModel()
@@ -325,9 +325,9 @@ namespace BingoMaster_Tests
 		[InlineData(new int[] { 4, 6, 7, 2 }, 1)]
 		public void PlayRound_FullCardDone_NextDrawnNumber_Failes(int[] drawnNumbers, int nextNumberToBeDrawn)
 		{
-			var input = new List<PlayerModel>()
+			var input = new List<PlayerGameModel>()
 			{
-				new PlayerModel()
+				new PlayerGameModel()
 				{
 					Name = "Eddie Vedder",
 					BingoCard = new BingoCardModel()
@@ -353,17 +353,17 @@ namespace BingoMaster_Tests
 		[Fact]
 		public void PlayRound_NoPlayers_ExceptionExpected()
 		{
-			var input = new List<PlayerModel>() { };
+			var input = new List<PlayerGameModel>() { };
 			Assert.Throws<ArgumentException>(() => _bingoGameLogic.PlayRound(input, new int[] { 1, 2, 3 }));
 		}
 
 		[Fact]
 		public void PlayRound_NoDrawnNumbers_ExceptionExpected()
 		{
-			var input = new List<PlayerModel>()
+			var input = new List<PlayerGameModel>()
 			{
-				new PlayerModel() { Name = "Eddie Vedder" },
-				new PlayerModel() { Name = "Mike McCready" }
+				new PlayerGameModel() { Name = "Eddie Vedder" },
+				new PlayerGameModel() { Name = "Mike McCready" }
 			};
 			Assert.Throws<ArgumentException>(() => _bingoGameLogic.PlayRound(input, new int[] {}));
 		}

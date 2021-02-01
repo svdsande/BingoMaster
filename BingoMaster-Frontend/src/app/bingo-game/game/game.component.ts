@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { BingoGameModel, PlayerModel } from 'src/api/api';
+import { BingoGameModel, PlayerGameModel } from 'src/api/api';
 import { BingoGameService } from 'src/app/services/bingo-game.service';
 import { WinnerDialogComponent } from './winner-dialog/winner-dialog.component';
 
@@ -49,7 +49,7 @@ export class GameComponent implements OnInit {
     this.drawnNumbers = [];
   }
 
-  private gameWon(player: PlayerModel): void {
+  private gameWon(player: PlayerGameModel): void {
     const dialogRef = this.dialog.open(WinnerDialogComponent, {
       width: '500px',
       data: { playerName: player.name }
@@ -60,7 +60,7 @@ export class GameComponent implements OnInit {
     });
   }
 
-  private gameIsWon(players: PlayerModel[]): boolean {
+  private gameIsWon(players: PlayerGameModel[]): boolean {
     return players.filter(player => player.isFullCardDone).length > 0;
   }
 }

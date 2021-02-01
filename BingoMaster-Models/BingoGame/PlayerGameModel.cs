@@ -1,6 +1,6 @@
 ﻿namespace BingoMaster_Models
 {
-	public class PlayerModel
+	public class PlayerGameModel
 	{
 		public string Name { get; set; }
 		public BingoCardModel BingoCard { get; set; }

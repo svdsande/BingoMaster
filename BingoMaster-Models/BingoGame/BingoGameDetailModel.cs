@@ -7,7 +7,7 @@ namespace BingoMaster_Models
 	{
 		public string Name { get; set; }
 		public DateTime Date { get; set; }
-		public IEnumerable<PlayerModel> Players { get; set; }
+		public IEnumerable<PlayerGameModel> Players { get; set; }
 		public int Size { get; set; }
 	}
 }

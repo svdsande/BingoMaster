@@ -7,6 +7,6 @@ namespace BingoMaster_Models
 	public class BingoGameModel
 	{
 		public int DrawnNumber { get; set; }
-		public IEnumerable<PlayerModel> Players { get; set; }
+		public IEnumerable<PlayerGameModel> Players { get; set; }
 	}
 }

@@ -15,7 +15,7 @@ import { UserService } from 'src/app/services/user/user.service';
 export class SettingsComponent implements OnInit {
 
   public user: Observable<UserModel>;
-  public userFormGroup: FormGroup;
+  public settingsFormGroup: FormGroup;
   public loading: boolean = false;
   private currentEmailAddress: string;
   private userId: string;
@@ -33,7 +33,7 @@ export class SettingsComponent implements OnInit {
     this.user = this.activatedRoute.paramMap.pipe(
       mergeMap((params: ParamMap) => this.userService.getUser(params.get('id'))),
       tap((user: UserModel) => {
-        this.userFormGroup.patchValue(user);
+        this.settingsFormGroup.patchValue(user);
         this.currentEmailAddress = user.emailAddress;
         this.userId = user.id;
         this.userName = user.userName;
@@ -44,12 +44,7 @@ export class SettingsComponent implements OnInit {
   public save(): void {
     this.loading = true;
 
-    const userModel: UserModel = new UserModel();
-    userModel.id = this.userId;
-    userModel.userName = this.userName;
-    userModel.emailAddress = this.userFormGroup.get('emailAddress').value;
-    userModel.firstName = this.userFormGroup.get('firstName').value;
-    userModel.lastName = this.userFormGroup.get('lastName').value;
+    const userModel = this.getUserModel();
 
     this.userService.updateUser(userModel)
       .pipe(take(1))
@@ -67,12 +62,27 @@ export class SettingsComponent implements OnInit {
       });
   }
 
+  private getUserModel(): UserModel {
+    const userModel: UserModel = new UserModel();
+    userModel.id = this.userId;
+    userModel.userName = this.userName;
+    userModel.emailAddress = this.settingsFormGroup.get('emailAddress').value;
+    userModel.firstName = this.settingsFormGroup.get('firstName').value;
+    userModel.lastName = this.settingsFormGroup.get('lastName').value;
+
+    return userModel;
+  }
+
   private buildForm(): void {
-    this.userFormGroup = new FormGroup({
+    this.settingsFormGroup = new FormGroup({
       emailAddress: new FormControl('', [Validators.required, Validators.pattern('\\w+([\\.-]?\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w{2,3})+')], this.uniqueEmailAddressValidator()),
       firstName: new FormControl(''),
       middleName: new FormControl(''),
       lastName: new FormControl(''),
+      playerFormGroup: new FormGroup({
+        name: new FormControl(''),
+        description: new FormControl('')
+      })
     });
   }
 

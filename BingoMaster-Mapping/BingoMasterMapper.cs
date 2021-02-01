@@ -18,7 +18,7 @@ namespace BingoMaster_Mapping
 			CreateMap<Game, BingoGameDetailModel>();
 
 			// Player
-			CreateMap<Player, PlayerModel>();
+			CreateMap<Player, PlayerGameModel>();
 		}
 	}
 }

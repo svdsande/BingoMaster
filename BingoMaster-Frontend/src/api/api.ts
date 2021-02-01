@@ -730,7 +730,7 @@ export interface IBingoCardCreationModel {
 
 export class BingoGameModel implements IBingoGameModel {
     drawnNumber!: number;
-    players?: PlayerModel[] | undefined;
+    players?: PlayerGameModel[] | undefined;
 
     constructor(data?: IBingoGameModel) {
         if (data) {
@@ -747,7 +747,7 @@ export class BingoGameModel implements IBingoGameModel {
             if (Array.isArray(_data["players"])) {
                 this.players = [] as any;
                 for (let item of _data["players"])
-                    this.players!.push(PlayerModel.fromJS(item));
+                    this.players!.push(PlayerGameModel.fromJS(item));
             }
         }
     }
@@ -773,17 +773,17 @@ export class BingoGameModel implements IBingoGameModel {
 
 export interface IBingoGameModel {
     drawnNumber: number;
-    players?: PlayerModel[] | undefined;
+    players?: PlayerGameModel[] | undefined;
 }
 
-export class PlayerModel implements IPlayerModel {
+export class PlayerGameModel implements IPlayerGameModel {
     name?: string | undefined;
     bingoCard?: BingoCardModel | undefined;
     isHorizontalLineDone!: boolean;
     isVerticalLineDone!: boolean;
     isFullCardDone!: boolean;
 
-    constructor(data?: IPlayerModel) {
+    constructor(data?: IPlayerGameModel) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -802,9 +802,9 @@ export class PlayerModel implements IPlayerModel {
         }
     }
 
-    static fromJS(data: any): PlayerModel {
+    static fromJS(data: any): PlayerGameModel {
         data = typeof data === 'object' ? data : {};
-        let result = new PlayerModel();
+        let result = new PlayerGameModel();
         result.init(data);
         return result;
     }
@@ -820,7 +820,7 @@ export class PlayerModel implements IPlayerModel {
     }
 }
 
-export interface IPlayerModel {
+export interface IPlayerGameModel {
     name?: string | undefined;
     bingoCard?: BingoCardModel | undefined;
     isHorizontalLineDone: boolean;
@@ -831,7 +831,7 @@ export interface IPlayerModel {
 export class BingoGameDetailModel implements IBingoGameDetailModel {
     name?: string | undefined;
     date!: Date;
-    players?: PlayerModel[] | undefined;
+    players?: PlayerGameModel[] | undefined;
     size!: number;
 
     constructor(data?: IBingoGameDetailModel) {
@@ -850,7 +850,7 @@ export class BingoGameDetailModel implements IBingoGameDetailModel {
             if (Array.isArray(_data["players"])) {
                 this.players = [] as any;
                 for (let item of _data["players"])
-                    this.players!.push(PlayerModel.fromJS(item));
+                    this.players!.push(PlayerGameModel.fromJS(item));
             }
             this.size = _data["size"];
         }
@@ -880,7 +880,7 @@ export class BingoGameDetailModel implements IBingoGameDetailModel {
 export interface IBingoGameDetailModel {
     name?: string | undefined;
     date: Date;
-    players?: PlayerModel[] | undefined;
+    players?: PlayerGameModel[] | undefined;
     size: number;
 }
 
