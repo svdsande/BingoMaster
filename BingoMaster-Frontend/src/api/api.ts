@@ -346,6 +346,63 @@ export class PlayerClient {
         }
         return _observableOf<BingoGameDetailModel[]>(<any>null);
     }
+
+    playerNameUnique(playerName: string | null | undefined): Observable<boolean> {
+        let url_ = this.baseUrl + "/api/Player/playername-unique?";
+        if (playerName !== undefined && playerName !== null)
+            url_ += "playerName=" + encodeURIComponent("" + playerName) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processPlayerNameUnique(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processPlayerNameUnique(<any>response_);
+                } catch (e) {
+                    return <Observable<boolean>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<boolean>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processPlayerNameUnique(response: HttpResponseBase): Observable<boolean> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 !== undefined ? resultData200 : <any>null;
+            return _observableOf(result200);
+            }));
+        } else if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ErrorModel.fromJS(resultData400);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<boolean>(<any>null);
+    }
 }
 
 @Injectable()
@@ -589,63 +646,6 @@ export class UserClient {
             }));
         }
         return _observableOf<void>(<any>null);
-    }
-
-    userNameUnique(userName: string | null | undefined): Observable<boolean> {
-        let url_ = this.baseUrl + "/api/User/username-unique?";
-        if (userName !== undefined && userName !== null)
-            url_ += "userName=" + encodeURIComponent("" + userName) + "&";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processUserNameUnique(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processUserNameUnique(<any>response_);
-                } catch (e) {
-                    return <Observable<boolean>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<boolean>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processUserNameUnique(response: HttpResponseBase): Observable<boolean> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = resultData200 !== undefined ? resultData200 : <any>null;
-            return _observableOf(result200);
-            }));
-        } else if (status === 400) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result400: any = null;
-            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = ErrorModel.fromJS(resultData400);
-            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<boolean>(<any>null);
     }
 
     emailAddressUnique(emailAddress: string | null | undefined): Observable<boolean> {
@@ -1049,7 +1049,6 @@ export class AuthenticatedUserModel implements IAuthenticatedUserModel {
     middleName?: string | undefined;
     lastName?: string | undefined;
     emailAddress?: string | undefined;
-    userName?: string | undefined;
     token?: string | undefined;
 
     constructor(data?: IAuthenticatedUserModel) {
@@ -1069,7 +1068,6 @@ export class AuthenticatedUserModel implements IAuthenticatedUserModel {
             this.middleName = _data["middleName"];
             this.lastName = _data["lastName"];
             this.emailAddress = _data["emailAddress"];
-            this.userName = _data["userName"];
             this.token = _data["token"];
         }
     }
@@ -1089,7 +1087,6 @@ export class AuthenticatedUserModel implements IAuthenticatedUserModel {
         data["middleName"] = this.middleName;
         data["lastName"] = this.lastName;
         data["emailAddress"] = this.emailAddress;
-        data["userName"] = this.userName;
         data["token"] = this.token;
         return data; 
     }
@@ -1102,7 +1099,6 @@ export interface IAuthenticatedUserModel {
     middleName?: string | undefined;
     lastName?: string | undefined;
     emailAddress?: string | undefined;
-    userName?: string | undefined;
     token?: string | undefined;
 }
 

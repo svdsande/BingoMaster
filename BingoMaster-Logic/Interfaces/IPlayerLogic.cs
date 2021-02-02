@@ -11,5 +11,6 @@ namespace BingoMaster_Logic.Interfaces
 		IEnumerable<BingoGameDetailModel> GetGamesForPlayer(Guid id);
 		PlayerModel GetPlayerById(Guid id);
 		void Update(PlayerModel playerModel);
+		bool PlayerNameUnique(string playerName);
 	}
 }

@@ -14,6 +14,7 @@ namespace BingoMaster_Tests
 	public class UserLogicTests : TestBase
 	{
 		private readonly Mock<IPasswordLogic> _passwordLogicMock;
+		private readonly Mock<IPlayerLogic> _playerLogicMock;
 		private readonly Mock<IOptions<JwtSettingsModel>> _jwtSettingsModelMock;
 		private readonly JwtSettingsModel jwtSettings;
 		private readonly IUserLogic _userLogic;
@@ -29,7 +30,7 @@ namespace BingoMaster_Tests
 				FirstName = "Eddie",
 				LastName = "Vedder",
 				EmailAddress = "eddie-vedder@pearljam.com",
-				UserName = "evedder"
+				Player = new Player()
 			};
 
 			context.Users.Add(user);
@@ -39,7 +40,8 @@ namespace BingoMaster_Tests
 			_jwtSettingsModelMock = new Mock<IOptions<JwtSettingsModel>>(MockBehavior.Strict);
 			_jwtSettingsModelMock.Setup(setting => setting.Value).Returns(jwtSettings);
 			_passwordLogicMock = new Mock<IPasswordLogic>(MockBehavior.Loose);
-			_userLogic = new UserLogic(_jwtSettingsModelMock.Object, context, _passwordLogicMock.Object, _mapper);
+			_playerLogicMock = new Mock<IPlayerLogic>(MockBehavior.Strict);
+			_userLogic = new UserLogic(_jwtSettingsModelMock.Object, context, _passwordLogicMock.Object, _playerLogicMock.Object, _mapper);
 		}
 
 		[Theory]
@@ -98,7 +100,6 @@ namespace BingoMaster_Tests
 			var actual = _userLogic.Authenticate(model);
 
 			Assert.Equal("eddie-vedder@pearljam.com", actual.EmailAddress);
-			Assert.Equal("evedder", actual.UserName);
 			Assert.Equal("Eddie", actual.FirstName);
 			Assert.Equal("Vedder", actual.LastName);
 			Assert.False(string.IsNullOrWhiteSpace(actual.Token));
@@ -132,11 +133,13 @@ namespace BingoMaster_Tests
 				UserName = "username"
 			};
 
+			_playerLogicMock.Setup(logic => logic.PlayerNameUnique(It.IsAny<string>())).Returns(true);
+
 			Assert.Throws<UserAlreadyExistsException>(() => _userLogic.Register(model));
 		}
 
 		[Fact]
-		public void Register_UserNameTaken_ExceptionExpected()
+		public void Register_PlayerNameTaken_ExceptionExpected()
 		{
 			var model = new RegisterUserModel
 			{
@@ -144,6 +147,8 @@ namespace BingoMaster_Tests
 				Password = "BlackAndAlive",
 				UserName = "evedder"
 			};
+
+			_playerLogicMock.Setup(logic => logic.PlayerNameUnique(It.IsAny<string>())).Returns(false);
 
 			Assert.Throws<UserAlreadyExistsException>(() => _userLogic.Register(model));
 		}
@@ -163,6 +168,7 @@ namespace BingoMaster_Tests
 			};
 
 			_passwordLogicMock.Setup(logic => logic.GetPasswordStrength(It.IsAny<string>())).Returns(passwordStrength);
+			_playerLogicMock.Setup(logic => logic.PlayerNameUnique(It.IsAny<string>())).Returns(true);
 
 			var exception = Assert.Throws<ArgumentException>(() => _userLogic.Register(model));
 			Assert.Equal("Provided password too weak", exception.Message);
@@ -181,34 +187,13 @@ namespace BingoMaster_Tests
 			};
 
 			_passwordLogicMock.Setup(logic => logic.GetPasswordStrength(It.IsAny<string>())).Returns(PasswordStrength.VeryStrong);
+			_playerLogicMock.Setup(logic => logic.PlayerNameUnique(It.IsAny<string>())).Returns(true);
 
 			var actual = _userLogic.Register(model);
 
 			Assert.Equal("mike-mccready@pearljam.com", actual.EmailAddress);
-			Assert.Equal("McCready", actual.UserName);
 			Assert.Equal("Mike", actual.FirstName);
 			Assert.Equal("McCready", actual.LastName);
-		}
-
-		[Theory]
-		[InlineData("")]
-		[InlineData("  ")]
-		[InlineData(null)]
-		public void UserNameUnique_NoUserName_ExceptionExpected(string userName)
-		{
-			Assert.Throws<ArgumentException>(() => _userLogic.UserNameUnique(userName));
-		}
-
-		[Fact]
-		public void UserNameUnique_UserNameTaken_NotUnique()
-		{
-			Assert.False(_userLogic.UserNameUnique("evedder"));
-		}
-
-		[Fact]
-		public void UserNameUnique_UserNameNotTaken_IsUnique()
-		{
-			Assert.True(_userLogic.UserNameUnique("evedderBlack"));
 		}
 
 		[Theory]

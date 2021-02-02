@@ -56,5 +56,22 @@ namespace BingoMaster_Logic
 			_context.Entry(player).CurrentValues.SetValues(playerModel);
 			_context.SaveChanges();
 		}
+
+		public bool PlayerNameUnique(string playerName)
+		{
+			if (string.IsNullOrWhiteSpace(playerName))
+			{
+				throw new ArgumentException("No player name provided");
+			}
+
+			var player = _context.Players.FirstOrDefault(player => player.Name == playerName);
+
+			if (player != null)
+			{
+				return false;
+			}
+
+			return true;
+		}
 	}
 }

@@ -13,7 +13,6 @@ namespace BingoMaster_Logic.Interfaces
 		UserModel GetUserByIdWithPlayer(Guid id);
 		UserModel GetUserById(Guid id);
 		void Update(UserModel userModel);
-		bool UserNameUnique(string userName);
 		bool EmailAddressUnique(string emailAddress);
 	}
 }

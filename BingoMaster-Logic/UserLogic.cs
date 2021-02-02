@@ -25,15 +25,17 @@ namespace BingoMaster_Logic
 		private readonly JwtSettingsModel _jwtSettings;
 		private readonly BingoMasterDbContext _context;
 		private readonly IPasswordLogic _passwordLogic;
+		private readonly IPlayerLogic _playerLogic;
 		private readonly IMapper _mapper;
 
 		#endregion
 
-		public UserLogic(IOptions<JwtSettingsModel> jwtSettings, BingoMasterDbContext context, IPasswordLogic passwordLogic, IMapper mapper)
+		public UserLogic(IOptions<JwtSettingsModel> jwtSettings, BingoMasterDbContext context, IPasswordLogic passwordLogic, IPlayerLogic playerLogic, IMapper mapper)
 		{
 			_jwtSettings = jwtSettings.Value;
 			_context = context;
 			_passwordLogic = passwordLogic;
+			_playerLogic = playerLogic;
 			_mapper = mapper;
 		}
 
@@ -87,9 +89,9 @@ namespace BingoMaster_Logic
 				throw new ArgumentException("No email address, username or password provided");
 			}
 
-			if (!UserNameUnique(registerUserModel.UserName) || !EmailAddressUnique(registerUserModel.EmailAddress))
+			if (!_playerLogic.PlayerNameUnique(registerUserModel.UserName) || !EmailAddressUnique(registerUserModel.EmailAddress))
 			{
-				throw new UserAlreadyExistsException("User already exists");
+				throw new UserAlreadyExistsException("Player or user already exists");
 			}
 
 			var passwordStrength = _passwordLogic.GetPasswordStrength(registerUserModel.Password);
@@ -105,35 +107,20 @@ namespace BingoMaster_Logic
 			var newUser = new User
 			{
 				EmailAddress = registerUserModel.EmailAddress,
-				UserName = registerUserModel.UserName,
 				FirstName = registerUserModel.FirstName,
 				LastName = registerUserModel.LastName,
 				Salt = Convert.ToBase64String(salt),
 				Hash = hashedPassword,
-				Player = new Player()
+				Player = new Player
+				{
+					Name = registerUserModel.UserName
+				}
 			};
 
 			_context.Add(newUser);
 			_context.SaveChanges();
 
 			return _mapper.Map<UserModel>(newUser);
-		}
-
-		public bool UserNameUnique(string userName)
-		{
-			if (string.IsNullOrWhiteSpace(userName))
-			{
-				throw new ArgumentException("No username provided");
-			}
-
-			var user = _context.Users.FirstOrDefault(user => user.UserName == userName);
-
-			if (user != null)
-			{
-				return false;
-			}
-
-			return true;
 		}
 
 		public bool EmailAddressUnique(string emailAddress)

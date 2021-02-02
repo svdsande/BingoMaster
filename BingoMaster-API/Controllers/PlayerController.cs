@@ -55,6 +55,19 @@ namespace BingoMaster_API.Controllers
 			return Ok(_playerLogic.GetGamesForPlayer(id));
 		}
 
+		[HttpGet("playername-unique")]
+		[SwaggerResponse(HttpStatusCode.OK, typeof(bool))]
+		[SwaggerResponse(HttpStatusCode.BadRequest, typeof(ErrorModel))]
+		public IActionResult PlayerNameUnique(string playerName)
+		{
+			if (string.IsNullOrWhiteSpace(playerName))
+			{
+				return BadRequest("No player name provided");
+			}
+
+			return Ok(_playerLogic.PlayerNameUnique(playerName));
+		}
+
 		[HttpPut]
 		[Authorize]
 		[SwaggerResponse(HttpStatusCode.NoContent, typeof(void))]
