@@ -2,9 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { AbstractControl, AsyncValidatorFn, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, ParamMap } from '@angular/router';
-import { Observable, of } from 'rxjs';
-import { delay, map, mergeMap, switchMap, take, tap } from 'rxjs/operators';
-import { UserModel } from 'src/api/api';
+import { forkJoin, Observable, of } from 'rxjs';
+import { delay, map, mergeMap, switchMap, tap } from 'rxjs/operators';
+import { PlayerModel, UserModel } from 'src/api/api';
+import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
+import { PlayerService } from 'src/app/services/player/player.service';
 import { UserService } from 'src/app/services/user/user.service';
 
 @Component({
@@ -14,7 +16,7 @@ import { UserService } from 'src/app/services/user/user.service';
 })
 export class SettingsComponent implements OnInit {
 
-  public user: Observable<UserModel>;
+  public settings: Observable<[UserModel, PlayerModel]>;
   public settingsFormGroup: FormGroup;
   public loading: boolean = false;
   private currentEmailAddress: string;
@@ -24,42 +26,51 @@ export class SettingsComponent implements OnInit {
   constructor(
     private activatedRoute: ActivatedRoute,
     private userService: UserService,
-    private snackBar: MatSnackBar
+    private playerService: PlayerService,
+    private snackBar: MatSnackBar,
+    private authenticationService: AuthenticationService
   ) { }
 
   ngOnInit(): void {
     this.buildForm();
 
-    this.user = this.activatedRoute.paramMap.pipe(
-      mergeMap((params: ParamMap) => this.userService.getUser(params.get('id'))),
-      tap((user: UserModel) => {
-        this.settingsFormGroup.patchValue(user);
-        this.currentEmailAddress = user.emailAddress;
-        this.userId = user.id;
-        this.userName = user.userName;
+    this.settings = this.activatedRoute.paramMap.pipe(
+      mergeMap((params: ParamMap) => {
+        const user = this.userService.getUser(params.get('id'));
+        const player = this.playerService.getPlayer(this.authenticationService.currentUserValue.playerId);
+
+        return forkJoin([user, player]);
+      }),
+      tap((result: [UserModel, PlayerModel]) => {
+        this.settingsFormGroup.patchValue(result[0]);
+        this.settingsFormGroup.get('player').patchValue(result[1]);
+        this.currentEmailAddress = result[0].emailAddress;
+        this.userId = result[0].id;
+        this.userName = result[0].userName;
       })
     );
   }
 
   public save(): void {
     this.loading = true;
-
     const userModel = this.getUserModel();
+    const playerModel = this.getPlayerModel();
 
-    this.userService.updateUser(userModel)
-      .pipe(take(1))
-      .subscribe(user => {
-        this.loading = false;
-        this.snackBar.open('Account information successfully updated', '', {
-          duration: 2000
-        });
-      },
-      error => {
-        this.loading = false;
-        this.snackBar.open('Account update failed', '', {
-          duration: 2000
-        });
+    forkJoin({
+      user: this.userService.updateUser(userModel),
+      player: this.playerService.updatePlayer(playerModel)
+    }).subscribe(() => {
+      this.loading = false;
+      this.snackBar.open('Account information successfully updated', '', {
+        duration: 2000
       });
+    },
+    error => {
+      this.loading = false;
+      this.snackBar.open('Account update failed', '', {
+        duration: 2000
+      });
+    });
   }
 
   private getUserModel(): UserModel {
@@ -73,13 +84,22 @@ export class SettingsComponent implements OnInit {
     return userModel;
   }
 
+  private getPlayerModel(): PlayerModel {
+    const playerModel: PlayerModel = new PlayerModel();
+    playerModel.id = this.authenticationService.currentUserValue.playerId;
+    playerModel.name = this.settingsFormGroup.get('player.name').value;
+    playerModel.description = this.settingsFormGroup.get('player.description').value;
+
+    return playerModel;
+  }
+
   private buildForm(): void {
     this.settingsFormGroup = new FormGroup({
       emailAddress: new FormControl('', [Validators.required, Validators.pattern('\\w+([\\.-]?\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w{2,3})+')], this.uniqueEmailAddressValidator()),
       firstName: new FormControl(''),
       middleName: new FormControl(''),
       lastName: new FormControl(''),
-      playerFormGroup: new FormGroup({
+      player: new FormGroup({
         name: new FormControl(''),
         description: new FormControl('')
       })

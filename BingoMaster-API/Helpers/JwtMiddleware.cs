@@ -57,7 +57,7 @@ namespace BingoMaster_API.Helpers
                 var jwtToken = (JwtSecurityToken)validatedToken;
                 var userId = Guid.Parse(jwtToken.Claims.First(x => x.Type == "id").Value);
 
-                context.Items["User"] = userLogic.GetUserById(userId);
+                context.Items["User"] = userLogic.GetUserByIdWithPlayer(userId);
             }
             catch
             {

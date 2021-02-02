@@ -171,6 +171,120 @@ export class PlayerClient {
         this.baseUrl = baseUrl ? baseUrl : "";
     }
 
+    getPlayer(id: string | undefined): Observable<PlayerModel> {
+        let url_ = this.baseUrl + "/api/Player?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetPlayer(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetPlayer(<any>response_);
+                } catch (e) {
+                    return <Observable<PlayerModel>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<PlayerModel>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetPlayer(response: HttpResponseBase): Observable<PlayerModel> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = PlayerModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ErrorModel.fromJS(resultData400);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<PlayerModel>(<any>null);
+    }
+
+    updatePlayer(playerModel: PlayerModel): Observable<void> {
+        let url_ = this.baseUrl + "/api/Player";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(playerModel);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdatePlayer(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdatePlayer(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processUpdatePlayer(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ErrorModel.fromJS(resultData400);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+
     gamesForPlayer(id: string): Observable<BingoGameDetailModel[]> {
         let url_ = this.baseUrl + "/api/Player/{id}/games";
         if (id === undefined || id === null)
@@ -884,8 +998,53 @@ export interface IBingoGameDetailModel {
     size: number;
 }
 
+export class PlayerModel implements IPlayerModel {
+    id!: string;
+    name?: string | undefined;
+    description?: string | undefined;
+
+    constructor(data?: IPlayerModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.description = _data["description"];
+        }
+    }
+
+    static fromJS(data: any): PlayerModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new PlayerModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["description"] = this.description;
+        return data; 
+    }
+}
+
+export interface IPlayerModel {
+    id: string;
+    name?: string | undefined;
+    description?: string | undefined;
+}
+
 export class AuthenticatedUserModel implements IAuthenticatedUserModel {
     id!: string;
+    playerId!: string;
     firstName?: string | undefined;
     middleName?: string | undefined;
     lastName?: string | undefined;
@@ -905,6 +1064,7 @@ export class AuthenticatedUserModel implements IAuthenticatedUserModel {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
+            this.playerId = _data["playerId"];
             this.firstName = _data["firstName"];
             this.middleName = _data["middleName"];
             this.lastName = _data["lastName"];
@@ -924,6 +1084,7 @@ export class AuthenticatedUserModel implements IAuthenticatedUserModel {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
+        data["playerId"] = this.playerId;
         data["firstName"] = this.firstName;
         data["middleName"] = this.middleName;
         data["lastName"] = this.lastName;
@@ -936,6 +1097,7 @@ export class AuthenticatedUserModel implements IAuthenticatedUserModel {
 
 export interface IAuthenticatedUserModel {
     id: string;
+    playerId: string;
     firstName?: string | undefined;
     middleName?: string | undefined;
     lastName?: string | undefined;
@@ -986,6 +1148,7 @@ export interface IAuthenticateUserModel {
 
 export class UserModel implements IUserModel {
     id!: string;
+    playerId!: string;
     firstName?: string | undefined;
     lastName?: string | undefined;
     emailAddress?: string | undefined;
@@ -1003,6 +1166,7 @@ export class UserModel implements IUserModel {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
+            this.playerId = _data["playerId"];
             this.firstName = _data["firstName"];
             this.lastName = _data["lastName"];
             this.emailAddress = _data["emailAddress"];
@@ -1020,6 +1184,7 @@ export class UserModel implements IUserModel {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
+        data["playerId"] = this.playerId;
         data["firstName"] = this.firstName;
         data["lastName"] = this.lastName;
         data["emailAddress"] = this.emailAddress;
@@ -1030,6 +1195,7 @@ export class UserModel implements IUserModel {
 
 export interface IUserModel {
     id: string;
+    playerId: string;
     firstName?: string | undefined;
     lastName?: string | undefined;
     emailAddress?: string | undefined;

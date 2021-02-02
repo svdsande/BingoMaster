@@ -10,6 +10,7 @@ namespace BingoMaster_Logic.Interfaces
 	{
 		AuthenticatedUserModel Authenticate(AuthenticateUserModel authenticateUserModel);
 		UserModel Register(RegisterUserModel registerUserModel);
+		UserModel GetUserByIdWithPlayer(Guid id);
 		UserModel GetUserById(Guid id);
 		void Update(UserModel userModel);
 		bool UserNameUnique(string userName);

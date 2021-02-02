@@ -2,6 +2,7 @@
 using BingoMaster_Entities;
 using BingoMaster_Logic.Interfaces;
 using BingoMaster_Models;
+using BingoMaster_Models.Player;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,6 +35,26 @@ namespace BingoMaster_Logic
 			var games = _context.GamePlayers.Where(gamePlayer => gamePlayer.PlayerId == id).Select(gamePlayer => gamePlayer.Game).ToArray();
 
 			return _mapper.Map<IEnumerable<Game>, IEnumerable<BingoGameDetailModel>>(games);
+		}
+
+		public PlayerModel GetPlayerById(Guid id)
+		{
+			var player = _context.Players.Find(id);
+
+			return _mapper.Map<PlayerModel>(player);
+		}
+
+		public void Update(PlayerModel playerModel)
+		{
+			var player = _context.Players.FirstOrDefault(player => player.Id == playerModel.Id);
+
+			if (player == null)
+			{
+				throw new KeyNotFoundException("Entity does not exists");
+			}
+
+			_context.Entry(player).CurrentValues.SetValues(playerModel);
+			_context.SaveChanges();
 		}
 	}
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using BingoMaster_API.Attributes;
 using BingoMaster_Logic.Interfaces;
 using BingoMaster_Models;
-using Microsoft.AspNetCore.Http;
+using BingoMaster_Models.Player;
 using Microsoft.AspNetCore.Mvc;
 using NSwag.Annotations;
 
@@ -27,6 +27,20 @@ namespace BingoMaster_API.Controllers
 			_playerLogic = playerLogic;
 		}
 
+		[HttpGet]
+		[Authorize]
+		[SwaggerResponse(HttpStatusCode.OK, typeof(PlayerModel))]
+		[SwaggerResponse(HttpStatusCode.BadRequest, typeof(ErrorModel))]
+		public IActionResult GetPlayer(Guid id)
+		{
+			if (id == Guid.Empty)
+			{
+				return BadRequest("No player id provided");
+			}
+
+			return Ok(_playerLogic.GetPlayerById(id));
+		}
+
 		[HttpGet("{id}/games")]
 		[Authorize]
 		[SwaggerResponse(HttpStatusCode.OK, typeof(IEnumerable<BingoGameDetailModel>))]
@@ -39,6 +53,22 @@ namespace BingoMaster_API.Controllers
 			}
 
 			return Ok(_playerLogic.GetGamesForPlayer(id));
+		}
+
+		[HttpPut]
+		[Authorize]
+		[SwaggerResponse(HttpStatusCode.NoContent, typeof(void))]
+		[SwaggerResponse(HttpStatusCode.BadRequest, typeof(ErrorModel))]
+		public IActionResult UpdatePlayer([FromBody] PlayerModel playerModel)
+		{
+			if (playerModel == null)
+			{
+				return BadRequest("Invalid form data provided");
+			}
+
+			_playerLogic.Update(playerModel);
+
+			return NoContent();
 		}
 	}
 }

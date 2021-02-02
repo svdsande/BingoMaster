@@ -5,6 +5,7 @@ using BingoMaster_Logic.Interfaces;
 using BingoMaster_Models;
 using BingoMaster_Models.User;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -43,7 +44,9 @@ namespace BingoMaster_Logic
 				throw new ArgumentException("No email address or password provided");
 			}
 
-			var user = _context.Users.FirstOrDefault(user => user.EmailAddress == authenticateUserModel.EmailAddress);
+			var user = _context.Users
+				.Include(user => user.Player)
+				.FirstOrDefault(user => user.EmailAddress == authenticateUserModel.EmailAddress);
 
 			if (user == null)
 			{
@@ -59,6 +62,15 @@ namespace BingoMaster_Logic
 			model.Token = GenerateToken(user);
 
 			return model;
+		}
+
+		public UserModel GetUserByIdWithPlayer(Guid id)
+		{
+			var user = _context.Users
+				.Include(user => user.Player)
+				.SingleOrDefault(user => user.Id == id);
+
+			return _mapper.Map<UserModel>(user);
 		}
 
 		public UserModel GetUserById(Guid id)
@@ -97,7 +109,8 @@ namespace BingoMaster_Logic
 				FirstName = registerUserModel.FirstName,
 				LastName = registerUserModel.LastName,
 				Salt = Convert.ToBase64String(salt),
-				Hash = hashedPassword
+				Hash = hashedPassword,
+				Player = new Player()
 			};
 
 			_context.Add(newUser);
@@ -146,7 +159,10 @@ namespace BingoMaster_Logic
 			var key = Encoding.ASCII.GetBytes(_jwtSettings.Secret);
 			var tokenDescriptor = new SecurityTokenDescriptor
 			{
-				Subject = new ClaimsIdentity(new[] { new Claim("id", user.Id.ToString()) }),
+				Subject = new ClaimsIdentity(new[] { 
+					new Claim("id", user.Id.ToString()),
+					new Claim("playerId", user.Player.Id.ToString())
+				}),
 				Expires = DateTime.UtcNow.AddDays(7),
 				SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
 			};
