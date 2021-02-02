@@ -50,6 +50,26 @@
         "horizontal_line": "Horizontal line",
         "full_card": "Full card"
       }
+    },
+    "SETUP": {
+      "FORM" :{
+        "NAME": {
+          "label": "Name",
+          "error_message": "Name is required"
+        },
+        "CARD_SIZE": {
+          "label": "Card size"
+        },
+        "DATE": {
+          "label": "Date",
+          "error_message": "Date is required"
+        },
+        "MAX_AMOUNT_PLAYERS": {
+          "label": "Maximum amount players",
+          "error_message": "Amount of players is required"
+        },
+        "submit": "Save"
+      }
     }
   },
   "AUTHENTICATION": {

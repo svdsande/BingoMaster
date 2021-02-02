@@ -71,6 +71,8 @@ export class GameSetupComponent implements OnInit {
     this.gameSetupFormGroup = new FormGroup({
       name: new FormControl('', Validators.required),
       size: new FormControl(3, Validators.required),
+      date: new FormControl(new Date(), Validators.required),
+      amountOfPlayers: new FormControl('', Validators.required),
       players: new FormArray([], Validators.required)
     });
   }

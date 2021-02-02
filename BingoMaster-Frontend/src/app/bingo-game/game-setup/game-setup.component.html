@@ -2,13 +2,13 @@
   <form [formGroup]="this.gameSetupFormGroup" (ngSubmit)="this.createBingoGame()" id="game-setup-form">
     <div class="form-field-row">
       <mat-form-field class="form-field">
-        <mat-label>Name</mat-label>
+        <mat-label>{{ 'BINGO_GAME.SETUP.FORM.NAME.label' | translate }}</mat-label>
         <input matInput type="text" formControlName="name">
-        <mat-error *ngIf="this.gameSetupFormGroup.get('name').invalid">Name is required</mat-error>
+        <mat-error *ngIf="this.gameSetupFormGroup.get('name').invalid">{{ 'BINGO_GAME.SETUP.FORM.NAME.error_message' | translate }}</mat-error>
       </mat-form-field>
 
       <mat-form-field class="form-field quarter">
-        <mat-label>Size</mat-label>
+        <mat-label>{{ 'BINGO_GAME.SETUP.FORM.CARD_SIZE.label' | translate }}</mat-label>
         <mat-select name="size" formControlName="size">
           <mat-option [value]="3">3x3</mat-option>
           <mat-option [value]="4">4x4</mat-option>
@@ -16,6 +16,22 @@
           <mat-option [value]="6">6x6</mat-option>
           <mat-option [value]="7">7x7</mat-option>
         </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div class="form-field-row">
+      <mat-form-field class="form-field">
+          <mat-label>{{ 'BINGO_GAME.SETUP.FORM.DATE.label' | translate }}</mat-label>
+          <input matInput [matDatepicker]="picker" formControlName="date">
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+          <mat-error *ngIf="this.gameSetupFormGroup.get('date').invalid">{{ 'BINGO_GAME.SETUP.FORM.DATE.error_message' | translate }}</mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="form-field">
+          <mat-label>{{ 'BINGO_GAME.SETUP.FORM.MAX_AMOUNT_PLAYERS.label' | translate }}</mat-label>
+          <input matInput type="number" min="1" max="50" formControlName="amountOfPlayers">
+          <mat-error *ngIf="this.gameSetupFormGroup.get('amountOfPlayers').invalid">{{ 'BINGO_GAME.SETUP.FORM.MAX_AMOUNT_PLAYERS.error_message' | translate }}</mat-error>
       </mat-form-field>
     </div>
 
@@ -47,7 +63,7 @@
     <div class="form-field-row">
       <spinner-button [loading]="this.loading">
         <button mat-raised-button color="primary" type="submit"
-          [disabled]="!this.gameSetupFormGroup.valid || this.loading" id="generate-button">Create Game</button>
+          [disabled]="!this.gameSetupFormGroup.valid || this.loading" id="generate-button">{{ 'BINGO_GAME.SETUP.FORM.submit' | translate }}</button>
       </spinner-button>
     </div>
   </form>
