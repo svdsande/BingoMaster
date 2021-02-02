@@ -23,7 +23,11 @@ namespace BingoMaster_Entities
 			modelBuilder.Entity<User>(user =>
 			{
 				user.HasIndex(e => e.EmailAddress).IsUnique();
-				user.HasIndex(e => e.UserName).IsUnique();
+			});
+
+			modelBuilder.Entity<Player>(player =>
+			{
+				player.HasIndex(e => e.Name).IsUnique();
 			});
 
 			modelBuilder.Entity<GamePlayer>()
