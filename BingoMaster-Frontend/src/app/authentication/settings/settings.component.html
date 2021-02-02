@@ -3,7 +3,7 @@
 <div id="container">
   <div id="inner-container">
     <div *ngIf="this.settings | async as settings else loadingData">
-      <h1 class="title">{{ 'SETTINGS.title' | translate :{ userName: settings[0].userName} }}</h1>
+      <h1 class="title">{{ 'SETTINGS.title' | translate :{ playerName: settings[0].playerName} }}</h1>
       <form [formGroup]="this.settingsFormGroup" (ngSubmit)="this.save()">
         <div class="row">
           <mat-form-field class="full-width">
@@ -35,13 +35,6 @@
         <h1 class="title">{{ 'SETTINGS.PLAYER.title' | translate }}</h1>
 
         <div formGroupName="player">
-          <div class="row">
-            <mat-form-field class="full-width">
-              <mat-label>{{ 'SETTINGS.PLAYER.FORM.NAME.label' | translate }}</mat-label>
-              <input matInput formControlName="name" type="text">
-            </mat-form-field>
-          </div>
-
           <div class="row">
             <mat-form-field class="full-width">
               <mat-label>{{ 'SETTINGS.PLAYER.FORM.DESCRIPTION.label' | translate }}</mat-label>

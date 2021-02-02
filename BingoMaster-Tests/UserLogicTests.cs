@@ -106,21 +106,21 @@ namespace BingoMaster_Tests
 		}
 
 		[Theory]
-		[InlineData("", "password", "username")]
-		[InlineData("email", "", "username")]
+		[InlineData("", "password", "playerName")]
+		[InlineData("email", "", "playerName")]
 		[InlineData("email", "password", "")]
 		[InlineData("", "", "")]
-		public void Register_NoPasswordOrUserNameOrEmail_ExceptionExpected(string emailAddress, string password, string userName)
+		public void Register_NoPasswordOrPlayerNameOrEmail_ExceptionExpected(string emailAddress, string password, string playerName)
 		{
 			var model = new RegisterUserModel
 			{
 				EmailAddress = emailAddress,
 				Password = password,
-				UserName = userName
+				PlayerName = playerName
 			};
 
 			var exception = Assert.Throws<ArgumentException>(() => _userLogic.Register(model));
-			Assert.Equal("No email address, username or password provided", exception.Message);
+			Assert.Equal("No email address, playername or password provided", exception.Message);
 		}
 
 		[Fact]
@@ -130,7 +130,7 @@ namespace BingoMaster_Tests
 			{
 				EmailAddress = "eddie-vedder@pearljam.com",
 				Password = "BlackAndAlive",
-				UserName = "username"
+				PlayerName = "playerName"
 			};
 
 			_playerLogicMock.Setup(logic => logic.PlayerNameUnique(It.IsAny<string>())).Returns(true);
@@ -145,7 +145,7 @@ namespace BingoMaster_Tests
 			{
 				EmailAddress = "eddie-vedder-black@pearljam.com",
 				Password = "BlackAndAlive",
-				UserName = "evedder"
+				PlayerName = "evedder"
 			};
 
 			_playerLogicMock.Setup(logic => logic.PlayerNameUnique(It.IsAny<string>())).Returns(false);
@@ -164,7 +164,7 @@ namespace BingoMaster_Tests
 			{
 				EmailAddress = "mike-mccready@pearljam.com",
 				Password = "password",
-				UserName = "evedderBlack"
+				PlayerName = "evedderBlack"
 			};
 
 			_passwordLogicMock.Setup(logic => logic.GetPasswordStrength(It.IsAny<string>())).Returns(passwordStrength);
@@ -181,7 +181,7 @@ namespace BingoMaster_Tests
 			{
 				EmailAddress = "mike-mccready@pearljam.com",
 				Password = "$earl&am!2020",
-				UserName = "McCready",
+				PlayerName = "McCready",
 				FirstName = "Mike",
 				LastName = "McCready"
 			};

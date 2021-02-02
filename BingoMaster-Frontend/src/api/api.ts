@@ -1045,6 +1045,7 @@ export interface IPlayerModel {
 export class AuthenticatedUserModel implements IAuthenticatedUserModel {
     id!: string;
     playerId!: string;
+    playerName?: string | undefined;
     firstName?: string | undefined;
     middleName?: string | undefined;
     lastName?: string | undefined;
@@ -1064,6 +1065,7 @@ export class AuthenticatedUserModel implements IAuthenticatedUserModel {
         if (_data) {
             this.id = _data["id"];
             this.playerId = _data["playerId"];
+            this.playerName = _data["playerName"];
             this.firstName = _data["firstName"];
             this.middleName = _data["middleName"];
             this.lastName = _data["lastName"];
@@ -1083,6 +1085,7 @@ export class AuthenticatedUserModel implements IAuthenticatedUserModel {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["playerId"] = this.playerId;
+        data["playerName"] = this.playerName;
         data["firstName"] = this.firstName;
         data["middleName"] = this.middleName;
         data["lastName"] = this.lastName;
@@ -1095,6 +1098,7 @@ export class AuthenticatedUserModel implements IAuthenticatedUserModel {
 export interface IAuthenticatedUserModel {
     id: string;
     playerId: string;
+    playerName?: string | undefined;
     firstName?: string | undefined;
     middleName?: string | undefined;
     lastName?: string | undefined;
@@ -1148,7 +1152,7 @@ export class UserModel implements IUserModel {
     firstName?: string | undefined;
     lastName?: string | undefined;
     emailAddress?: string | undefined;
-    userName?: string | undefined;
+    playerName?: string | undefined;
 
     constructor(data?: IUserModel) {
         if (data) {
@@ -1166,7 +1170,7 @@ export class UserModel implements IUserModel {
             this.firstName = _data["firstName"];
             this.lastName = _data["lastName"];
             this.emailAddress = _data["emailAddress"];
-            this.userName = _data["userName"];
+            this.playerName = _data["playerName"];
         }
     }
 
@@ -1184,7 +1188,7 @@ export class UserModel implements IUserModel {
         data["firstName"] = this.firstName;
         data["lastName"] = this.lastName;
         data["emailAddress"] = this.emailAddress;
-        data["userName"] = this.userName;
+        data["playerName"] = this.playerName;
         return data; 
     }
 }
@@ -1195,11 +1199,11 @@ export interface IUserModel {
     firstName?: string | undefined;
     lastName?: string | undefined;
     emailAddress?: string | undefined;
-    userName?: string | undefined;
+    playerName?: string | undefined;
 }
 
 export class RegisterUserModel implements IRegisterUserModel {
-    userName?: string | undefined;
+    playerName?: string | undefined;
     firstName?: string | undefined;
     middleName?: string | undefined;
     lastName?: string | undefined;
@@ -1217,7 +1221,7 @@ export class RegisterUserModel implements IRegisterUserModel {
 
     init(_data?: any) {
         if (_data) {
-            this.userName = _data["userName"];
+            this.playerName = _data["playerName"];
             this.firstName = _data["firstName"];
             this.middleName = _data["middleName"];
             this.lastName = _data["lastName"];
@@ -1235,7 +1239,7 @@ export class RegisterUserModel implements IRegisterUserModel {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["userName"] = this.userName;
+        data["playerName"] = this.playerName;
         data["firstName"] = this.firstName;
         data["middleName"] = this.middleName;
         data["lastName"] = this.lastName;
@@ -1246,7 +1250,7 @@ export class RegisterUserModel implements IRegisterUserModel {
 }
 
 export interface IRegisterUserModel {
-    userName?: string | undefined;
+    playerName?: string | undefined;
     firstName?: string | undefined;
     middleName?: string | undefined;
     lastName?: string | undefined;

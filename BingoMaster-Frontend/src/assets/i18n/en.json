@@ -70,12 +70,12 @@
     "REGISTER": {
       "title": "Register",
       "FORM": {
-        "USERNAME": {
-          "label": "Username",
+        "PLAYERNAME": {
+          "label": "Playername",
           "ERROR_MESSAGES": {
-            "required": "Username is required",
-            "taken": "Username is already taken",
-            "length": "Username must be at least 3 characters long"
+            "required": "Playername is required",
+            "taken": "Playername is already taken",
+            "length": "Playername must be at least 3 characters long"
           }
         },
         "EMAIL": {
@@ -98,7 +98,7 @@
     }
   },
   "SETTINGS": {
-    "title": "Hi there {{ userName }}",
+    "title": "Hi there {{ playerName }}",
     "FORM": {
       "EMAIL": {
         "label": "Email address",
@@ -119,9 +119,6 @@
     "PLAYER": {
       "title": "Player",
       "FORM": {
-        "NAME": {
-          "label": "Name"
-        },
         "DESCRIPTION": {
           "label": "Description"
         }

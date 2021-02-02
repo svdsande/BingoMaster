@@ -21,7 +21,7 @@ export class SettingsComponent implements OnInit {
   public loading: boolean = false;
   private currentEmailAddress: string;
   private userId: string;
-  private userName: string;
+  private playerName: string;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -46,7 +46,7 @@ export class SettingsComponent implements OnInit {
         this.settingsFormGroup.get('player').patchValue(result[1]);
         this.currentEmailAddress = result[0].emailAddress;
         this.userId = result[0].id;
-        this.userName = result[0].userName;
+        this.playerName = result[0].playerName;
       })
     );
   }
@@ -76,7 +76,6 @@ export class SettingsComponent implements OnInit {
   private getUserModel(): UserModel {
     const userModel: UserModel = new UserModel();
     userModel.id = this.userId;
-    userModel.userName = this.userName;
     userModel.emailAddress = this.settingsFormGroup.get('emailAddress').value;
     userModel.firstName = this.settingsFormGroup.get('firstName').value;
     userModel.lastName = this.settingsFormGroup.get('lastName').value;
@@ -87,7 +86,7 @@ export class SettingsComponent implements OnInit {
   private getPlayerModel(): PlayerModel {
     const playerModel: PlayerModel = new PlayerModel();
     playerModel.id = this.authenticationService.currentUserValue.playerId;
-    playerModel.name = this.settingsFormGroup.get('player.name').value;
+    playerModel.name = this.playerName;
     playerModel.description = this.settingsFormGroup.get('player.description').value;
 
     return playerModel;
@@ -100,7 +99,6 @@ export class SettingsComponent implements OnInit {
       middleName: new FormControl(''),
       lastName: new FormControl(''),
       player: new FormGroup({
-        name: new FormControl(''),
         description: new FormControl('')
       })
     });

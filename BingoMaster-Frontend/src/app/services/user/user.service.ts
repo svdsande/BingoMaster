@@ -17,10 +17,6 @@ export class UserService {
     return this.userClient.updateUser(userModel);
   }
 
-  public userNameUnique(userName: string): Observable<boolean> {
-    return this.userClient.userNameUnique(userName);
-  }
-
   public userEmailAddressUnique(emailAddress: string): Observable<boolean> {
     return this.userClient.emailAddressUnique(emailAddress);
   }

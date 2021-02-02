@@ -84,12 +84,12 @@ namespace BingoMaster_Logic
 
 		public UserModel Register(RegisterUserModel registerUserModel)
 		{
-			if (registerUserModel == null || string.IsNullOrWhiteSpace(registerUserModel.EmailAddress) || string.IsNullOrWhiteSpace(registerUserModel.Password) || string.IsNullOrWhiteSpace(registerUserModel.UserName))
+			if (registerUserModel == null || string.IsNullOrWhiteSpace(registerUserModel.EmailAddress) || string.IsNullOrWhiteSpace(registerUserModel.Password) || string.IsNullOrWhiteSpace(registerUserModel.PlayerName))
 			{
-				throw new ArgumentException("No email address, username or password provided");
+				throw new ArgumentException("No email address, playername or password provided");
 			}
 
-			if (!_playerLogic.PlayerNameUnique(registerUserModel.UserName) || !EmailAddressUnique(registerUserModel.EmailAddress))
+			if (!_playerLogic.PlayerNameUnique(registerUserModel.PlayerName) || !EmailAddressUnique(registerUserModel.EmailAddress))
 			{
 				throw new UserAlreadyExistsException("Player or user already exists");
 			}
@@ -113,7 +113,7 @@ namespace BingoMaster_Logic
 				Hash = hashedPassword,
 				Player = new Player
 				{
-					Name = registerUserModel.UserName
+					Name = registerUserModel.PlayerName
 				}
 			};
 

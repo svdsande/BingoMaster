@@ -11,6 +11,6 @@ namespace BingoMaster_Models.User
 		public string FirstName { get; set; }
 		public string LastName { get; set; }
 		public string EmailAddress { get; set; }
-		public string UserName { get; set; }
+		public string PlayerName { get; set; }
 	}
 }

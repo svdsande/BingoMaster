@@ -5,6 +5,7 @@ import { of } from 'rxjs';
 import { delay, map, switchMap, take } from 'rxjs/operators';
 import { RegisterUserModel } from 'src/api/api';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
+import { PlayerService } from 'src/app/services/player/player.service';
 import { UserService } from 'src/app/services/user/user.service';
 
 @Component({
@@ -20,6 +21,7 @@ export class RegisterComponent implements OnInit {
   constructor(
     private authenticationService: AuthenticationService,
     private userService: UserService,
+    private playerService: PlayerService,
     private snackBar: MatSnackBar
   ) { }
 
@@ -31,7 +33,7 @@ export class RegisterComponent implements OnInit {
     this.loading = true;
 
     const registerUserModel: RegisterUserModel = new RegisterUserModel();
-    registerUserModel.userName = this.registerFormGroup.get('userName').value;
+    registerUserModel.playerName = this.registerFormGroup.get('playerName').value;
     registerUserModel.emailAddress = this.registerFormGroup.get('email').value;
     registerUserModel.password = this.registerFormGroup.get('password').value;
 
@@ -39,7 +41,7 @@ export class RegisterComponent implements OnInit {
       .pipe(take(1))
       .subscribe(user => {
         this.loading = false;
-        this.snackBar.open('Account successfully created for ' + user.userName, '', {
+        this.snackBar.open('Account successfully created for ' + user.playerName, '', {
           duration: 2000
         });
       },
@@ -53,18 +55,18 @@ export class RegisterComponent implements OnInit {
 
   private buildForm(): void {
     this.registerFormGroup = new FormGroup({
-      userName: new FormControl('', [Validators.required, Validators.minLength(3)], this.uniqueUsernameValidator()),
+      playerName: new FormControl('', [Validators.required, Validators.minLength(3)], this.uniquePlayerNameValidator()),
       email: new FormControl('', [Validators.required, Validators.pattern('\\w+([\\.-]?\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w{2,3})+')], this.uniqueEmailAddressValidator()),
       password: new FormControl('', [Validators.required, Validators.pattern('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&].{8,}')])
     });
   }
 
-  private uniqueUsernameValidator(): AsyncValidatorFn {
+  private uniquePlayerNameValidator(): AsyncValidatorFn {
     return (control: AbstractControl) => {
       return of(control.value).pipe(
         delay(500),
-        switchMap((userName: string) => this.userService.userNameUnique(userName).pipe(
-          map(isUnique => isUnique ? null : { duplicateUserName: true }),
+        switchMap((playerName: string) => this.playerService.playerNameUnique(playerName).pipe(
+          map(isUnique => isUnique ? null : { duplicatePlayerName: true }),
         )));
     };
   }

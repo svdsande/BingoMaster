@@ -19,7 +19,7 @@
     <div *ngIf="this.currentUser | async as user; else login">
       <button mat-button class="menu-item" [matMenuTriggerFor]="menu">
         <mat-icon>account_circle</mat-icon>
-        {{ user.userName }}
+        {{ user.playerName }}
       </button>
 
       <mat-menu #menu="matMenu">

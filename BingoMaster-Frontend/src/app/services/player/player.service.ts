@@ -17,6 +17,10 @@ export class PlayerService {
     return this.playerClient.updatePlayer(playerModel);
   }
 
+  public playerNameUnique(playerName: string): Observable<boolean> {
+    return this.playerClient.playerNameUnique(playerName);
+  }
+
   public getGamesForPlayer(id: string): Observable<BingoGameDetailModel[]> {
     return this.playerClient.gamesForPlayer(id);
   }

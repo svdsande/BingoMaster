@@ -12,8 +12,10 @@ namespace BingoMaster_Mapping
 		public BingoMasterMapper()
 		{
 			// User
-			CreateMap<User, UserModel>();
+			CreateMap<User, UserModel>()
+				.ForMember(dest => dest.PlayerName, opt => opt.MapFrom(src => src.Player.Name));
 			CreateMap<User, AuthenticatedUserModel>()
+				.ForMember(dest => dest.PlayerName, opt => opt.MapFrom(src => src.Player.Name))
 				.ForMember(dest => dest.PlayerId, opt => opt.MapFrom(src => src.Player.Id));
 
 			// Game

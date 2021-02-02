@@ -8,6 +8,7 @@ namespace BingoMaster_Models
 	{
 		public Guid Id { get; set; }
 		public Guid PlayerId { get; set; }
+		public string PlayerName { get; set; }
 		public string FirstName { get; set; }
 		public string MiddleName { get; set; }
 		public string LastName { get; set; }
