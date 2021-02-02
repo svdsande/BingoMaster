@@ -7,6 +7,7 @@ using BingoMaster_Models.User;
 using Microsoft.Extensions.Options;
 using Moq;
 using System;
+using System.Collections.Generic;
 using Xunit;
 
 namespace BingoMaster_Tests
@@ -19,29 +20,34 @@ namespace BingoMaster_Tests
 		private readonly JwtSettingsModel jwtSettings;
 		private readonly IUserLogic _userLogic;
 		private readonly DbConnectionFactory _dbConnectionFactory;
+		private readonly BingoMasterDbContext _context;
+		private readonly Guid userId;
 
 		public UserLogicTests()
 		{
 			_dbConnectionFactory = new DbConnectionFactory();
-			var context = _dbConnectionFactory.CreateSQLiteContext();
+			_context = _dbConnectionFactory.CreateSQLiteContext();
+
+			userId = Guid.NewGuid();
 
 			var user = new User
 			{
+				Id = userId,
 				FirstName = "Eddie",
 				LastName = "Vedder",
 				EmailAddress = "eddie-vedder@pearljam.com",
 				Player = new Player()
 			};
 
-			context.Users.Add(user);
-			context.SaveChanges();
+			_context.Users.Add(user);
+			_context.SaveChanges();
 
 			jwtSettings = new JwtSettingsModel { Secret = "CzsQwFZ#DjM3NPa&rEN4F2E&2ZJ1Ysd3k2^TTz4Zo06w65B*07" };
 			_jwtSettingsModelMock = new Mock<IOptions<JwtSettingsModel>>(MockBehavior.Strict);
 			_jwtSettingsModelMock.Setup(setting => setting.Value).Returns(jwtSettings);
 			_passwordLogicMock = new Mock<IPasswordLogic>(MockBehavior.Loose);
 			_playerLogicMock = new Mock<IPlayerLogic>(MockBehavior.Strict);
-			_userLogic = new UserLogic(_jwtSettingsModelMock.Object, context, _passwordLogicMock.Object, _playerLogicMock.Object, _mapper);
+			_userLogic = new UserLogic(_jwtSettingsModelMock.Object, _context, _passwordLogicMock.Object, _playerLogicMock.Object, _mapper);
 		}
 
 		[Theory]
@@ -194,6 +200,38 @@ namespace BingoMaster_Tests
 			Assert.Equal("mike-mccready@pearljam.com", actual.EmailAddress);
 			Assert.Equal("Mike", actual.FirstName);
 			Assert.Equal("McCready", actual.LastName);
+		}
+
+		[Fact]
+		public void Update_UserNotFound_ExceptionExpected()
+		{
+			var model = new UserModel
+			{
+				Id = Guid.NewGuid(),
+				FirstName = "Eddie",
+				LastName = "McCready",
+				EmailAddress = "eddie-vedder@pearljam.com",
+				PlayerName = "EVedder",
+			};
+
+			Assert.Throws<KeyNotFoundException>(() => _userLogic.Update(model));
+		}
+
+		[Fact]
+		public void Update_UserFound_Succeeds()
+		{
+			var model = new UserModel
+			{
+				Id = userId,
+				FirstName = "Eddie",
+				LastName = "McCready",
+				EmailAddress = "eddie-vedder@pearljam.com",
+				PlayerName = "EVedder",
+			};
+
+			_userLogic.Update(model);
+
+			Assert.Equal(model.LastName, _context.Users.Find(userId).LastName);
 		}
 
 		[Theory]

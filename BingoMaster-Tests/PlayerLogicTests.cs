@@ -1,6 +1,7 @@
 ﻿using BingoMaster_Entities;
 using BingoMaster_Logic;
 using BingoMaster_Logic.Interfaces;
+using BingoMaster_Models.Player;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -12,11 +13,15 @@ namespace BingoMaster_Tests
 	{
 		private readonly IPlayerLogic _playerLogic;
 		private readonly DbConnectionFactory _dbConnectionFactory;
+		private readonly BingoMasterDbContext _context;
+		private readonly Guid playerId;
 
 		public PlayerLogicTests()
 		{
 			_dbConnectionFactory = new DbConnectionFactory();
-			var context = _dbConnectionFactory.CreateSQLiteContext();
+			_context = _dbConnectionFactory.CreateSQLiteContext();
+
+			playerId = Guid.NewGuid();
 
 			var user = new User
 			{
@@ -27,14 +32,15 @@ namespace BingoMaster_Tests
 
 			var player = new Player
 			{
+				Id = playerId,
 				Name = "evedder",
 				User = user
 			};
 
-			context.Players.Add(player);
-			context.SaveChanges();
+			_context.Players.Add(player);
+			_context.SaveChanges();
 
-			_playerLogic = new PlayerLogic(context, _mapper);
+			_playerLogic = new PlayerLogic(_context, _mapper);
 		}
 
 		[Fact]
@@ -42,6 +48,34 @@ namespace BingoMaster_Tests
 		{
 			var id = new Guid();
 			Assert.Throws<ArgumentException>(() => _playerLogic.GetGamesForPlayer(id));
+		}
+
+		[Fact]
+		public void Update_PlayerNotFound_ExceptionExpected()
+		{
+			var model = new PlayerModel
+			{
+				Id = Guid.NewGuid(),
+				Name = "evedder",
+				Description = "Some description"
+			};
+
+			Assert.Throws<KeyNotFoundException>(() => _playerLogic.Update(model));
+		}
+
+		[Fact]
+		public void Update_PlayerFound_Succeeds()
+		{
+			var model = new PlayerModel
+			{
+				Id = playerId,
+				Name = "evedder",
+				Description = "Some description"
+			};
+
+			_playerLogic.Update(model);
+
+			Assert.Equal(model.Description, _context.Players.Find(playerId).Description);
 		}
 
 		[Theory]
