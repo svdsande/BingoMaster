@@ -7,7 +7,7 @@ import { BingoCardDetailRoutingModule } from './bingo-card-detail-routing.module
 import { BingoCardDetailComponent } from './bingo-card-detail.component';
 import { GenerateBingoCardComponent } from './generate-bingo-card/generate-bingo-card.component';
 import { DownloadComponent } from './download/download.component';
-import { MccColorPickerModule } from 'material-community-components';
+import { MccColorPickerModule } from 'material-community-components/color-picker';
 
 @NgModule({
   declarations: [
