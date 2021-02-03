@@ -9,5 +9,7 @@ namespace BingoMaster_Models
 		public DateTime Date { get; set; }
 		public IEnumerable<PlayerGameModel> Players { get; set; }
 		public int Size { get; set; }
+		public bool IsCenterSquareFree { get; set; }
+		public bool IsPrivateGame { get; set; }
 	}
 }

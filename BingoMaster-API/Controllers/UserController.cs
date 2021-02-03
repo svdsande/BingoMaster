@@ -63,7 +63,7 @@ namespace BingoMaster_API.Controllers
 			return Ok(userModel);
 		}
 
-		[HttpGet]
+		[HttpGet("{id}")]
 		[Authorize]
 		[SwaggerResponse(HttpStatusCode.OK, typeof(UserModel))]
 		[SwaggerResponse(HttpStatusCode.BadRequest, typeof(ErrorModel))]

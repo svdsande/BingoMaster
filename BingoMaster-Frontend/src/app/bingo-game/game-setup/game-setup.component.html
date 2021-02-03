@@ -21,44 +21,52 @@
 
     <div class="form-field-row">
       <mat-form-field class="form-field">
-          <mat-label>{{ 'BINGO_GAME.SETUP.FORM.DATE.label' | translate }}</mat-label>
-          <input matInput [matDatepicker]="picker" formControlName="date">
-          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-          <mat-datepicker #picker></mat-datepicker>
-          <mat-error *ngIf="this.gameSetupFormGroup.get('date').invalid">{{ 'BINGO_GAME.SETUP.FORM.DATE.error_message' | translate }}</mat-error>
+        <mat-label>{{ 'BINGO_GAME.SETUP.FORM.DATE.label' | translate }}</mat-label>
+        <input matInput [matDatepicker]="picker" [min]="this.today" formControlName="date">
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+        <mat-error *ngIf="this.gameSetupFormGroup.get('date').invalid">{{ 'BINGO_GAME.SETUP.FORM.DATE.error_message' | translate }}</mat-error>
       </mat-form-field>
 
       <mat-form-field class="form-field">
-          <mat-label>{{ 'BINGO_GAME.SETUP.FORM.MAX_AMOUNT_PLAYERS.label' | translate }}</mat-label>
-          <input matInput type="number" min="1" max="50" formControlName="amountOfPlayers">
-          <mat-error *ngIf="this.gameSetupFormGroup.get('amountOfPlayers').invalid">{{ 'BINGO_GAME.SETUP.FORM.MAX_AMOUNT_PLAYERS.error_message' | translate }}</mat-error>
+        <mat-label>{{ 'BINGO_GAME.SETUP.FORM.MAX_AMOUNT_PLAYERS.label' | translate }}</mat-label>
+        <input matInput type="number" min="1" max="50" formControlName="amountOfPlayers">
+        <mat-error *ngIf="this.gameSetupFormGroup.get('amountOfPlayers').invalid">{{ 'BINGO_GAME.SETUP.FORM.MAX_AMOUNT_PLAYERS.error_message' | translate }}</mat-error>
       </mat-form-field>
     </div>
 
-    <button mat-stroked-button type="button" (click)="this.addPlayer()">Add Player</button>
+    <div class="form-field-row">
+      <mat-form-field class="form-field">
+        <mat-label>{{ 'BINGO_GAME.SETUP.FORM.PLAYERS.label' | translate }}</mat-label>
+        <mat-chip-list #playersChipList>
+          <mat-chip *ngFor="let player of this.players"
+            [removable]="removable"
+            [selectable]="selectable"
+            (removed)="removePlayer(player)">
+            {{ player.name }}
+            <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+          </mat-chip>
+          <input #playersInput formControlName="playersInput"
+            [matAutocomplete]="auto"
+            [matChipInputFor]="playersChipList"
+            [matChipInputSeparatorKeyCodes]="separatorKeysCodes">
+        </mat-chip-list>
+        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="playerSelected($event)">
+          <mat-option *ngFor="let player of this.filteredPlayers | async" [value]="player">
+            {{ player.name }}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+    </div>
 
-    <ng-container formArrayName="players">
-      <mat-accordion class="players-accordion">
-        <mat-expansion-panel *ngFor="let player of players.controls; index as i" hideToggle>
-          <mat-expansion-panel-header>
-            <mat-panel-title>Player {{ i + 1 }}</mat-panel-title>
-            <mat-panel-description>
-              <mat-icon>account_circle</mat-icon>
-            </mat-panel-description>
-          </mat-expansion-panel-header>
+    <div class="error-message" *ngIf="this.gameSetupFormGroup.errors?.maximumAmountOfPlayers && (gameSetupFormGroup.touched || gameSetupFormGroup.dirty)">{{ 'BINGO_GAME.SETUP.FORM.invalid_amount_of_players' | translate }}</div>
 
-          <mat-form-field class="form-field">
-            <mat-label>Player name:</mat-label>
-            <input matInput type="text" [formControl]="players.controls[i]">
-            <mat-error *ngIf="players.controls[i].invalid">Player name is required</mat-error>
-          </mat-form-field>
+    <h4>{{ 'BINGO_GAME.SETUP.FORM.OPTIONS.title' | translate }}</h4>
 
-          <mat-action-row>
-            <button mat-button color="warn" type="button" (click)="this.removePlayer(i)">Remove</button>
-          </mat-action-row>
-        </mat-expansion-panel>
-      </mat-accordion>
-    </ng-container>
+    <div class="form-field-inline-row">
+      <mat-slide-toggle color="primary" class="slide-toggle" formControlName="enablePrivateGame">{{ 'BINGO_GAME.SETUP.FORM.OPTIONS.ITEMS.enable_private' | translate }}</mat-slide-toggle>
+      <mat-slide-toggle color="primary" class="slide-toggle" formControlName="centerSquareFree">{{ 'BINGO_GAME.SETUP.FORM.OPTIONS.ITEMS.center_square' | translate }}</mat-slide-toggle>
+    </div>
 
     <div class="form-field-row">
       <spinner-button [loading]="this.loading">

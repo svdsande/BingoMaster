@@ -27,17 +27,21 @@
     }
   }
 
-.players-accordion {
-  display: block;
-  margin-top: 15px;
+  .form-field-inline-row {
+    display: inline-block;
 
-  .mat-expansion-panel-header-description {
-    justify-content: flex-end;
-    align-items: center;
+    .slide-toggle {
+      display: block;
+      margin-bottom: 8px;
+
+      &:last-child {
+        margin-bottom: 0px;
+      }
+    }
   }
 
-  .form-field {
-    width: 100%;
+  .error-message {
+    color: #f44336;
+    font-size: 13px;
   }
-}
 }

@@ -73,5 +73,12 @@ namespace BingoMaster_Logic
 
 			return true;
 		}
+
+		public IEnumerable<PlayerModel> GetAllPlayers()
+		{
+			var players = _context.Players.ToArray();
+
+			return _mapper.Map<IEnumerable<Player>, IEnumerable<PlayerModel>>(players);
+		}
 	}
 }

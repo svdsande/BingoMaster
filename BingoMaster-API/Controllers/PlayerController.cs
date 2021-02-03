@@ -27,7 +27,7 @@ namespace BingoMaster_API.Controllers
 			_playerLogic = playerLogic;
 		}
 
-		[HttpGet]
+		[HttpGet("{id}")]
 		[Authorize]
 		[SwaggerResponse(HttpStatusCode.OK, typeof(PlayerModel))]
 		[SwaggerResponse(HttpStatusCode.BadRequest, typeof(ErrorModel))]
@@ -39,6 +39,15 @@ namespace BingoMaster_API.Controllers
 			}
 
 			return Ok(_playerLogic.GetPlayerById(id));
+		}
+
+		[HttpGet]
+		[Authorize]
+		[SwaggerResponse(HttpStatusCode.OK, typeof(IEnumerable<PlayerModel>))]
+		[SwaggerResponse(HttpStatusCode.BadRequest, typeof(ErrorModel))]
+		public IActionResult GetAllPlayers()
+		{
+			return Ok(_playerLogic.GetAllPlayers());
 		}
 
 		[HttpGet("{id}/games")]

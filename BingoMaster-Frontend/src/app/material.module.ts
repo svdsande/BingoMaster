@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -15,11 +16,13 @@ import { MatMomentDateModule } from '@angular/material-moment-adapter';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatRippleModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatToolbarModule } from '@angular/material/toolbar';
 
 @NgModule({
   imports: [
+    MatAutocompleteModule,
     MatButtonModule,
     MatCardModule,
     MatCheckboxModule,
@@ -36,10 +39,12 @@ import { MatToolbarModule } from '@angular/material/toolbar';
     MatProgressSpinnerModule,
     MatRippleModule,
     MatSelectModule,
+    MatSlideToggleModule,
     MatSnackBarModule,
     MatToolbarModule,
   ],
   exports: [
+    MatAutocompleteModule,
     MatButtonModule,
     MatCardModule,
     MatCheckboxModule,
@@ -56,6 +61,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
     MatProgressSpinnerModule,
     MatRippleModule,
     MatSelectModule,
+    MatSlideToggleModule,
     MatSnackBarModule,
     MatToolbarModule,
   ]

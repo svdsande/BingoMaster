@@ -9,6 +9,10 @@ export class PlayerService {
 
   constructor(private playerClient: PlayerClient) { }
 
+  public getAllPlayers(): Observable<PlayerModel[]> {
+    return this.playerClient.getAllPlayers();
+  }
+
   public getPlayer(id: string): Observable<PlayerModel> {
     return this.playerClient.getPlayer(id);
   }
