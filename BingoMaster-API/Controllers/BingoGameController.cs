@@ -1,4 +1,5 @@
-﻿using BingoMaster_Logic.Interfaces;
+﻿using BingoMaster_API.Attributes;
+using BingoMaster_Logic.Interfaces;
 using BingoMaster_Models;
 using Microsoft.AspNetCore.Mvc;
 using NSwag.Annotations;
@@ -23,10 +24,16 @@ namespace BingoMaster_API.Controllers
 		}
 
 		[HttpPost]
+		[Authorize]
 		[SwaggerResponse(HttpStatusCode.OK, typeof(BingoGameModel))]
 		[SwaggerResponse(HttpStatusCode.BadRequest, typeof(ErrorModel))]
 		public ActionResult CreateBingoGame([FromBody] BingoGameDetailModel gameCreationModel)
 		{
+			if (gameCreationModel == null)
+			{
+				return BadRequest("Invalid game creation model provided");
+			}
+
 			var bingoGameModel = _bingoGameLogic.CreateNewGame(gameCreationModel);
 
 			return Ok(bingoGameModel);

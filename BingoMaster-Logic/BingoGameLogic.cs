@@ -1,4 +1,6 @@
-﻿using BingoMaster_Logic.Interfaces;
+﻿using AutoMapper;
+using BingoMaster_Entities;
+using BingoMaster_Logic.Interfaces;
 using BingoMaster_Models;
 using System;
 using System.Collections.Generic;
@@ -13,37 +15,47 @@ namespace BingoMaster_Logic
 
 		private readonly IBingoCardLogic _bingoCardLogic;
 		private readonly IBingoNumberLogic _bingoNumberLogic;
+		private readonly BingoMasterDbContext _context;
+		private readonly IMapper _mapper;
 
 		#endregion
 
-		public BingoGameLogic(IBingoCardLogic bingoCardLogic, IBingoNumberLogic bingoNumberLogic)
+		public BingoGameLogic(IBingoCardLogic bingoCardLogic, IBingoNumberLogic bingoNumberLogic, BingoMasterDbContext context, IMapper mapper)
 		{
 			_bingoCardLogic = bingoCardLogic;
 			_bingoNumberLogic = bingoNumberLogic;
+			_context = context;
+			_mapper = mapper;
 		}
 
-		public BingoGameModel CreateNewGame(BingoGameDetailModel gameCreationModel)
+		public BingoGameModel CreateNewGame(BingoGameDetailModel gameDetailModel)
 		{
-			if (gameCreationModel == null || string.IsNullOrWhiteSpace(gameCreationModel.Name) || gameCreationModel.Players.Count() <= 0 || gameCreationModel.Size <= 0)
+			if (gameDetailModel == null || string.IsNullOrWhiteSpace(gameDetailModel.Name) || gameDetailModel.MaximumAmountOfPlayers <= 0 || (gameDetailModel.Players?.Count() ?? 0) > gameDetailModel.MaximumAmountOfPlayers || gameDetailModel.Size <= 0)
 			{
 				throw new ArgumentException("No name for the game provided or invalid number of players or grid size");
 			}
 
-			foreach (var player in gameCreationModel.Players)
+			if (gameDetailModel.Date < DateTime.Now)
 			{
-				player.BingoCard = _bingoCardLogic.GenerateBingoCard(new BingoCardCreationModel()
-				{
-					Name = player.Name,
-					IsCenterSquareFree = true,
-					Size = gameCreationModel.Size
-				});
+				throw new ArgumentOutOfRangeException("Date for the game cannot be in the past");
 			}
 
-			return new BingoGameModel()
+			var creator = _context.Players.Find(gameDetailModel.CreatorId);
+
+			if (creator == null)
 			{
-				DrawnNumber = _bingoNumberLogic.GetNextNumber(),
-				Players = gameCreationModel.Players
-			};
+				throw new KeyNotFoundException("Creator does not exists");
+			}
+
+			var game = _mapper.Map<Game>(gameDetailModel);
+			game.Creator = creator;
+
+			AssignPlayersToGame(gameDetailModel, game);
+
+			_context.Games.Add(game);
+			_context.SaveChanges();
+
+			return _mapper.Map<BingoGameModel>(game);
 		}
 
 		public BingoGameModel PlayRound(IEnumerable<PlayerGameModel> players, int[] drawnNumbers)
@@ -97,6 +109,17 @@ namespace BingoMaster_Logic
 			}
 
 			return false;
+		}
+
+		private void AssignPlayersToGame(BingoGameDetailModel gameDetailModel, Game game)
+		{
+			if (gameDetailModel.Players?.Any() == true)
+			{
+				var playerIds = gameDetailModel.Players.Select(player => player.Id);
+				var players = _context.Players.Where(player => playerIds.Contains(player.Id)).ToArray();
+
+				game.GamePlayers = players.Select(player => new GamePlayer { Game = game, Player = player }).ToArray();
+			}
 		}
 	}
 }

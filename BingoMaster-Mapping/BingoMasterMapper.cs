@@ -4,6 +4,7 @@ using BingoMaster_Models;
 using BingoMaster_Models.Player;
 using BingoMaster_Models.User;
 using System;
+using System.Linq;
 
 namespace BingoMaster_Mapping
 {
@@ -19,11 +20,19 @@ namespace BingoMaster_Mapping
 				.ForMember(dest => dest.PlayerId, opt => opt.MapFrom(src => src.Player.Id));
 
 			// Game
-			CreateMap<Game, BingoGameDetailModel>();
+			CreateMap<Game, BingoGameDetailModel>()
+				.ForMember(dest => dest.IsCenterSquareFree, opt => opt.MapFrom(src => src.CenterSquareFree))
+				.ForMember(dest => dest.IsPrivateGame, opt => opt.MapFrom(src => src.Private))
+				.ReverseMap();
+			CreateMap<Game, BingoGameModel>()
+				.ForMember(dest => dest.Players, opt => opt.MapFrom(src => src.GamePlayers.Select(gamePlayer => gamePlayer.Player)));
 
 			// Player
 			CreateMap<Player, PlayerGameModel>();
 			CreateMap<Player, PlayerModel>().ReverseMap();
+
+			// GamePlayer
+			CreateMap<GamePlayer, PlayerGameModel>();
 		}
 	}
 }

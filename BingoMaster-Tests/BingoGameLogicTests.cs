@@ -1,6 +1,8 @@
-﻿using BingoMaster_Logic;
+﻿using BingoMaster_Entities;
+using BingoMaster_Logic;
 using BingoMaster_Logic.Interfaces;
 using BingoMaster_Models;
+using BingoMaster_Models.Player;
 using Moq;
 using System;
 using System.Collections.Generic;
@@ -10,98 +12,172 @@ using Xunit;
 
 namespace BingoMaster_Tests
 {
-	public class BingoGameLogicTests
+	public class BingoGameLogicTests : TestBase
 	{
 		private readonly Mock<IBingoCardLogic> _bingoCardLogicMock;
 		private readonly Mock<IBingoNumberLogic> _bingoNumberLogicMock;
+		private readonly DbConnectionFactory _dbConnectionFactory;
+		private readonly BingoMasterDbContext _context;
 		private readonly IBingoGameLogic _bingoGameLogic;
+		private readonly Guid _creatorId;
+		private readonly Guid _normalPlayerId;
 
 		public BingoGameLogicTests()
 		{
+			_dbConnectionFactory = new DbConnectionFactory();
+			_context = _dbConnectionFactory.CreateSQLiteContext();
+
+			_creatorId = Guid.NewGuid();
+			_normalPlayerId = Guid.NewGuid();
+
+			var user = new User
+			{
+				FirstName = "Eddie",
+				LastName = "Vedder",
+				EmailAddress = "eddie-vedder@pearljam.com"
+			};
+
+			var normalUser = new User
+			{
+				FirstName = "Mike",
+				LastName = "MC Cready",
+				EmailAddress = "mike-mccready@pearljam.com"
+			};
+
+			var players = new List<Player>
+			{
+				new Player
+				{
+					Id = _creatorId,
+					Name = "evedder",
+					User = user
+				},
+				new Player
+				{
+					Id = _normalPlayerId,
+					Name = "mikemccready",
+					User = normalUser
+				}
+			};
+
+
+			_context.Players.AddRange(players);
+
+			_context.SaveChanges();
+
 			_bingoCardLogicMock = new Mock<IBingoCardLogic>(MockBehavior.Strict);
 			_bingoNumberLogicMock = new Mock<IBingoNumberLogic>(MockBehavior.Strict);
-			_bingoGameLogic = new BingoGameLogic(_bingoCardLogicMock.Object, _bingoNumberLogicMock.Object);
+			_bingoGameLogic = new BingoGameLogic(_bingoCardLogicMock.Object, _bingoNumberLogicMock.Object, _context, _mapper);
+		}
+
+		[Theory]
+		[InlineData("", 2, 2, 3)]
+		[InlineData("Pearl Jam", 0, 2, 3)]
+		[InlineData("Pearl Jam", 2, 2, 0)]
+		[InlineData("Pearl Jam", 2, 3, 3)]
+		public void CreateNewGame_InvalidDate_ExceptionExpected(string name, int maximumAmountOfPlayers, int amountOfPlayers, int size)
+		{
+			var input = new BingoGameDetailModel()
+			{
+				Name = name,
+				MaximumAmountOfPlayers = maximumAmountOfPlayers,
+				Players = Enumerable.Range(1, amountOfPlayers).Select(item => new PlayerModel()).ToArray(),
+				Size = size
+			};
+
+			Assert.Throws<ArgumentException>(() => _bingoGameLogic.CreateNewGame(input));
 		}
 
 		[Fact]
-		public void CreateNewGame_TwoPlayers_Succeeds()
+		public void CreateNewGame_DateInThePast_ExceptionExpected()
 		{
 			var input = new BingoGameDetailModel()
 			{
 				Name = "Pearl Jam",
-				Players = new List<PlayerGameModel>()
-				{
-					new PlayerGameModel() { Name = "Eddie Vedder" },
-					new PlayerGameModel() { Name = "Mike McCready" }
-				},
-				Size = 3
+				MaximumAmountOfPlayers = 3,
+				Players = Enumerable.Range(1, 2).Select(item => new PlayerModel()).ToArray(),
+				Size = 3,
+				CreatorId = Guid.NewGuid(),
+				Date = new DateTime(1994, 12, 3)
 			};
 
-			_bingoCardLogicMock.Setup(logic => logic.GenerateBingoCard(It.IsAny<BingoCardCreationModel>())).Returns(new BingoCardModel()
+			Assert.Throws<ArgumentOutOfRangeException>(() => _bingoGameLogic.CreateNewGame(input));
+		}
+
+		[Fact]
+		public void CreateNewGame_CreatorNotFound_ExceptionExpected()
+		{
+			var input = new BingoGameDetailModel()
 			{
 				Name = "Pearl Jam",
-				Grid = new int?[][]
-				{
-					new int?[] { 1, 2, 3 },
-					new int?[] { 4, 5, 6 },
-					new int?[] { 7, 8, 9 }
-				}
-			});
+				MaximumAmountOfPlayers = 3,
+				Players = Enumerable.Range(1, 2).Select(item => new PlayerModel()).ToArray(),
+				Size = 3,
+				CreatorId = Guid.NewGuid(),
+				Date = DateTime.Now.AddMonths(1)
+			};
 
-			_bingoNumberLogicMock.Setup(logic => logic.GetNextNumber()).Returns(1);
+			Assert.Throws<KeyNotFoundException>(() => _bingoGameLogic.CreateNewGame(input));
+		}
+
+		[Fact]
+		public void CreateNewGame_NoPlayers_Succeeds()
+		{
+			var input = new BingoGameDetailModel()
+			{
+				Name = "Pearl Jam",
+				MaximumAmountOfPlayers = 3,
+				Size = 3,
+				CreatorId = _creatorId,
+				Date = DateTime.Now.AddMonths(1)
+			};
+
+			var expected = new BingoGameModel()
+			{
+				Name = "Pearl Jam",
+			};
 
 			var actual = _bingoGameLogic.CreateNewGame(input);
 
-			Assert.Equal(2, actual.Players.Count());
-			Assert.Equal("Eddie Vedder", actual.Players.First().Name);
-			Assert.Equal(3, actual.Players.First().BingoCard.Grid.Length);
+			Assert.Equal(expected.Name, actual.Name);
 		}
 
 		[Fact]
-		public void CreateNewGame_ZeroAmountOfPlayers_ExceptionExpected()
+		public void CreateNewGame_SomePlayers_Succeeds()
 		{
 			var input = new BingoGameDetailModel()
 			{
 				Name = "Pearl Jam",
-				Players = new List<PlayerGameModel>() { },
-				Size = 3
+				MaximumAmountOfPlayers = 3,
+				Size = 3,
+				Players = new List<PlayerModel>
+				{
+					new PlayerModel
+					{
+						Id = _normalPlayerId,
+						Name = "mikemccready"
+					}
+				},
+				CreatorId = _creatorId,
+				Date = DateTime.Now.AddMonths(1)
 			};
 
-			Assert.Throws<ArgumentException>(() => _bingoGameLogic.CreateNewGame(input));
-		}
-
-		[Fact]
-		public void CreateNewGame_ZeroSize_ExceptionExpected()
-		{
-			var input = new BingoGameDetailModel()
+			var expected = new BingoGameModel()
 			{
 				Name = "Pearl Jam",
-				Players = new List<PlayerGameModel>()
+				Players = new List<PlayerGameModel>
 				{
-					new PlayerGameModel() { Name = "Eddie Vedder" },
-					new PlayerGameModel() { Name = "Mike McCready" }
-				},
-				Size = 0
+					new PlayerGameModel
+					{
+						Name = "mikemccready"
+					}
+				}
 			};
 
-			Assert.Throws<ArgumentException>(() => _bingoGameLogic.CreateNewGame(input));
-		}
+			var actual = _bingoGameLogic.CreateNewGame(input);
 
-		[Fact]
-		public void CreateNewGame_NoName_ExceptionExpected()
-		{
-			var input = new BingoGameDetailModel()
-			{
-				Name = "",
-				Players = new List<PlayerGameModel>()
-				{
-					new PlayerGameModel() { Name = "Eddie Vedder" },
-					new PlayerGameModel() { Name = "Mike McCready" }
-				},
-				Size = 0
-			};
-
-			Assert.Throws<ArgumentException>(() => _bingoGameLogic.CreateNewGame(input));
+			Assert.Equal(expected.Name, actual.Name);
+			Assert.Single(actual.Players);
 		}
 
 		[Theory]

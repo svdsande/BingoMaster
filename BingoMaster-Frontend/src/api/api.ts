@@ -900,6 +900,7 @@ export interface IBingoCardCreationModel {
 }
 
 export class BingoGameModel implements IBingoGameModel {
+    name?: string | undefined;
     drawnNumber!: number;
     players?: PlayerGameModel[] | undefined;
 
@@ -914,6 +915,7 @@ export class BingoGameModel implements IBingoGameModel {
 
     init(_data?: any) {
         if (_data) {
+            this.name = _data["name"];
             this.drawnNumber = _data["drawnNumber"];
             if (Array.isArray(_data["players"])) {
                 this.players = [] as any;
@@ -932,6 +934,7 @@ export class BingoGameModel implements IBingoGameModel {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
         data["drawnNumber"] = this.drawnNumber;
         if (Array.isArray(this.players)) {
             data["players"] = [];
@@ -943,6 +946,7 @@ export class BingoGameModel implements IBingoGameModel {
 }
 
 export interface IBingoGameModel {
+    name?: string | undefined;
     drawnNumber: number;
     players?: PlayerGameModel[] | undefined;
 }
@@ -1000,9 +1004,11 @@ export interface IPlayerGameModel {
 }
 
 export class BingoGameDetailModel implements IBingoGameDetailModel {
+    creatorId!: string;
     name?: string | undefined;
     date!: Date;
-    players?: PlayerGameModel[] | undefined;
+    maximumAmountOfPlayers!: number;
+    players?: PlayerModel[] | undefined;
     size!: number;
     isCenterSquareFree!: boolean;
     isPrivateGame!: boolean;
@@ -1018,12 +1024,14 @@ export class BingoGameDetailModel implements IBingoGameDetailModel {
 
     init(_data?: any) {
         if (_data) {
+            this.creatorId = _data["creatorId"];
             this.name = _data["name"];
             this.date = _data["date"] ? new Date(_data["date"].toString()) : <any>undefined;
+            this.maximumAmountOfPlayers = _data["maximumAmountOfPlayers"];
             if (Array.isArray(_data["players"])) {
                 this.players = [] as any;
                 for (let item of _data["players"])
-                    this.players!.push(PlayerGameModel.fromJS(item));
+                    this.players!.push(PlayerModel.fromJS(item));
             }
             this.size = _data["size"];
             this.isCenterSquareFree = _data["isCenterSquareFree"];
@@ -1040,8 +1048,10 @@ export class BingoGameDetailModel implements IBingoGameDetailModel {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        data["creatorId"] = this.creatorId;
         data["name"] = this.name;
         data["date"] = this.date ? this.date.toISOString() : <any>undefined;
+        data["maximumAmountOfPlayers"] = this.maximumAmountOfPlayers;
         if (Array.isArray(this.players)) {
             data["players"] = [];
             for (let item of this.players)
@@ -1055,9 +1065,11 @@ export class BingoGameDetailModel implements IBingoGameDetailModel {
 }
 
 export interface IBingoGameDetailModel {
+    creatorId: string;
     name?: string | undefined;
     date: Date;
-    players?: PlayerGameModel[] | undefined;
+    maximumAmountOfPlayers: number;
+    players?: PlayerModel[] | undefined;
     size: number;
     isCenterSquareFree: boolean;
     isPrivateGame: boolean;

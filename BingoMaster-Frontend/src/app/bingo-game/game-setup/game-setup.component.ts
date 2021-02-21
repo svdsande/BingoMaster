@@ -110,7 +110,7 @@ export class GameSetupComponent implements OnInit {
     return bingoGameModel;
   }
 
-  private gamePlayerModels(): PlayerGameModel[] {
+  private gamePlayerModels(): PlayerModel[] {
     return this.gameSetupFormGroup.get('players').value.map((player: PlayerModel) => {
       return {
         name: player.name
