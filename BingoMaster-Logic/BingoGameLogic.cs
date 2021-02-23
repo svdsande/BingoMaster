@@ -120,16 +120,6 @@ namespace BingoMaster_Logic
 
 				game.GamePlayers = players.Select(player => new GamePlayer { Game = game, Player = player }).ToList();
 			}
-
-			if (game.GamePlayers?.Any() == true)
-			{
-				game.GamePlayers.Add(new GamePlayer { Game = game, Player = creator });
-			} 
-			else
-			{
-				game.GamePlayers = new GamePlayer[] { new GamePlayer { Game = game, Player = creator } };
-			}
-
 		}
 	}
 }

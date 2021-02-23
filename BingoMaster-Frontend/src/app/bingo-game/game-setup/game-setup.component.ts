@@ -66,8 +66,6 @@ export class GameSetupComponent implements OnInit {
 
     const bingoGameModel = this.getBingoGameModel();
 
-    console.log(bingoGameModel);
-
     this.bingoGameService.createBingoGame(bingoGameModel)
       .pipe(take(1))
       .subscribe((bingoGame: BingoGameModel) => {
