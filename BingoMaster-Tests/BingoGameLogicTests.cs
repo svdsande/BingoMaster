@@ -140,7 +140,7 @@ namespace BingoMaster_Tests
 			var actual = _bingoGameLogic.CreateNewGame(input);
 
 			Assert.Equal(expected.Name, actual.Name);
-			Assert.Single(actual.Players);
+			Assert.Empty(actual.Players);
 		}
 
 		[Fact]
@@ -157,6 +157,11 @@ namespace BingoMaster_Tests
 					{
 						Id = _normalPlayerId,
 						Name = "mikemccready"
+					},
+					new PlayerModel
+					{
+						Id = _creatorId,
+						Name = "evedder"
 					}
 				},
 				CreatorId = _creatorId,
