@@ -23,6 +23,7 @@ namespace BingoMaster_Mapping
 			CreateMap<Game, BingoGameDetailModel>()
 				.ForMember(dest => dest.IsCenterSquareFree, opt => opt.MapFrom(src => src.CenterSquareFree))
 				.ForMember(dest => dest.IsPrivateGame, opt => opt.MapFrom(src => src.Private))
+				.ForMember(dest => dest.Size, opt => opt.MapFrom(src => src.Grid))
 				.ReverseMap();
 			CreateMap<Game, BingoGameModel>()
 				.ForMember(dest => dest.Players, opt => opt.MapFrom(src => src.GamePlayers.Select(gamePlayer => gamePlayer.Player)));

@@ -35,7 +35,7 @@ namespace BingoMaster_Logic
 				throw new ArgumentException("No name for the game provided or invalid number of players or grid size");
 			}
 
-			if (gameDetailModel.Date < DateTime.Now)
+			if (gameDetailModel.Date.Date.CompareTo(DateTime.Now.Date) < 0)
 			{
 				throw new ArgumentOutOfRangeException("Date for the game cannot be in the past");
 			}
@@ -50,7 +50,7 @@ namespace BingoMaster_Logic
 			var game = _mapper.Map<Game>(gameDetailModel);
 			game.Creator = creator;
 
-			AssignPlayersToGame(gameDetailModel, game);
+			AssignPlayersToGame(gameDetailModel, creator, game);
 
 			_context.Games.Add(game);
 			_context.SaveChanges();
@@ -111,15 +111,25 @@ namespace BingoMaster_Logic
 			return false;
 		}
 
-		private void AssignPlayersToGame(BingoGameDetailModel gameDetailModel, Game game)
+		private void AssignPlayersToGame(BingoGameDetailModel gameDetailModel, Player creator, Game game)
 		{
 			if (gameDetailModel.Players?.Any() == true)
 			{
 				var playerIds = gameDetailModel.Players.Select(player => player.Id);
 				var players = _context.Players.Where(player => playerIds.Contains(player.Id)).ToArray();
 
-				game.GamePlayers = players.Select(player => new GamePlayer { Game = game, Player = player }).ToArray();
+				game.GamePlayers = players.Select(player => new GamePlayer { Game = game, Player = player }).ToList();
 			}
+
+			if (game.GamePlayers?.Any() == true)
+			{
+				game.GamePlayers.Add(new GamePlayer { Game = game, Player = creator });
+			} 
+			else
+			{
+				game.GamePlayers = new GamePlayer[] { new GamePlayer { Game = game, Player = creator } };
+			}
+
 		}
 	}
 }

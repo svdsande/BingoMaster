@@ -3,9 +3,11 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatChipList } from '@angular/material/chips';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable } from 'rxjs';
-import { map, startWith, take } from 'rxjs/operators';
-import { BingoGameDetailModel, BingoGameModel, PlayerGameModel, PlayerModel } from 'src/api/api';
+import { map, startWith, take, tap } from 'rxjs/operators';
+import { BingoGameDetailModel, BingoGameModel, PlayerModel } from 'src/api/api';
+import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 import { BingoGameService } from 'src/app/services/bingo-game.service';
 import { PlayerService } from 'src/app/services/player/player.service';
 
@@ -22,7 +24,6 @@ export class GameSetupComponent implements OnInit {
   public gameSetupFormGroup: FormGroup;
   public loading: boolean = false;
   public today: Date = new Date();
-  public removable: boolean = true;
   public selectable: boolean = true;
   public separatorKeysCodes: number[] = [ENTER, COMMA];
   public filteredPlayers: Observable<PlayerModel[]>;
@@ -31,14 +32,21 @@ export class GameSetupComponent implements OnInit {
 
   constructor(
     private bingoGameService: BingoGameService,
-    private playerService: PlayerService
+    private playerService: PlayerService,
+    private snackBar: MatSnackBar,
+    private authenticationService: AuthenticationService
   ) { }
 
   ngOnInit(): void {
     this.buildForm();
 
     this.playerService.getAllPlayers().pipe(
-      take(1)
+      take(1),
+      tap((players: PlayerModel[]) => {
+        this.players.push(players.find(player => player.id === this.authenticationService.currentUserValue.playerId));
+        this.gameSetupFormGroup.get('players').setValue(this.players);
+      }),
+      map(players => players.filter(player => player.id !== this.authenticationService.currentUserValue.playerId))
     ).subscribe((players: PlayerModel[]) => {
       this.allPlayers = players;
     });
@@ -58,11 +66,21 @@ export class GameSetupComponent implements OnInit {
 
     const bingoGameModel = this.getBingoGameModel();
 
+    console.log(bingoGameModel);
+
     this.bingoGameService.createBingoGame(bingoGameModel)
       .pipe(take(1))
-      .subscribe((model: BingoGameModel) => {
+      .subscribe((bingoGame: BingoGameModel) => {
         this.loading = false;
-        // TODO: Save to backend (send request to API)
+        this.snackBar.open('Game ' + bingoGame.name + ' successfully created', '', {
+          duration: 2000
+        });
+      },
+      error => {
+        this.loading = false;
+        this.snackBar.open('Game creation failed', '', {
+          duration: 2000
+        });
       });
   }
 
@@ -103,19 +121,13 @@ export class GameSetupComponent implements OnInit {
     bingoGameModel.name = this.gameSetupFormGroup.get('name').value;
     bingoGameModel.size = this.gameSetupFormGroup.get('size').value;
     bingoGameModel.date = this.gameSetupFormGroup.get('date').value;
+    bingoGameModel.maximumAmountOfPlayers = this.gameSetupFormGroup.get('amountOfPlayers').value;
     bingoGameModel.isPrivateGame = this.gameSetupFormGroup.get('enablePrivateGame').value;
     bingoGameModel.isCenterSquareFree = this.gameSetupFormGroup.get('centerSquareFree').value;
-    bingoGameModel.players = this.gamePlayerModels();
+    bingoGameModel.players = this.gameSetupFormGroup.get('players').value;
+    bingoGameModel.creatorId = this.authenticationService.currentUserValue.playerId;
 
     return bingoGameModel;
-  }
-
-  private gamePlayerModels(): PlayerModel[] {
-    return this.gameSetupFormGroup.get('players').value.map((player: PlayerModel) => {
-      return {
-        name: player.name
-      };
-    });
   }
 
   private filterPlayers(value: string): PlayerModel[] {
@@ -129,11 +141,11 @@ export class GameSetupComponent implements OnInit {
       name: new FormControl('', Validators.required),
       size: new FormControl(3, Validators.required),
       date: new FormControl(new Date(), Validators.required),
-      amountOfPlayers: new FormControl('', Validators.required),
+      amountOfPlayers: new FormControl(1, Validators.required),
       playersInput: new FormControl(),
       players: new FormControl(this.players),
-      centerSquareFree: new FormControl(''),
-      enablePrivateGame: new FormControl('')
+      centerSquareFree: new FormControl(false),
+      enablePrivateGame: new FormControl(false)
     }, [this.maximumAmountOfPlayersValidator]);
   }
 }
