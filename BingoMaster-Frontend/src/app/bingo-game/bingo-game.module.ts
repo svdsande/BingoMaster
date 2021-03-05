@@ -11,6 +11,7 @@ import { ConfirmDialogComponent } from './game/confirm-dialog/confirm-dialog.com
 import { GameControlsComponent } from './game/game-controls/game-controls.component';
 import { WinnerDialogComponent } from './game/winner-dialog/winner-dialog.component';
 import { GameComponent } from './game/game.component';
+import { GameOverviewComponent } from './game-overview/game-overview.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { GameComponent } from './game/game.component';
     ConfirmDialogComponent,
     GameControlsComponent,
     WinnerDialogComponent,
-    GameComponent
+    GameComponent,
+    GameOverviewComponent
   ],
   imports: [
     CommonModule,

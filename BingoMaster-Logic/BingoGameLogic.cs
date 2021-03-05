@@ -2,6 +2,7 @@
 using BingoMaster_Entities;
 using BingoMaster_Logic.Interfaces;
 using BingoMaster_Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -120,6 +121,53 @@ namespace BingoMaster_Logic
 
 				game.GamePlayers = players.Select(player => new GamePlayer { Game = game, Player = player }).ToList();
 			}
+		}
+
+		public void JoinGame(Guid gameId, Guid playerId)
+		{
+			if (gameId == Guid.Empty || playerId == Guid.Empty)
+			{
+				throw new ArgumentException("No game id or player id provided");
+			}
+
+			ToggleParticipation(gameId, playerId);
+		}
+
+		public void LeaveGame(Guid gameId, Guid playerId)
+		{
+			if (gameId == Guid.Empty || playerId == Guid.Empty)
+			{
+				throw new ArgumentException("No game id or player id provided");
+			}
+
+			ToggleParticipation(gameId, playerId);
+		}
+
+		private void ToggleParticipation(Guid gameId, Guid playerId)
+		{
+			var game = _context.Games
+							.Include(game => game.GamePlayers)
+							.SingleOrDefault(game => game.Id == gameId);
+
+			var player = _context.Players.SingleOrDefault(player => player.Id == playerId);
+
+			if (game == null || player == null)
+			{
+				throw new KeyNotFoundException("Game or player does not exist");
+			}
+
+			if (game.GamePlayers.Any(gamePlayer => gamePlayer.PlayerId == playerId))
+			{
+				var existingGamePlayer = game.GamePlayers.SingleOrDefault(gamePlayer => gamePlayer.PlayerId == playerId);
+				game.GamePlayers.Remove(existingGamePlayer);
+			} 
+			else
+			{
+				var gamePlayer = new GamePlayer { Game = game, Player = player };
+				game.GamePlayers.Add(gamePlayer);
+			}
+
+			_context.SaveChanges();
 		}
 	}
 }

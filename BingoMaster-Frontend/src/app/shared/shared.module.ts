@@ -6,13 +6,15 @@ import { CounterDirective } from './directives/counter.directive';
 import { PageHeaderComponent } from './components/page-header/page-header.component';
 import { MaterialModule } from '../material.module';
 import { TranslateModule } from '@ngx-translate/core';
+import { PlayerInGamePipe } from './pipes/player-in-game.pipe';
 
 @NgModule({
   declarations: [
     BingoCardComponent,
     CounterDirective,
     PageHeaderComponent,
-    SpinnerButtonComponent
+    SpinnerButtonComponent,
+    PlayerInGamePipe
   ],
   imports: [
     CommonModule,
@@ -24,7 +26,8 @@ import { TranslateModule } from '@ngx-translate/core';
     CounterDirective,
     PageHeaderComponent,
     SpinnerButtonComponent,
-    TranslateModule
+    TranslateModule,
+    PlayerInGamePipe
   ]
 })
 export class SharedModule { }

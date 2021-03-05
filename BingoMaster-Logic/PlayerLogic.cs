@@ -3,6 +3,7 @@ using BingoMaster_Entities;
 using BingoMaster_Logic.Interfaces;
 using BingoMaster_Models;
 using BingoMaster_Models.Player;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,7 +33,12 @@ namespace BingoMaster_Logic
 				throw new ArgumentException("No player id provided");
 			}
 
-			var games = _context.GamePlayers.Where(gamePlayer => gamePlayer.PlayerId == id).Select(gamePlayer => gamePlayer.Game).ToArray();
+			var games = _context.Games
+				.Include(game => game.GamePlayers)
+				.ThenInclude(gamePlayer => gamePlayer.Player)
+				.Where(game => game.GamePlayers.Any(gamePlayer => gamePlayer.PlayerId == id))
+				.ToArray();
+			
 
 			return _mapper.Map<IEnumerable<Game>, IEnumerable<BingoGameDetailModel>>(games);
 		}

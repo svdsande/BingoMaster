@@ -1,0 +1,31 @@
+<div class="games-container">
+  <mat-card *ngFor="let game of this.gamesForCurrentPlayer | async" class="game-card">
+    <mat-card-header>
+      <mat-card-title>{{ game.name }}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="game-detail">
+        <mat-icon>date_range</mat-icon>
+        <span>{{ game.date | date:'mediumDate' }}</span>
+      </div>
+      <div class="game-detail">
+        <mat-icon>people</mat-icon>
+        <span>{{ game.players.length }} / {{ game.maximumAmountOfPlayers }}</span>
+      </div>
+      <div class="game-detail">
+        <mat-icon>grid_3x3</mat-icon>
+        <span>{{ game.size }}</span>
+      </div>
+    </mat-card-content>
+    <mat-card-actions align="end">
+      <button mat-stroked-button *ngIf="(game.players | playerInGame: this.playerId) === false" (click)="join(game.id)">
+        <mat-icon>add</mat-icon>
+        {{ 'BINGO_GAME.OVERVIEW.CARD.ACTIONS.join' | translate | uppercase}}
+      </button>
+      <button mat-stroked-button color="warn" *ngIf="(game.players | playerInGame: this.playerId) === true" (click)="leave(game.id)">
+        <mat-icon>remove</mat-icon>
+        {{ 'BINGO_GAME.OVERVIEW.CARD.ACTIONS.leave' | translate | uppercase}}
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div>

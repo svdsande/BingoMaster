@@ -83,6 +83,14 @@
         "invalid_amount_of_players": "More players were added then the specified maximum amount of players",
         "submit": "Save"
       }
+    },
+    "OVERVIEW": {
+      "CARD": {
+        "ACTIONS": {
+          "join": "join",
+          "leave": "leave"
+        }
+      }
     }
   },
   "AUTHENTICATION": {

@@ -3,6 +3,7 @@ using BingoMaster_Logic.Interfaces;
 using BingoMaster_Models;
 using Microsoft.AspNetCore.Mvc;
 using NSwag.Annotations;
+using System;
 using System.Collections.Generic;
 using System.Net;
 
@@ -37,6 +38,38 @@ namespace BingoMaster_API.Controllers
 			var bingoGameModel = _bingoGameLogic.CreateNewGame(gameCreationModel);
 
 			return Ok(bingoGameModel);
+		}
+
+		[HttpPut("{id}/players/join")]
+		[Authorize]
+		[SwaggerResponse(HttpStatusCode.OK, typeof(void))]
+		[SwaggerResponse(HttpStatusCode.BadRequest, typeof(ErrorModel))]
+		public ActionResult JoinGame(Guid id, Guid playerId)
+		{
+			if (id == Guid.Empty || playerId == Guid.Empty)
+			{
+				return BadRequest("No game or player id provided");
+			}
+
+			_bingoGameLogic.JoinGame(id, playerId);
+
+			return NoContent();
+		}
+
+		[HttpPut("{id}/players/leave")]
+		[Authorize]
+		[SwaggerResponse(HttpStatusCode.OK, typeof(void))]
+		[SwaggerResponse(HttpStatusCode.BadRequest, typeof(ErrorModel))]
+		public ActionResult LeaveGame(Guid id, Guid playerId)
+		{
+			if (id == Guid.Empty || playerId == Guid.Empty)
+			{
+				return BadRequest("No game or player id provided");
+			}
+
+			_bingoGameLogic.LeaveGame(id, playerId);
+
+			return NoContent();
 		}
 	}
 }
