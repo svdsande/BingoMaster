@@ -39,7 +39,6 @@ namespace BingoMaster_Logic
 				.Where(game => game.GamePlayers.Any(gamePlayer => gamePlayer.PlayerId == id))
 				.ToArray();
 			
-
 			return _mapper.Map<IEnumerable<Game>, IEnumerable<BingoGameDetailModel>>(games);
 		}
 

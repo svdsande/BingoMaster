@@ -3,6 +3,7 @@ using BingoMaster_Logic;
 using BingoMaster_Logic.Interfaces;
 using BingoMaster_Models;
 using BingoMaster_Models.Player;
+using Microsoft.EntityFrameworkCore;
 using Moq;
 using System;
 using System.Collections.Generic;
@@ -21,6 +22,8 @@ namespace BingoMaster_Tests
 		private readonly IBingoGameLogic _bingoGameLogic;
 		private readonly Guid _creatorId;
 		private readonly Guid _normalPlayerId;
+		private readonly Guid _pearlJamGameId;
+		private readonly Guid _fooFightersGameId;
 
 		public BingoGameLogicTests()
 		{
@@ -29,6 +32,8 @@ namespace BingoMaster_Tests
 
 			_creatorId = Guid.NewGuid();
 			_normalPlayerId = Guid.NewGuid();
+			_pearlJamGameId = Guid.NewGuid();
+			_fooFightersGameId = Guid.NewGuid();
 
 			var user = new User
 			{
@@ -60,8 +65,39 @@ namespace BingoMaster_Tests
 				}
 			};
 
+			var gamePearlJam = new Game
+			{
+				Id = _pearlJamGameId,
+				Name = "Pearl Jam Game",
+				MaximumAmountOfPlayers = 3
+			};
+
+			var gameFooFighters = new Game
+			{
+				Id = _fooFightersGameId,
+				Name = "Foo Fighters Game",
+				MaximumAmountOfPlayers = 1
+			};
+
+
+			var gamePlayers = new List<GamePlayer>
+			{
+				new GamePlayer
+				{
+					Game = gamePearlJam,
+					Player = players.First()
+				},
+				new GamePlayer
+				{
+					Game = gameFooFighters,
+					Player = players.First()
+				}
+			};
 
 			_context.Players.AddRange(players);
+			_context.Games.Add(gamePearlJam);
+			_context.Games.Add(gameFooFighters);
+			_context.GamePlayers.AddRange(gamePlayers);
 
 			_context.SaveChanges();
 
@@ -105,7 +141,7 @@ namespace BingoMaster_Tests
 		}
 
 		[Fact]
-		public void CreateNewGame_CreatorNotFound_ExceptionExpected()
+		public void CreateNewGame_CreatorNotFound_NullExpected()
 		{
 			var input = new BingoGameDetailModel()
 			{
@@ -117,7 +153,7 @@ namespace BingoMaster_Tests
 				Date = DateTime.Now.AddMonths(1)
 			};
 
-			Assert.Throws<KeyNotFoundException>(() => _bingoGameLogic.CreateNewGame(input));
+			Assert.Null(_bingoGameLogic.CreateNewGame(input));
 		}
 
 		[Fact]
@@ -188,6 +224,61 @@ namespace BingoMaster_Tests
 
 			Assert.Equal(expected.Name, actual.Name);
 			Assert.Equal(expected.Players.Count(), actual.Players.Count());
+		}
+
+		[Theory]
+		[InlineData("00000000-0000-0000-0000-000000000000", "00ebf684-3797-473b-a503-a88c1c4cbb6d")]
+		[InlineData("00ebf684-3797-473b-a503-a88c1c4cbb6d", "00000000-0000-0000-0000-000000000000")]
+		public void JoinGame_InvalidData_ExceptionExpected(string gameId, string playerId)
+		{
+			Assert.Throws<ArgumentException>(() => _bingoGameLogic.JoinGame(Guid.Parse(gameId), Guid.Parse(playerId)));
+		}
+
+		[Fact]
+		public void JoinGame_GameDoesNotExist_NoChangesExpected()
+		{
+			var gameDoesNotExistId = Guid.NewGuid();
+			_bingoGameLogic.JoinGame(gameDoesNotExistId, _creatorId);
+
+			var gamePlayer = _context.GamePlayers.SingleOrDefault(gamePlayer => gamePlayer.GameId == gameDoesNotExistId);
+
+			Assert.Null(gamePlayer);
+		}
+
+		[Fact]
+		public void JoinGame_PlayerAlreadyJoinedGame_NoChangesExpected()
+		{
+			_bingoGameLogic.JoinGame(_pearlJamGameId, _creatorId);
+
+			var game = _context.Games
+				.Include(game => game.GamePlayers)
+				.SingleOrDefault(game => game.Id == _pearlJamGameId);
+
+			Assert.NotNull(game.GamePlayers.SingleOrDefault(gamePlayer => gamePlayer.PlayerId == _creatorId));
+		}
+
+		[Fact]
+		public void JoinGame_NewPlayerWantToJoinGame_PlayerShoulBeJoined()
+		{
+			_bingoGameLogic.JoinGame(_pearlJamGameId, _normalPlayerId);
+
+			var game = _context.Games
+				.Include(game => game.GamePlayers)
+				.SingleOrDefault(game => game.Id == _pearlJamGameId);
+
+			Assert.NotNull(game.GamePlayers.SingleOrDefault(gamePlayer => gamePlayer.PlayerId == _creatorId));
+		}
+
+		[Fact]
+		public void JoinGame_MaximumAmountOfPlayersReached_PlayerShouldNotHaveJoined()
+		{
+			_bingoGameLogic.JoinGame(_fooFightersGameId, _normalPlayerId);
+
+			var game = _context.Games
+				.Include(game => game.GamePlayers)
+				.SingleOrDefault(game => game.Id == _fooFightersGameId);
+
+			Assert.Null(game.GamePlayers.SingleOrDefault(gamePlayer => gamePlayer.PlayerId == _normalPlayerId));
 		}
 
 		[Theory]
