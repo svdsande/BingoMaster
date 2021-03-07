@@ -24,6 +24,7 @@ namespace BingoMaster_Tests
 		private readonly Guid _normalPlayerId;
 		private readonly Guid _pearlJamGameId;
 		private readonly Guid _fooFightersGameId;
+		private readonly Guid _greenDayGameId;
 
 		public BingoGameLogicTests()
 		{
@@ -34,6 +35,7 @@ namespace BingoMaster_Tests
 			_normalPlayerId = Guid.NewGuid();
 			_pearlJamGameId = Guid.NewGuid();
 			_fooFightersGameId = Guid.NewGuid();
+			_greenDayGameId = Guid.NewGuid();
 
 			var user = new User
 			{
@@ -79,6 +81,13 @@ namespace BingoMaster_Tests
 				MaximumAmountOfPlayers = 1
 			};
 
+			var gameGreenDay = new Game
+			{
+				Id = _greenDayGameId,
+				Name = "Foo Fighters Game",
+				MaximumAmountOfPlayers = 1
+			};
+
 
 			var gamePlayers = new List<GamePlayer>
 			{
@@ -91,12 +100,18 @@ namespace BingoMaster_Tests
 				{
 					Game = gameFooFighters,
 					Player = players.First()
+				},
+				new GamePlayer
+				{
+					Game = gameGreenDay,
+					Player = players.First()
 				}
 			};
 
 			_context.Players.AddRange(players);
 			_context.Games.Add(gamePearlJam);
 			_context.Games.Add(gameFooFighters);
+			_context.Games.Add(gameGreenDay);
 			_context.GamePlayers.AddRange(gamePlayers);
 
 			_context.SaveChanges();
@@ -279,6 +294,49 @@ namespace BingoMaster_Tests
 				.SingleOrDefault(game => game.Id == _fooFightersGameId);
 
 			Assert.Null(game.GamePlayers.SingleOrDefault(gamePlayer => gamePlayer.PlayerId == _normalPlayerId));
+		}
+
+		[Theory]
+		[InlineData("00000000-0000-0000-0000-000000000000", "00ebf684-3797-473b-a503-a88c1c4cbb6d")]
+		[InlineData("00ebf684-3797-473b-a503-a88c1c4cbb6d", "00000000-0000-0000-0000-000000000000")]
+		public void LeaveGame_InvalidData_ExceptionExpected(string gameId, string playerId)
+		{
+			Assert.Throws<ArgumentException>(() => _bingoGameLogic.LeaveGame(Guid.Parse(gameId), Guid.Parse(playerId)));
+		}
+
+		[Fact]
+		public void LeaveGame_GameDoesNotExist_NoChangesExpected()
+		{
+			var gameDoesNotExistId = Guid.NewGuid();
+			_bingoGameLogic.LeaveGame(gameDoesNotExistId, _creatorId);
+
+			var gamePlayer = _context.GamePlayers.SingleOrDefault(gamePlayer => gamePlayer.GameId == gameDoesNotExistId);
+
+			Assert.Null(gamePlayer);
+		}
+
+		[Fact]
+		public void LeaveGame_PlayerDoesNotParticipate_NoChangesExpected()
+		{
+			_bingoGameLogic.LeaveGame(_greenDayGameId, _normalPlayerId);
+
+			var game = _context.Games
+				.Include(game => game.GamePlayers)
+				.SingleOrDefault(game => game.Id == _greenDayGameId);
+
+			Assert.Null(game.GamePlayers.SingleOrDefault(gamePlayer => gamePlayer.PlayerId == _normalPlayerId));
+		}
+
+		[Fact]
+		public void LeaveGame_PlayerDoesParticipate_PlayerLeftGame()
+		{
+			_bingoGameLogic.LeaveGame(_greenDayGameId, _creatorId);
+
+			var game = _context.Games
+				.Include(game => game.GamePlayers)
+				.SingleOrDefault(game => game.Id == _greenDayGameId);
+
+			Assert.Null(game.GamePlayers.SingleOrDefault(gamePlayer => gamePlayer.PlayerId == _creatorId));
 		}
 
 		[Theory]

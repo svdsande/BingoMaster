@@ -109,7 +109,7 @@ namespace BingoMaster_Logic
 
 			var game = GetGameIncludingGamePlayers(gameId);
 
-			if (game.GamePlayers.Any(gamePlayer => gamePlayer.PlayerId == playerId))
+			if (game?.GamePlayers?.Any(gamePlayer => gamePlayer.PlayerId == playerId) ?? false)
 			{
 				var existingGamePlayer = game.GamePlayers.SingleOrDefault(gamePlayer => gamePlayer.PlayerId == playerId);
 				game.GamePlayers.Remove(existingGamePlayer);
