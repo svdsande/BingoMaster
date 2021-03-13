@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { BehaviorSubject } from 'rxjs';
 import { map, switchMap, take } from 'rxjs/operators';
@@ -15,8 +16,10 @@ import { PlayerService } from 'src/app/services/player/player.service';
 export class GameOverviewComponent implements OnInit {
 
   public games: BehaviorSubject<BingoGameDetailModel[]> = new BehaviorSubject<BingoGameDetailModel[]>([]);
+  public gameFilterFormGroup: FormGroup;
   private playerId: string;
   private player: PlayerModel;
+  private allGames: BingoGameDetailModel[];
 
   constructor(
     private authenticationService: AuthenticationService,
@@ -29,6 +32,13 @@ export class GameOverviewComponent implements OnInit {
     this.playerId = this.authenticationService.currentUserValue.playerId;
     this.setPlayer();
     this.getAllPublicGames();
+    this.buildForm();
+
+    this.gameFilterFormGroup.get('search').valueChanges.pipe(
+      map(searchValue => searchValue ? this.filterGamesByName(searchValue) : this.allGames.slice())
+    ).subscribe((filteredGames: BingoGameDetailModel[]) => {
+      this.games.next(filteredGames);
+    });
   }
 
   public join(gameId: string): void {
@@ -74,6 +84,7 @@ export class GameOverviewComponent implements OnInit {
       take(1)
     ).subscribe((games: BingoGameDetailModel[]) => {
       this.games.next(games);
+      this.allGames = games;
     });
   }
 
@@ -82,6 +93,16 @@ export class GameOverviewComponent implements OnInit {
       take(1)
     ).subscribe((player: PlayerModel) => {
       this.player = player;
+    });
+  }
+
+  private buildForm(): void {
+    this.gameFilterFormGroup = new FormGroup({
+      search: new FormControl(''),
+      range: new FormGroup({
+        startDate: new FormControl(),
+        endDate: new FormControl(),
+      })
     });
   }
 
@@ -103,5 +124,11 @@ export class GameOverviewComponent implements OnInit {
     }
 
     this.games.next(games);
+  }
+
+  private filterGamesByName(searchValue: string): BingoGameDetailModel[] {
+    const filterValue = searchValue.toLowerCase();
+
+    return this.allGames.filter(option => option.name.toLowerCase().includes(filterValue));
   }
 }

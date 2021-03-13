@@ -85,6 +85,21 @@
       }
     },
     "OVERVIEW": {
+      "FILTER": {
+        "FORM": {
+          "SEARCH": {
+            "label": "Search"
+          },
+          "DATE": {
+            "label": "Date",
+            "PLACEHOLDERS": {
+              "start": "State date",
+              "end": "End date"
+            }
+          }
+        }
+      },
+      "create_game": "Create Game",
       "CARD": {
         "ACTIONS": {
           "join": "join",

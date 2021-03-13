@@ -1,31 +1,56 @@
-<div class="games-container">
-  <mat-card *ngFor="let game of this.games| async" class="game-card">
-    <mat-card-header>
-      <mat-card-title>{{ game.name }}</mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-      <div class="game-detail">
-        <mat-icon>date_range</mat-icon>
-        <span>{{ game.date | date:'mediumDate' }}</span>
-      </div>
-      <div class="game-detail">
-        <mat-icon>people</mat-icon>
-        <span>{{ game.players.length }} / {{ game.maximumAmountOfPlayers }}</span>
-      </div>
-      <div class="game-detail">
-        <mat-icon>grid_3x3</mat-icon>
-        <span>{{ game.size }}</span>
-      </div>
-    </mat-card-content>
-    <mat-card-actions align="end">
-      <button mat-stroked-button *ngIf="(game.players | playerInGame) === false" (click)="join(game.id)">
-        <mat-icon>add</mat-icon>
-        {{ 'BINGO_GAME.OVERVIEW.CARD.ACTIONS.join' | translate | uppercase}}
-      </button>
-      <button mat-stroked-button color="warn" *ngIf="(game.players | playerInGame) === true" (click)="leave(game.id)">
-        <mat-icon>remove</mat-icon>
-        {{ 'BINGO_GAME.OVERVIEW.CARD.ACTIONS.leave' | translate | uppercase}}
-      </button>
-    </mat-card-actions>
-  </mat-card>
+<div class="container">
+  <div class="game-filter-container">
+    <form [formGroup]="this.gameFilterFormGroup">
+      <mat-form-field id="search-form-field" appearance="outline">
+        <mat-label>{{ 'BINGO_GAME.OVERVIEW.FILTER.FORM.SEARCH.label' | translate }}</mat-label>
+        <input matInput formControlName="search" type="text">
+        <mat-icon matSuffix class="input-icon">search</mat-icon>
+      </mat-form-field>
+      <mat-form-field id="date-form-field" appearance="outline">
+        <mat-label>{{ 'BINGO_GAME.OVERVIEW.FILTER.FORM.DATE.label' | translate }}</mat-label>
+        <mat-date-range-input formGroupName="range" [rangePicker]="picker">
+          <input matStartDate formControlName="start" [placeholder]="'BINGO_GAME.OVERVIEW.FILTER.FORM.DATE.PLACEHOLDERS.start' | translate">
+          <input matEndDate formControlName="end" [placeholder]="'BINGO_GAME.OVERVIEW.FILTER.FORM.DATE.PLACEHOLDERS.end' | translate">
+        </mat-date-range-input>
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-date-range-picker #picker></mat-date-range-picker>
+      </mat-form-field>
+    </form>
+    <div class="spacer"></div>
+    <div>
+      <button mat-raised-button color="primary">{{ 'BINGO_GAME.OVERVIEW.create_game' | translate | uppercase}}</button>
+    </div>
+  </div>
+
+  <div class="games-container">
+    <mat-card *ngFor="let game of this.games| async" class="game-card">
+      <mat-card-header>
+        <mat-card-title>{{ game.name }}</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="game-detail">
+          <mat-icon>date_range</mat-icon>
+          <span>{{ game.date | date:'mediumDate' }}</span>
+        </div>
+        <div class="game-detail">
+          <mat-icon>people</mat-icon>
+          <span>{{ game.players.length }} / {{ game.maximumAmountOfPlayers }}</span>
+        </div>
+        <div class="game-detail">
+          <mat-icon>grid_3x3</mat-icon>
+          <span>{{ game.size }}</span>
+        </div>
+      </mat-card-content>
+      <mat-card-actions align="end">
+        <button mat-stroked-button *ngIf="(game.players | playerInGame) === false" (click)="join(game.id)">
+          <mat-icon>add</mat-icon>
+          {{ 'BINGO_GAME.OVERVIEW.CARD.ACTIONS.join' | translate | uppercase}}
+        </button>
+        <button mat-stroked-button color="warn" *ngIf="(game.players | playerInGame) === true" (click)="leave(game.id)">
+          <mat-icon>remove</mat-icon>
+          {{ 'BINGO_GAME.OVERVIEW.CARD.ACTIONS.leave' | translate | uppercase}}
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
 </div>

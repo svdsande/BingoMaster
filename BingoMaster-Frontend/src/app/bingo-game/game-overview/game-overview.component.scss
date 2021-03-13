@@ -5,21 +5,54 @@
   align-items: center;
 }
 
-.games-container {
-  display: flex;
+.container {
   width: 850px;
-  justify-content: space-evenly;
 
-  .game-card {
-    width: 175px;
+  .game-filter-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 0px;
 
-    .game-detail {
+    form {
       display: flex;
-      align-items: center;
+      flex: 4;
 
-      mat-icon {
-        margin-right: 5px;
+      #search-form-field {
+        width: 100%;
+        margin-right: 20px;
+      }
+
+      #date-form-field {
+        width: 240px;
+      }
+    }
+
+    .spacer {
+      flex: 1;
+    }
+  }
+
+  .games-container {
+    display: flex;
+    justify-content: space-evenly;
+
+    .game-card {
+      width: 175px;
+
+      .game-detail {
+        display: flex;
+        align-items: center;
+
+        mat-icon {
+          margin-right: 5px;
+        }
       }
     }
   }
+}
+
+.input-icon {
+  color: #acacac;
+  padding-right: 5px;
 }
