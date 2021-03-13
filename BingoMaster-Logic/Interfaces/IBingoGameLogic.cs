@@ -9,6 +9,7 @@ namespace BingoMaster_Logic.Interfaces
 	{
 		BingoGameModel CreateNewGame(BingoGameDetailModel gameCreationModel);
 		BingoGameModel PlayRound(IEnumerable<PlayerGameModel> players, int[] drawnNumbers);
+		IEnumerable<BingoGameDetailModel> GetAllPublicBingoGames();
 		void JoinGame(Guid gameId, Guid playerId);
 		void LeaveGame(Guid gameId, Guid playerId);
 	}

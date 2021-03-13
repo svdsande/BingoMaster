@@ -83,6 +83,17 @@ namespace BingoMaster_Logic
 			};
 		}
 
+		public IEnumerable<BingoGameDetailModel> GetAllPublicBingoGames()
+		{
+			var games = _context.Games
+				.Include(game => game.GamePlayers)
+				.ThenInclude(gamePlayer => gamePlayer.Player)
+				.Where(game => !game.Private)
+				.ToArray();
+
+			return _mapper.Map<IEnumerable<Game>, IEnumerable<BingoGameDetailModel>>(games);
+		}
+
 		public void JoinGame(Guid gameId, Guid playerId)
 		{
 			if (gameId == Guid.Empty || playerId == Guid.Empty)

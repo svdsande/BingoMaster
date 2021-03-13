@@ -1,5 +1,5 @@
 <div class="games-container">
-  <mat-card *ngFor="let game of this.gamesForCurrentPlayer | async" class="game-card">
+  <mat-card *ngFor="let game of this.games| async" class="game-card">
     <mat-card-header>
       <mat-card-title>{{ game.name }}</mat-card-title>
     </mat-card-header>
@@ -18,11 +18,11 @@
       </div>
     </mat-card-content>
     <mat-card-actions align="end">
-      <button mat-stroked-button *ngIf="(game.players | playerInGame: this.playerId) === false" (click)="join(game.id)">
+      <button mat-stroked-button *ngIf="(game.players | playerInGame) === false" (click)="join(game.id)">
         <mat-icon>add</mat-icon>
         {{ 'BINGO_GAME.OVERVIEW.CARD.ACTIONS.join' | translate | uppercase}}
       </button>
-      <button mat-stroked-button color="warn" *ngIf="(game.players | playerInGame: this.playerId) === true" (click)="leave(game.id)">
+      <button mat-stroked-button color="warn" *ngIf="(game.players | playerInGame) === true" (click)="leave(game.id)">
         <mat-icon>remove</mat-icon>
         {{ 'BINGO_GAME.OVERVIEW.CARD.ACTIONS.leave' | translate | uppercase}}
       </button>

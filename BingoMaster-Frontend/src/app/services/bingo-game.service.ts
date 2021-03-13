@@ -23,6 +23,18 @@ export class BingoGameService {
     return this.bingoGameClient.createBingoGame(bingoGameModel);
   }
 
+  public getAllPublicGames(): Observable<BingoGameDetailModel[]> {
+    return this.bingoGameClient.getAllBingoGames();
+  }
+
+  public joinGame(gameId: string, playerId: string): Observable<void> {
+    return this.bingoGameClient.joinGame(gameId, playerId);
+  }
+
+  public leaveGame(gameId: string, playerId: string): Observable<void> {
+    return this.bingoGameClient.leaveGame(gameId, playerId);
+  }
+
   public playNextRound(players: PlayerGameModel[], drawnNumber: number[]): void {
     this.hubConnection.invoke('PlayNextRound', players, drawnNumber);
   }

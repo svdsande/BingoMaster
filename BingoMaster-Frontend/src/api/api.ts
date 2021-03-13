@@ -100,6 +100,65 @@ export class BingoGameClient {
         this.baseUrl = baseUrl ? baseUrl : "";
     }
 
+    getAllBingoGames(): Observable<BingoGameDetailModel[]> {
+        let url_ = this.baseUrl + "/api/BingoGame";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAllBingoGames(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAllBingoGames(<any>response_);
+                } catch (e) {
+                    return <Observable<BingoGameDetailModel[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<BingoGameDetailModel[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAllBingoGames(response: HttpResponseBase): Observable<BingoGameDetailModel[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(BingoGameDetailModel.fromJS(item));
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ErrorModel.fromJS(resultData400);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<BingoGameDetailModel[]>(<any>null);
+    }
+
     createBingoGame(gameCreationModel: BingoGameDetailModel): Observable<BingoGameModel> {
         let url_ = this.baseUrl + "/api/BingoGame";
         url_ = url_.replace(/[?&]$/, "");
@@ -1015,6 +1074,126 @@ export interface IBingoCardCreationModel {
     amount: number;
 }
 
+export class BingoGameDetailModel implements IBingoGameDetailModel {
+    id!: string;
+    creatorId!: string;
+    name?: string | undefined;
+    date!: Date;
+    maximumAmountOfPlayers!: number;
+    players?: PlayerModel[] | undefined;
+    size!: number;
+    isCenterSquareFree!: boolean;
+    isPrivateGame!: boolean;
+
+    constructor(data?: IBingoGameDetailModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.creatorId = _data["creatorId"];
+            this.name = _data["name"];
+            this.date = _data["date"] ? new Date(_data["date"].toString()) : <any>undefined;
+            this.maximumAmountOfPlayers = _data["maximumAmountOfPlayers"];
+            if (Array.isArray(_data["players"])) {
+                this.players = [] as any;
+                for (let item of _data["players"])
+                    this.players!.push(PlayerModel.fromJS(item));
+            }
+            this.size = _data["size"];
+            this.isCenterSquareFree = _data["isCenterSquareFree"];
+            this.isPrivateGame = _data["isPrivateGame"];
+        }
+    }
+
+    static fromJS(data: any): BingoGameDetailModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new BingoGameDetailModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["creatorId"] = this.creatorId;
+        data["name"] = this.name;
+        data["date"] = this.date ? this.date.toISOString() : <any>undefined;
+        data["maximumAmountOfPlayers"] = this.maximumAmountOfPlayers;
+        if (Array.isArray(this.players)) {
+            data["players"] = [];
+            for (let item of this.players)
+                data["players"].push(item.toJSON());
+        }
+        data["size"] = this.size;
+        data["isCenterSquareFree"] = this.isCenterSquareFree;
+        data["isPrivateGame"] = this.isPrivateGame;
+        return data; 
+    }
+}
+
+export interface IBingoGameDetailModel {
+    id: string;
+    creatorId: string;
+    name?: string | undefined;
+    date: Date;
+    maximumAmountOfPlayers: number;
+    players?: PlayerModel[] | undefined;
+    size: number;
+    isCenterSquareFree: boolean;
+    isPrivateGame: boolean;
+}
+
+export class PlayerModel implements IPlayerModel {
+    id!: string;
+    name?: string | undefined;
+    description?: string | undefined;
+
+    constructor(data?: IPlayerModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.description = _data["description"];
+        }
+    }
+
+    static fromJS(data: any): PlayerModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new PlayerModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["description"] = this.description;
+        return data; 
+    }
+}
+
+export interface IPlayerModel {
+    id: string;
+    name?: string | undefined;
+    description?: string | undefined;
+}
+
 export class BingoGameModel implements IBingoGameModel {
     name?: string | undefined;
     drawnNumber!: number;
@@ -1117,122 +1296,6 @@ export interface IPlayerGameModel {
     isHorizontalLineDone: boolean;
     isVerticalLineDone: boolean;
     isFullCardDone: boolean;
-}
-
-export class BingoGameDetailModel implements IBingoGameDetailModel {
-    creatorId!: string;
-    name?: string | undefined;
-    date!: Date;
-    maximumAmountOfPlayers!: number;
-    players?: PlayerModel[] | undefined;
-    size!: number;
-    isCenterSquareFree!: boolean;
-    isPrivateGame!: boolean;
-
-    constructor(data?: IBingoGameDetailModel) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.creatorId = _data["creatorId"];
-            this.name = _data["name"];
-            this.date = _data["date"] ? new Date(_data["date"].toString()) : <any>undefined;
-            this.maximumAmountOfPlayers = _data["maximumAmountOfPlayers"];
-            if (Array.isArray(_data["players"])) {
-                this.players = [] as any;
-                for (let item of _data["players"])
-                    this.players!.push(PlayerModel.fromJS(item));
-            }
-            this.size = _data["size"];
-            this.isCenterSquareFree = _data["isCenterSquareFree"];
-            this.isPrivateGame = _data["isPrivateGame"];
-        }
-    }
-
-    static fromJS(data: any): BingoGameDetailModel {
-        data = typeof data === 'object' ? data : {};
-        let result = new BingoGameDetailModel();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["creatorId"] = this.creatorId;
-        data["name"] = this.name;
-        data["date"] = this.date ? this.date.toISOString() : <any>undefined;
-        data["maximumAmountOfPlayers"] = this.maximumAmountOfPlayers;
-        if (Array.isArray(this.players)) {
-            data["players"] = [];
-            for (let item of this.players)
-                data["players"].push(item.toJSON());
-        }
-        data["size"] = this.size;
-        data["isCenterSquareFree"] = this.isCenterSquareFree;
-        data["isPrivateGame"] = this.isPrivateGame;
-        return data; 
-    }
-}
-
-export interface IBingoGameDetailModel {
-    creatorId: string;
-    name?: string | undefined;
-    date: Date;
-    maximumAmountOfPlayers: number;
-    players?: PlayerModel[] | undefined;
-    size: number;
-    isCenterSquareFree: boolean;
-    isPrivateGame: boolean;
-}
-
-export class PlayerModel implements IPlayerModel {
-    id!: string;
-    name?: string | undefined;
-    description?: string | undefined;
-
-    constructor(data?: IPlayerModel) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.name = _data["name"];
-            this.description = _data["description"];
-        }
-    }
-
-    static fromJS(data: any): PlayerModel {
-        data = typeof data === 'object' ? data : {};
-        let result = new PlayerModel();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["name"] = this.name;
-        data["description"] = this.description;
-        return data; 
-    }
-}
-
-export interface IPlayerModel {
-    id: string;
-    name?: string | undefined;
-    description?: string | undefined;
 }
 
 export class AuthenticatedUserModel implements IAuthenticatedUserModel {

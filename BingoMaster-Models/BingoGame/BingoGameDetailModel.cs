@@ -6,6 +6,7 @@ namespace BingoMaster_Models
 {
 	public class BingoGameDetailModel
 	{
+		public Guid Id { get; set; }
 		public Guid CreatorId { get; set; }
 		public string Name { get; set; }
 		public DateTime Date { get; set; }

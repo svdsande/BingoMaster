@@ -24,6 +24,16 @@ namespace BingoMaster_API.Controllers
 			_bingoGameLogic = bingoGameLogic;
 		}
 
+		[HttpGet]
+		[SwaggerResponse(HttpStatusCode.OK, typeof(IEnumerable<BingoGameDetailModel>))]
+		[SwaggerResponse(HttpStatusCode.BadRequest, typeof(ErrorModel))]
+		public ActionResult GetAllBingoGames()
+		{
+			var games = _bingoGameLogic.GetAllPublicBingoGames();
+
+			return Ok(games);
+		}
+
 		[HttpPost]
 		[Authorize]
 		[SwaggerResponse(HttpStatusCode.OK, typeof(BingoGameModel))]
