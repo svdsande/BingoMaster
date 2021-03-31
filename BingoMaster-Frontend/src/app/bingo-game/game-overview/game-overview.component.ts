@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import * as moment from 'moment';
 import { BehaviorSubject } from 'rxjs';
 import { map, switchMap, take } from 'rxjs/operators';
 import { BingoGameDetailModel, PlayerModel } from 'src/api/api';
@@ -36,6 +37,12 @@ export class GameOverviewComponent implements OnInit {
 
     this.gameFilterFormGroup.get('search').valueChanges.pipe(
       map(searchValue => searchValue ? this.filterGamesByName(searchValue) : this.allGames.slice())
+    ).subscribe((filteredGames: BingoGameDetailModel[]) => {
+      this.games.next(filteredGames);
+    });
+
+    this.gameFilterFormGroup.get('range').valueChanges.pipe(
+      map(dateRange => this.filterGamesInDateRange(dateRange))
     ).subscribe((filteredGames: BingoGameDetailModel[]) => {
       this.games.next(filteredGames);
     });
@@ -129,6 +136,10 @@ export class GameOverviewComponent implements OnInit {
   private filterGamesByName(searchValue: string): BingoGameDetailModel[] {
     const filterValue = searchValue.toLowerCase();
 
-    return this.allGames.filter(option => option.name.toLowerCase().includes(filterValue));
+    return this.allGames.filter(game => game.name.toLowerCase().includes(filterValue));
+  }
+
+  private filterGamesInDateRange(range: {startDate: moment.Moment, endDate: moment.Moment}): BingoGameDetailModel[] {
+    return this.allGames.filter(game => moment(game.date).isBetween(range.startDate, range.endDate));
   }
 }

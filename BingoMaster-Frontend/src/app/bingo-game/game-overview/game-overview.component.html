@@ -9,8 +9,8 @@
       <mat-form-field id="date-form-field" appearance="outline">
         <mat-label>{{ 'BINGO_GAME.OVERVIEW.FILTER.FORM.DATE.label' | translate }}</mat-label>
         <mat-date-range-input formGroupName="range" [rangePicker]="picker">
-          <input matStartDate formControlName="start" [placeholder]="'BINGO_GAME.OVERVIEW.FILTER.FORM.DATE.PLACEHOLDERS.start' | translate">
-          <input matEndDate formControlName="end" [placeholder]="'BINGO_GAME.OVERVIEW.FILTER.FORM.DATE.PLACEHOLDERS.end' | translate">
+          <input matStartDate formControlName="startDate" [placeholder]="'BINGO_GAME.OVERVIEW.FILTER.FORM.DATE.PLACEHOLDERS.start' | translate">
+          <input matEndDate formControlName="endDate" [placeholder]="'BINGO_GAME.OVERVIEW.FILTER.FORM.DATE.PLACEHOLDERS.end' | translate">
         </mat-date-range-input>
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-date-range-picker #picker></mat-date-range-picker>
