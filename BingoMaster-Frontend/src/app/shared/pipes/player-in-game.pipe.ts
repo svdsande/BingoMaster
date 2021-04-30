@@ -11,7 +11,7 @@ export class PlayerInGamePipe implements PipeTransform {
   constructor(private authenticationService: AuthenticationService) { }
 
   transform(players: PlayerModel[]): boolean {
-    const playerId = this.authenticationService.currentUserValue.playerId;
+    const playerId = this.authenticationService.currentUserValue?.playerId;
     return players.some(player => player.id === playerId);
   }
 
