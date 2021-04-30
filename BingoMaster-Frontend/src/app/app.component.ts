@@ -52,7 +52,7 @@ export class AppComponent implements OnInit {
         return route;
       }),
       filter((route) => route.outlet === 'primary'),
-      mergeMap((route) => route.data)
+      map((route) => route.data)
     ).subscribe((event) => {
       this.titleService.setTitle(event['title'] + ' | BingoMaster');
     });
