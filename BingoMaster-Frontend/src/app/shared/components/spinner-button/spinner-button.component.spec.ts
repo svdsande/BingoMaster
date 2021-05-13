@@ -1,4 +1,6 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { By } from '@angular/platform-browser';
 
 import { SpinnerButtonComponent } from './spinner-button.component';
 
@@ -8,7 +10,8 @@ describe('SpinnerButtonComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ SpinnerButtonComponent ]
+      declarations: [ SpinnerButtonComponent ],
+      imports: [ MatProgressSpinnerModule ]
     })
     .compileComponents();
   }));
@@ -21,5 +24,25 @@ describe('SpinnerButtonComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should hide spinner', () => {
+    expect(fixture.debugElement.query(By.css('.spinner-container'))).toBeNull();
+  });
+
+  it('should show spinner', () => {
+    component.loading = true;
+    fixture.detectChanges();
+    expect(fixture.debugElement.query(By.css('.spinner-container'))).toBeTruthy();
+  });
+
+  it('should first show and then hide spinner', () => {
+    component.loading = true;
+    fixture.detectChanges();
+    expect(fixture.debugElement.query(By.css('.spinner-container'))).toBeTruthy();
+
+    component.loading = false;
+    fixture.detectChanges();
+    expect(fixture.debugElement.query(By.css('.spinner-container'))).toBeNull();
   });
 });

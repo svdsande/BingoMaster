@@ -30,7 +30,7 @@ export class AuthenticationService {
     this.currentUserSubject.next(null);
   }
 
-  public get currentUserValue(): AuthenticatedUserModel {
+  get currentUserValue(): AuthenticatedUserModel {
     return this.currentUserSubject.value;
   }
 
