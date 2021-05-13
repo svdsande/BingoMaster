@@ -54,7 +54,7 @@ export class AppComponent implements OnInit {
       filter((route) => route.outlet === 'primary'),
       map((route) => route.data)
     ).subscribe((event) => {
-      this.titleService.setTitle(event['title'] + ' | BingoMaster');
+      this.titleService.setTitle(event['title'] + ' BingoMaster');
     });
   }
 }
