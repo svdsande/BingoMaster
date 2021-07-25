@@ -3,7 +3,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import * as moment from 'moment';
 import { BehaviorSubject } from 'rxjs';
-import { map, switchMap, take } from 'rxjs/operators';
+import { map, take } from 'rxjs/operators';
 import { BingoGameDetailModel, PlayerModel } from 'src/api/api';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 import { BingoGameService } from 'src/app/services/bingo-game.service';
@@ -49,41 +49,29 @@ export class GameOverviewComponent implements OnInit {
   }
 
   public join(gameId: string): void {
-    this.games.pipe(
-      take(1),
-      switchMap(games => this.bingoGameService.joinGame(gameId, this.playerId).pipe(
-        map(() => games)
-      ))
-    ).subscribe((games) => {
-      this.joinGame(games, gameId);
-      this.snackBar.open('Join game', 'Success', {
+    this.bingoGameService.joinGame(gameId, this.playerId).subscribe(() => {
+      this.joinGame(this.games.value, gameId);
+      this.snackBar.open('Joined game', 'Success', {
         duration: 2000
       });
-    },
-      error => {
-        this.snackBar.open('Joining game failed, please refresh and try again', 'Error', {
-          duration: 2000
-        });
+    }, error => {
+      this.snackBar.open('Joining game failed, please refresh and try again', 'Error', {
+        duration: 2000
       });
+    });
   }
 
   public leave(gameId: string): void {
-    this.games.pipe(
-      take(1),
-      switchMap(games => this.bingoGameService.leaveGame(gameId, this.playerId).pipe(
-        map(() => games)
-      ))
-    ).subscribe((games) => {
-      this.leaveGame(games, gameId);
+    this.bingoGameService.leaveGame(gameId, this.playerId).subscribe(() => {
+      this.leaveGame(this.games.value, gameId);
       this.snackBar.open('Left game', 'Success', {
         duration: 2000
       });
-    },
-      error => {
-        this.snackBar.open('Leaving game failed, please refresh and try again', 'Error', {
-          duration: 2000
-        });
+    }, error => {
+      this.snackBar.open('Leaving game failed, please refresh and try again', 'Error', {
+        duration: 2000
       });
+    });
   }
 
   private getAllPublicGames(): void {
