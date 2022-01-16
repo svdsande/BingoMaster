@@ -61,7 +61,7 @@ namespace BingoMaster_Logic
 
 		public BingoGameModel PlayRound(IEnumerable<PlayerGameModel> players, int[] drawnNumbers)
 		{
-			if (players.Count() <= 0 || drawnNumbers.Length <= 0)
+			if (!players.Any()|| !drawnNumbers.Any())
 			{
 				throw new ArgumentException("Invalid number of players or drawn numbers");
 			}

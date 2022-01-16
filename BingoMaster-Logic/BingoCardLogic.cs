@@ -11,7 +11,7 @@ namespace BingoMaster_Logic
     {
         public IEnumerable<BingoCardModel> GenerateBingoCards(BingoCardCreationModel bingoCardModel)
         {
-            if (bingoCardModel == null || string.IsNullOrWhiteSpace(bingoCardModel.Name) || bingoCardModel.Amount <= 0 || bingoCardModel.Size <= 0)
+            if (!MinimalRequiredInformationProvided(bingoCardModel) || bingoCardModel.Size <= 0)
             {
                 throw new ArgumentException("No name for the card provided or invalid number of cards or grid size");
             }
@@ -25,19 +25,24 @@ namespace BingoMaster_Logic
 
         public BingoCardModel GenerateBingoCard(BingoCardCreationModel bingoCardModel)
 		{
-            if (bingoCardModel == null || string.IsNullOrWhiteSpace(bingoCardModel.Name) || bingoCardModel.Size <= 0)
-            {
-                throw new ArgumentException("No name for the card provided or invalid grid size");
-            }
+			if (!MinimalRequiredInformationProvided(bingoCardModel))
+			{
+				throw new ArgumentException("No name for the card provided or invalid grid size");
+			}
 
-            return new BingoCardModel()
-            {
-                Name = bingoCardModel.Name,
-                Grid = BuildBingoCardGrid(bingoCardModel)
-            };
+			return new BingoCardModel()
+			{
+				Name = bingoCardModel.Name,
+				Grid = BuildBingoCardGrid(bingoCardModel)
+			};
 		}
 
-        private int?[][] BuildBingoCardGrid(BingoCardCreationModel bingoCardModel)
+		private bool MinimalRequiredInformationProvided(BingoCardCreationModel bingoCardModel)
+		{
+			return bingoCardModel != null || !string.IsNullOrWhiteSpace(bingoCardModel.Name) || bingoCardModel.Size > 0;
+		}
+
+		private int?[][] BuildBingoCardGrid(BingoCardCreationModel bingoCardModel)
         {
             var grid = GenerateCardGrid(bingoCardModel.Size);
 
