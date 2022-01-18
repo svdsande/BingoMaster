@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Threading.Tasks;
-using BingoMaster_API.Attributes;
 using BingoMaster_Logic.Interfaces;
 using BingoMaster_Models;
 using BingoMaster_Models.Player;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NSwag.Annotations;
 

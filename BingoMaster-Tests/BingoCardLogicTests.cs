@@ -47,6 +47,7 @@ namespace BingoMaster_Tests
             var input = new BingoCardCreationModel()
             {
                 Name = "Pearl Jam",
+                Amount = 1,
                 IsCenterSquareFree = true,
                 Size = 3,
             };

@@ -4,6 +4,7 @@ using BingoMaster_Logic.Exceptions;
 using BingoMaster_Logic.Interfaces;
 using BingoMaster_Models;
 using BingoMaster_Models.User;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Moq;
 using System;
@@ -16,8 +17,7 @@ namespace BingoMaster_Tests
 	{
 		private readonly Mock<IPasswordLogic> _passwordLogicMock;
 		private readonly Mock<IPlayerLogic> _playerLogicMock;
-		private readonly Mock<IOptions<JwtSettingsModel>> _jwtSettingsModelMock;
-		private readonly JwtSettingsModel jwtSettings;
+		private readonly Mock<ITokenLogic> _tokenLogicMock;
 		private readonly IUserLogic _userLogic;
 		private readonly DbConnectionFactory _dbConnectionFactory;
 		private readonly BingoMasterDbContext _context;
@@ -42,12 +42,11 @@ namespace BingoMaster_Tests
 			_context.Users.Add(user);
 			_context.SaveChanges();
 
-			jwtSettings = new JwtSettingsModel { Secret = "CzsQwFZ#DjM3NPa&rEN4F2E&2ZJ1Ysd3k2^TTz4Zo06w65B*07" };
-			_jwtSettingsModelMock = new Mock<IOptions<JwtSettingsModel>>(MockBehavior.Strict);
-			_jwtSettingsModelMock.Setup(setting => setting.Value).Returns(jwtSettings);
+			_tokenLogicMock = new Mock<ITokenLogic>(MockBehavior.Strict);
+			_tokenLogicMock.Setup(s => s.GenerateToken(It.IsAny<User>())).Returns("CzsQwFZ#DjM3NPa&rEN4F2E&2ZJ1Ysd3k2^TTz4Zo06w65B*07");
 			_passwordLogicMock = new Mock<IPasswordLogic>(MockBehavior.Loose);
 			_playerLogicMock = new Mock<IPlayerLogic>(MockBehavior.Strict);
-			_userLogic = new UserLogic(_jwtSettingsModelMock.Object, _context, _passwordLogicMock.Object, _playerLogicMock.Object, _mapper);
+			_userLogic = new UserLogic(_context, _passwordLogicMock.Object, _playerLogicMock.Object, _tokenLogicMock.Object, _mapper);
 		}
 
 		[Theory]

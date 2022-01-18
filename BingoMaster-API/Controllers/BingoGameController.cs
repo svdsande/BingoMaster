@@ -1,6 +1,6 @@
-﻿using BingoMaster_API.Attributes;
-using BingoMaster_Logic.Interfaces;
+﻿using BingoMaster_Logic.Interfaces;
 using BingoMaster_Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NSwag.Annotations;
 using System;

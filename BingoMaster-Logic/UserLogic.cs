@@ -4,38 +4,31 @@ using BingoMaster_Logic.Exceptions;
 using BingoMaster_Logic.Interfaces;
 using BingoMaster_Models;
 using BingoMaster_Models.User;
-using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
-using System.Security.Claims;
-using System.Security.Cryptography;
-using System.Text;
 
 namespace BingoMaster_Logic
 {
-	public class UserLogic : IUserLogic
+    public class UserLogic : IUserLogic
 	{
 		#region Fields
 
-		private readonly JwtSettingsModel _jwtSettings;
 		private readonly BingoMasterDbContext _context;
 		private readonly IPasswordLogic _passwordLogic;
 		private readonly IPlayerLogic _playerLogic;
+		private readonly ITokenLogic _tokenLogic;
 		private readonly IMapper _mapper;
 
 		#endregion
 
-		public UserLogic(IOptions<JwtSettingsModel> jwtSettings, BingoMasterDbContext context, IPasswordLogic passwordLogic, IPlayerLogic playerLogic, IMapper mapper)
+		public UserLogic(BingoMasterDbContext context, IPasswordLogic passwordLogic, IPlayerLogic playerLogic, ITokenLogic tokenLogic, IMapper mapper)
 		{
-			_jwtSettings = jwtSettings.Value;
 			_context = context;
 			_passwordLogic = passwordLogic;
 			_playerLogic = playerLogic;
+			_tokenLogic = tokenLogic;
 			_mapper = mapper;
 		}
 
@@ -61,7 +54,7 @@ namespace BingoMaster_Logic
 			}
 
 			var model = _mapper.Map<AuthenticatedUserModel>(user);
-			model.Token = GenerateToken(user);
+			model.Token = _tokenLogic.GenerateToken(user);
 
 			return model;
 		}
@@ -138,23 +131,6 @@ namespace BingoMaster_Logic
 			}
 
 			return true;
-		}
-
-		private string GenerateToken(User user)
-		{
-			var tokenHandler = new JwtSecurityTokenHandler();
-			var key = Encoding.ASCII.GetBytes(_jwtSettings.Secret);
-			var tokenDescriptor = new SecurityTokenDescriptor
-			{
-				Subject = new ClaimsIdentity(new[] { 
-					new Claim("id", user.Id.ToString()),
-					new Claim("playerId", user.Player.Id.ToString())
-				}),
-				Expires = DateTime.UtcNow.AddDays(7),
-				SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-			};
-			var token = tokenHandler.CreateToken(tokenDescriptor);
-			return tokenHandler.WriteToken(token);
 		}
 
 		public void Update(UserModel userModel)
