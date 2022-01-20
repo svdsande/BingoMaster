@@ -59,15 +59,6 @@ namespace BingoMaster_Logic
 			return model;
 		}
 
-		public UserModel GetUserByIdWithPlayer(Guid id)
-		{
-			var user = _context.Users
-				.Include(user => user.Player)
-				.SingleOrDefault(user => user.Id == id);
-
-			return _mapper.Map<UserModel>(user);
-		}
-
 		public UserModel GetUserById(Guid id)
 		{
 			var user = _context.Users.Find(id);
