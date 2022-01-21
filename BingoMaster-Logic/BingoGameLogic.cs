@@ -60,30 +60,26 @@ namespace BingoMaster_Logic
 		}
 
 		public BingoGameModel PlayRound(IEnumerable<PlayerGameModel> players, int[] drawnNumbers)
-		{
-			if (!players.Any()|| !drawnNumbers.Any())
-			{
-				throw new ArgumentException("Invalid number of players or drawn numbers");
-			}
+        {
+            if (!players.Any() || !drawnNumbers.Any())
+            {
+                throw new ArgumentException("Invalid number of players or drawn numbers");
+            }
 
-			var nextNumber = _bingoNumberLogic.GetNextNumber();
-			var numbers = drawnNumbers.Select(number => (int?)number).ToList();
-			numbers.Add(nextNumber);
+            var nextNumber = _bingoNumberLogic.GetNextNumber();
+            var numbers = drawnNumbers.Select(number => (int?)number).ToList();
+            numbers.Add(nextNumber);
 
-			foreach (var player in players)
-			{
-				player.IsHorizontalLineDone = HorizontalLineDone(player.BingoCard.Grid, numbers);
-				player.IsFullCardDone = FullCardDone(player.BingoCard.Grid, numbers);
-			}
+            CheckBingoCards(players, numbers);
 
-			return new BingoGameModel()
-			{
-				DrawnNumber = nextNumber,
-				Players = players
-			};
-		}
+            return new BingoGameModel()
+            {
+                DrawnNumber = nextNumber,
+                Players = players
+            };
+        }
 
-		public IEnumerable<BingoGameDetailModel> GetAllPublicBingoGames()
+        public IEnumerable<BingoGameDetailModel> GetAllPublicBingoGames()
 		{
 			var games = _context.Games
 				.Include(game => game.GamePlayers)
@@ -95,37 +91,56 @@ namespace BingoMaster_Logic
 		}
 
 		public void JoinGame(Guid gameId, Guid playerId)
+        {
+			var game = TryGetGameWithPlayers(gameId, playerId);
+
+			if (!IsPlayerAlreadyGameParticipant(playerId, game) && !IsMaximumAmountOfGamePlayersReached(game))
+            {
+                var player = _context.Players.SingleOrDefault(player => player.Id == playerId);
+                game.GamePlayers.Add(new GamePlayer { Game = game, Player = player });
+                _context.SaveChanges();
+            }
+        }
+
+        public void LeaveGame(Guid gameId, Guid playerId)
+        {
+            var game = TryGetGameWithPlayers(gameId, playerId);
+
+            if (IsPlayerAlreadyGameParticipant(playerId, game))
+            {
+                var existingGamePlayer = game.GamePlayers.SingleOrDefault(gamePlayer => gamePlayer.PlayerId == playerId);
+                game.GamePlayers.Remove(existingGamePlayer);
+                _context.SaveChanges();
+            }
+        }
+
+		private void CheckBingoCards(IEnumerable<PlayerGameModel> players, List<int?> numbers)
 		{
-			if (gameId == Guid.Empty || playerId == Guid.Empty)
+			foreach (var player in players)
 			{
-				throw new ArgumentException("No game id or player id provided");
-			}
-
-			var game = GetGameIncludingGamePlayers(gameId);
-
-			if ((!game?.GamePlayers?.Any(gamePlayer => gamePlayer.PlayerId == playerId) ?? false) && game?.GamePlayers?.Count() < game?.MaximumAmountOfPlayers)
-			{
-				var player = _context.Players.SingleOrDefault(player => player.Id == playerId);
-				game.GamePlayers.Add(new GamePlayer { Game = game, Player = player });
-				_context.SaveChanges();
+				player.IsHorizontalLineDone = HorizontalLineDone(player.BingoCard.Grid, numbers);
+				player.IsFullCardDone = FullCardDone(player.BingoCard.Grid, numbers);
 			}
 		}
 
-		public void LeaveGame(Guid gameId, Guid playerId)
+		private Game TryGetGameWithPlayers(Guid gameId, Guid playerId)
+        {
+            if (gameId == Guid.Empty || playerId == Guid.Empty)
+            {
+                throw new ArgumentException("No game id or player id provided");
+            }
+
+            return GetGameIncludingGamePlayers(gameId);
+        }
+
+        private bool IsPlayerAlreadyGameParticipant(Guid playerId, Game game)
+        {
+            return game?.GamePlayers?.Any(gamePlayer => gamePlayer.PlayerId == playerId) ?? false;
+        }
+
+		private bool IsMaximumAmountOfGamePlayersReached(Game game)
 		{
-			if (gameId == Guid.Empty || playerId == Guid.Empty)
-			{
-				throw new ArgumentException("No game id or player id provided");
-			}
-
-			var game = GetGameIncludingGamePlayers(gameId);
-
-			if (game?.GamePlayers?.Any(gamePlayer => gamePlayer.PlayerId == playerId) ?? false)
-			{
-				var existingGamePlayer = game.GamePlayers.SingleOrDefault(gamePlayer => gamePlayer.PlayerId == playerId);
-				game.GamePlayers.Remove(existingGamePlayer);
-				_context.SaveChanges();
-			}
+			return game?.GamePlayers?.Count() == game?.MaximumAmountOfPlayers;
 		}
 
 		private Game GetGameIncludingGamePlayers(Guid gameId)
