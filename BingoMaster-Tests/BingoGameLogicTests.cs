@@ -15,7 +15,6 @@ namespace BingoMaster_Tests
 {
 	public class BingoGameLogicTests : TestBase
 	{
-		private readonly Mock<IBingoCardLogic> _bingoCardLogicMock;
 		private readonly Mock<IBingoNumberLogic> _bingoNumberLogicMock;
 		private readonly DbConnectionFactory _dbConnectionFactory;
 		private readonly BingoMasterDbContext _context;
@@ -116,9 +115,8 @@ namespace BingoMaster_Tests
 
 			_context.SaveChanges();
 
-			_bingoCardLogicMock = new Mock<IBingoCardLogic>(MockBehavior.Strict);
 			_bingoNumberLogicMock = new Mock<IBingoNumberLogic>(MockBehavior.Strict);
-			_bingoGameLogic = new BingoGameLogic(_bingoCardLogicMock.Object, _bingoNumberLogicMock.Object, _context, _mapper);
+			_bingoGameLogic = new BingoGameLogic(_bingoNumberLogicMock.Object, _context, _mapper);
 		}
 
 		[Theory]

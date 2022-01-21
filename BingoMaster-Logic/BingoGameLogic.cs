@@ -14,16 +14,14 @@ namespace BingoMaster_Logic
 	{
 		#region Fields
 
-		private readonly IBingoCardLogic _bingoCardLogic;
 		private readonly IBingoNumberLogic _bingoNumberLogic;
 		private readonly BingoMasterDbContext _context;
 		private readonly IMapper _mapper;
 
 		#endregion
 
-		public BingoGameLogic(IBingoCardLogic bingoCardLogic, IBingoNumberLogic bingoNumberLogic, BingoMasterDbContext context, IMapper mapper)
+		public BingoGameLogic(IBingoNumberLogic bingoNumberLogic, BingoMasterDbContext context, IMapper mapper)
 		{
-			_bingoCardLogic = bingoCardLogic;
 			_bingoNumberLogic = bingoNumberLogic;
 			_context = context;
 			_mapper = mapper;
