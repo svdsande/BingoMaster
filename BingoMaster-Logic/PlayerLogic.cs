@@ -69,14 +69,7 @@ namespace BingoMaster_Logic
 				throw new ArgumentException("No player name provided");
 			}
 
-			var player = _context.Players.FirstOrDefault(player => player.Name == playerName);
-
-			if (player != null)
-			{
-				return false;
-			}
-
-			return true;
+			return !_context.Players.Any(player => player.Name == playerName);
 		}
 
 		public IEnumerable<PlayerModel> GetAllPlayers()

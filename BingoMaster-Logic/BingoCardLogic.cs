@@ -1,9 +1,7 @@
 ﻿using BingoMaster_Models;
-using HtmlAgilityPack;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace BingoMaster_Logic
 {

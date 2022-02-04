@@ -71,17 +71,12 @@ namespace BingoMaster_Logic
                 throw new ArgumentException("No email address, playername or password provided");
             }
 
-            if (!_playerLogic.PlayerNameUnique(registerUserModel.PlayerName) || !EmailAddressUnique(registerUserModel.EmailAddress))
+            if (!IsPlayerUnique(registerUserModel))
             {
                 throw new UserAlreadyExistsException("Player or user already exists");
             }
 
-            var passwordStrength = _passwordLogic.GetPasswordStrength(registerUserModel.Password);
-
-            if (passwordStrength != PasswordStrength.Strong && passwordStrength != PasswordStrength.VeryStrong)
-            {
-                throw new ArgumentException("Provided password too weak");
-            }
+            VerifyPasswordStrength(registerUserModel.Password);
 
             var newUser = ConstructNewUserWithPassword(registerUserModel);
 
@@ -98,14 +93,7 @@ namespace BingoMaster_Logic
                 throw new ArgumentException("No email address provided");
             }
 
-            var user = _context.Users.FirstOrDefault(user => user.EmailAddress == emailAddress);
-
-            if (user != null)
-            {
-                return false;
-            }
-
-            return true;
+            return !_context.Users.Any(user => user.EmailAddress == emailAddress);
         }
 
         public void Update(UserModel userModel)
@@ -119,6 +107,21 @@ namespace BingoMaster_Logic
 
             _context.Entry(user).CurrentValues.SetValues(userModel);
             _context.SaveChanges();
+        }
+
+        private void VerifyPasswordStrength(string password)
+        {
+            var passwordStrength = _passwordLogic.GetPasswordStrength(password);
+
+            if (passwordStrength != PasswordStrength.Strong && passwordStrength != PasswordStrength.VeryStrong)
+            {
+                throw new ArgumentException("Provided password too weak");
+            }
+        }
+
+        private bool IsPlayerUnique(RegisterUserModel registerUserModel)
+        {
+            return _playerLogic.PlayerNameUnique(registerUserModel.PlayerName) && EmailAddressUnique(registerUserModel.EmailAddress);
         }
 
         private User ConstructNewUserWithPassword(RegisterUserModel registerUserModel)
